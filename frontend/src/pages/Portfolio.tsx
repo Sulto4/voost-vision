@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { supabase, Project } from '@/lib/supabase'
+import { X, ChevronLeft, ChevronRight } from 'lucide-react'
 
 const categories = [
   { id: 'all', label_ro: 'Toate', label_en: 'All' },
@@ -14,9 +15,29 @@ const categories = [
 export default function Portfolio() {
   const { t, i18n } = useTranslation()
   const currentLang = i18n.language
-  const [filter, setFilter] = useState('all')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const filterFromUrl = searchParams.get('filter') || 'all'
+  const [filter, setFilterState] = useState(filterFromUrl)
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
+  const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [lightboxProject, setLightboxProject] = useState<Project | null>(null)
+  const [lightboxIndex, setLightboxIndex] = useState(0)
+
+  // Sync filter state with URL
+  const setFilter = (newFilter: string) => {
+    setFilterState(newFilter)
+    if (newFilter === 'all') {
+      setSearchParams({})
+    } else {
+      setSearchParams({ filter: newFilter })
+    }
+  }
+
+  // Sync from URL on mount/change
+  useEffect(() => {
+    setFilterState(filterFromUrl)
+  }, [filterFromUrl])
 
   useEffect(() => {
     async function fetchProjects() {
@@ -44,6 +65,36 @@ export default function Portfolio() {
   const filteredProjects = filter === 'all'
     ? projects
     : projects.filter((p) => p.category === filter)
+
+  // Lightbox functions
+  const openLightbox = (project: Project, e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setLightboxProject(project)
+    setLightboxIndex(0)
+    setLightboxOpen(true)
+  }
+
+  const closeLightbox = () => {
+    setLightboxOpen(false)
+    setLightboxProject(null)
+  }
+
+  const getLightboxImages = (project: Project) => {
+    return [project.thumbnail_url, ...(project.images || [])].filter(Boolean) as string[]
+  }
+
+  const nextImage = () => {
+    if (!lightboxProject) return
+    const images = getLightboxImages(lightboxProject)
+    setLightboxIndex((prev) => (prev + 1) % images.length)
+  }
+
+  const prevImage = () => {
+    if (!lightboxProject) return
+    const images = getLightboxImages(lightboxProject)
+    setLightboxIndex((prev) => (prev - 1 + images.length) % images.length)
+  }
 
   return (
     <div className="pt-16 md:pt-20">
@@ -83,19 +134,29 @@ export default function Portfolio() {
           ) : (
             <div className="grid md:grid-cols-2 gap-8">
               {filteredProjects.map((project) => (
-                <Link
+                <div
                   key={project.id}
-                  to={`${getLocalizedPath('/portfolio', '/portofoliu')}/${project.id}`}
                   className="glass-card overflow-hidden group"
                 >
-                  <div className="aspect-video overflow-hidden">
+                  <div
+                    className="aspect-video overflow-hidden cursor-pointer relative"
+                    onClick={(e) => openLightbox(project, e)}
+                  >
                     <img
                       src={project.thumbnail_url || ''}
                       alt={currentLang === 'en' ? project.title_en : project.title_ro}
                       className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                     />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                      <span className="opacity-0 group-hover:opacity-100 transition-opacity text-white text-sm bg-black/50 px-3 py-1 rounded-full">
+                        {currentLang === 'en' ? 'View Image' : 'Vezi Imaginea'}
+                      </span>
+                    </div>
                   </div>
-                  <div className="p-6">
+                  <Link
+                    to={`${getLocalizedPath('/portfolio', '/portofoliu')}/${project.id}`}
+                    className="block p-6 hover:bg-white/5 transition-colors"
+                  >
                     <h3 className="text-xl font-semibold mb-2">
                       {currentLang === 'en' ? project.title_en : project.title_ro}
                     </h3>
@@ -112,13 +173,67 @@ export default function Portfolio() {
                         </span>
                       ))}
                     </div>
-                  </div>
-                </Link>
+                  </Link>
+                </div>
               ))}
             </div>
           )}
         </div>
       </section>
+
+      {/* Lightbox Modal */}
+      {lightboxOpen && lightboxProject && (
+        <div
+          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
+          onClick={closeLightbox}
+        >
+          {/* Close button */}
+          <button
+            onClick={closeLightbox}
+            className="absolute top-4 right-4 p-2 text-white/70 hover:text-white transition-colors z-10"
+            aria-label="Close lightbox"
+          >
+            <X className="w-8 h-8" />
+          </button>
+
+          {/* Previous button */}
+          {getLightboxImages(lightboxProject).length > 1 && (
+            <button
+              onClick={(e) => { e.stopPropagation(); prevImage(); }}
+              className="absolute left-4 p-2 text-white/70 hover:text-white transition-colors z-10"
+              aria-label="Previous image"
+            >
+              <ChevronLeft className="w-10 h-10" />
+            </button>
+          )}
+
+          {/* Image */}
+          <img
+            src={getLightboxImages(lightboxProject)[lightboxIndex]}
+            alt={currentLang === 'en' ? lightboxProject.title_en : lightboxProject.title_ro}
+            className="max-h-[90vh] max-w-[90vw] object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
+
+          {/* Next button */}
+          {getLightboxImages(lightboxProject).length > 1 && (
+            <button
+              onClick={(e) => { e.stopPropagation(); nextImage(); }}
+              className="absolute right-4 p-2 text-white/70 hover:text-white transition-colors z-10"
+              aria-label="Next image"
+            >
+              <ChevronRight className="w-10 h-10" />
+            </button>
+          )}
+
+          {/* Image counter */}
+          {getLightboxImages(lightboxProject).length > 1 && (
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/70 text-sm">
+              {lightboxIndex + 1} / {getLightboxImages(lightboxProject).length}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }
