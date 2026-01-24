@@ -8,8 +8,11 @@
     scroll-behavior: smooth;
   }
 
+  /* Dark mode (default) */
   body {
-    @apply bg-surface-900 text-white antialiased;
+    @apply antialiased;
+    background-color: #0f172a; /* surface-900 */
+    color: #ffffff;
   }
 
   /* Focus ring for accessibility */
@@ -21,6 +24,16 @@
   ::selection {
     @apply bg-primary-500/30;
   }
+}
+
+/* Light mode overrides - outside @layer for specificity */
+html.light body {
+  background-color: #f8fafc !important; /* surface-50 */
+  color: #0f172a !important; /* surface-900 */
+}
+
+html.light :focus-visible {
+  --tw-ring-offset-color: #f8fafc;
 }
 
 /* Component utilities */
@@ -79,6 +92,36 @@
   .heading-3 {
     @apply text-2xl md:text-3xl font-semibold;
   }
+}
+
+/* Light mode component overrides */
+html.light .glass-card {
+  background-color: rgba(15, 23, 42, 0.05);
+  border-color: rgba(15, 23, 42, 0.1);
+}
+
+html.light .btn-secondary {
+  background-color: rgba(15, 23, 42, 0.1);
+  color: #0f172a;
+}
+
+html.light .btn-secondary:hover {
+  background-color: rgba(15, 23, 42, 0.2);
+}
+
+html.light .btn-outline {
+  border-color: rgba(15, 23, 42, 0.2);
+  color: #0f172a;
+}
+
+html.light .btn-outline:hover {
+  background-color: rgba(15, 23, 42, 0.1);
+}
+
+html.light .input {
+  background-color: rgba(15, 23, 42, 0.05);
+  border-color: rgba(15, 23, 42, 0.1);
+  color: #0f172a;
 }
 
 /* Animation utilities */

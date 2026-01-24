@@ -32,7 +32,7 @@ export default function Header() {
   }
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-surface-900/80 backdrop-blur-lg border-b border-white/5">
+    <header className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-lg border-b ${theme === 'light' ? 'bg-white/80 border-surface-900/5' : 'bg-surface-900/80 border-white/5'}`}>
       <div className="container-custom">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
@@ -50,8 +50,8 @@ export default function Header() {
                 to={link.href}
                 className={`text-sm font-medium transition-colors ${
                   isActive(link.href)
-                    ? 'text-primary-400'
-                    : 'text-surface-300 hover:text-white'
+                    ? 'text-primary-500'
+                    : theme === 'light' ? 'text-surface-600 hover:text-surface-900' : 'text-surface-300 hover:text-white'
                 }`}
               >
                 {link.label}
@@ -65,26 +65,26 @@ export default function Header() {
             <div className="relative">
               <button
                 onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-                className="p-2 rounded-lg hover:bg-white/10 transition-colors flex items-center space-x-1"
+                className={`p-2 rounded-lg transition-colors flex items-center space-x-1 ${theme === 'light' ? 'hover:bg-surface-900/10 text-surface-700' : 'hover:bg-white/10'}`}
                 aria-label="Change language"
               >
                 <Globe className="w-5 h-5" />
                 <span className="text-sm uppercase">{currentLang}</span>
               </button>
               {isLangMenuOpen && (
-                <div className="absolute right-0 mt-2 w-32 py-2 bg-surface-800 rounded-lg shadow-xl border border-white/10">
+                <div className={`absolute right-0 mt-2 w-32 py-2 rounded-lg shadow-xl border ${theme === 'light' ? 'bg-white border-surface-200' : 'bg-surface-800 border-white/10'}`}>
                   <button
                     onClick={() => changeLanguage('ro')}
-                    className={`w-full px-4 py-2 text-left text-sm hover:bg-white/10 ${
-                      currentLang === 'ro' ? 'text-primary-400' : 'text-white'
+                    className={`w-full px-4 py-2 text-left text-sm ${theme === 'light' ? 'hover:bg-surface-100' : 'hover:bg-white/10'} ${
+                      currentLang === 'ro' ? 'text-primary-500' : theme === 'light' ? 'text-surface-700' : 'text-white'
                     }`}
                   >
                     Română
                   </button>
                   <button
                     onClick={() => changeLanguage('en')}
-                    className={`w-full px-4 py-2 text-left text-sm hover:bg-white/10 ${
-                      currentLang === 'en' ? 'text-primary-400' : 'text-white'
+                    className={`w-full px-4 py-2 text-left text-sm ${theme === 'light' ? 'hover:bg-surface-100' : 'hover:bg-white/10'} ${
+                      currentLang === 'en' ? 'text-primary-500' : theme === 'light' ? 'text-surface-700' : 'text-white'
                     }`}
                   >
                     English
@@ -96,7 +96,7 @@ export default function Header() {
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+              className={`p-2 rounded-lg transition-colors ${theme === 'light' ? 'hover:bg-surface-900/10 text-surface-700' : 'hover:bg-white/10'}`}
               aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
             >
               {theme === 'dark' ? (
