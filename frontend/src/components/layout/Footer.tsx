@@ -1,10 +1,17 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Mail, Phone, MapPin, Facebook, Instagram, Linkedin, Twitter } from 'lucide-react'
+import { Mail, Phone, MapPin, Facebook, Instagram, Linkedin, Twitter, Globe } from 'lucide-react'
 
 export default function Footer() {
   const { t, i18n } = useTranslation()
   const currentLang = i18n.language
+  const [isLangMenuOpen, setIsLangMenuOpen] = useState(false)
+
+  const changeLanguage = (lang: string) => {
+    i18n.changeLanguage(lang)
+    setIsLangMenuOpen(false)
+  }
 
   const getLocalizedPath = (enPath: string, roPath: string) => {
     return currentLang === 'en' ? enPath : roPath
@@ -131,7 +138,38 @@ export default function Footer() {
           <p className="text-surface-500 text-sm">
             © {new Date().getFullYear()} Voost Vision. {t('footer.rights')}
           </p>
-          <div className="flex space-x-6 text-sm text-surface-500">
+          <div className="flex items-center space-x-6 text-sm text-surface-500">
+            {/* Language Switcher */}
+            <div className="relative">
+              <button
+                onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
+                className="flex items-center space-x-2 hover:text-white transition-colors"
+                aria-label="Change language"
+              >
+                <Globe className="w-4 h-4" />
+                <span className="uppercase">{currentLang}</span>
+              </button>
+              {isLangMenuOpen && (
+                <div className="absolute bottom-full right-0 mb-2 w-32 py-2 bg-surface-800 rounded-lg shadow-xl border border-white/10">
+                  <button
+                    onClick={() => changeLanguage('ro')}
+                    className={`w-full px-4 py-2 text-left text-sm hover:bg-white/10 ${
+                      currentLang === 'ro' ? 'text-primary-400' : 'text-white'
+                    }`}
+                  >
+                    Română
+                  </button>
+                  <button
+                    onClick={() => changeLanguage('en')}
+                    className={`w-full px-4 py-2 text-left text-sm hover:bg-white/10 ${
+                      currentLang === 'en' ? 'text-primary-400' : 'text-white'
+                    }`}
+                  >
+                    English
+                  </button>
+                </div>
+              )}
+            </div>
             <Link to="/privacy" className="hover:text-white transition-colors">
               {t('footer.privacy')}
             </Link>
