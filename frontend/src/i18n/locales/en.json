@@ -1,0 +1,107 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "portfolio": "Portfolio",
+    "blog": "Blog",
+    "contact": "Contact",
+    "bookCall": "Book a Call"
+  },
+  "hero": {
+    "title": "Digital vision for your business",
+    "subtitle": "We transform your ideas into exceptional digital experiences. Web development, mobile apps and UI/UX design for ambitious businesses.",
+    "cta": "Start a project",
+    "secondaryCta": "View portfolio"
+  },
+  "services": {
+    "title": "Our Services",
+    "subtitle": "Complete solutions for your digital presence",
+    "webDev": "Web Development",
+    "webDevDesc": "Modern, fast and responsive websites. From landing pages to complex e-commerce platforms.",
+    "webApps": "Web Applications",
+    "webAppsDesc": "SaaS platforms, dashboards and custom web applications tailored to your business needs.",
+    "mobile": "Mobile Apps",
+    "mobileDesc": "Native or cross-platform iOS and Android apps for an exceptional mobile experience.",
+    "design": "UI/UX Design",
+    "designDesc": "User-centered design for a memorable experience and better conversions.",
+    "learnMore": "Learn more"
+  },
+  "portfolio": {
+    "title": "Recent Projects",
+    "subtitle": "A selection of our work for clients across various industries",
+    "viewAll": "View all projects",
+    "viewProject": "View project"
+  },
+  "testimonials": {
+    "title": "What our clients say",
+    "subtitle": "Feedback from satisfied customers"
+  },
+  "blogPreview": {
+    "title": "From our blog",
+    "subtitle": "Latest articles and insights from the digital world",
+    "readMore": "Read more",
+    "viewAll": "View all articles"
+  },
+  "cta": {
+    "title": "Ready to transform your digital presence?",
+    "subtitle": "Schedule a free 30-minute consultation and let's discuss your project.",
+    "button": "Book now"
+  },
+  "footer": {
+    "tagline": "Digital vision for your business. We build exceptional web experiences for ambitious businesses.",
+    "services": "Services",
+    "quickLinks": "Quick Links",
+    "contact": "Contact",
+    "rights": "All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms & Conditions"
+  },
+  "about": {
+    "pageTitle": "About Us",
+    "pageSubtitle": "Your trusted team for digital solutions",
+    "story": "Our Story",
+    "storyText": "Voost Vision was born from a passion for technology and the desire to help Romanian businesses thrive in the digital era. With over 5 years of industry experience, we've delivered projects for clients across various domains.",
+    "mission": "Our Mission",
+    "missionText": "We aim to deliver superior quality digital solutions, accessible to businesses of all sizes. We believe every business deserves a professional online presence.",
+    "whyUs": "Why Choose Us?",
+    "expertise": "Technical Expertise",
+    "expertiseDesc": "Our team has advanced knowledge in the latest web and mobile technologies.",
+    "quality": "Guaranteed Quality",
+    "qualityDesc": "We deliver projects to 2026 standards, with attention to detail.",
+    "support": "Dedicated Support",
+    "supportDesc": "We're with you throughout the project and after launch."
+  },
+  "contact": {
+    "pageTitle": "Contact",
+    "pageSubtitle": "We're here to help. Send us a message!",
+    "name": "Name",
+    "email": "Email",
+    "subject": "Subject",
+    "message": "Message",
+    "send": "Send message",
+    "sending": "Sending...",
+    "success": "Message sent successfully!",
+    "error": "An error occurred. Please try again."
+  },
+  "booking": {
+    "pageTitle": "Book a Consultation",
+    "pageSubtitle": "30 free minutes to discuss your project",
+    "selectDate": "Select a date",
+    "selectTime": "Select time",
+    "yourDetails": "Your details",
+    "name": "Full name",
+    "email": "Email",
+    "company": "Company (optional)",
+    "description": "Project description",
+    "book": "Confirm booking",
+    "booking": "Booking...",
+    "success": "Booking confirmed! You will receive a confirmation email.",
+    "error": "An error occurred. Please try again."
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Try again"
+  }
+}

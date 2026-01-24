@@ -1,0 +1,260 @@
+<project_specification>
+# Voost Vision - Company Website
+
+## Overview
+
+Modern, bilingual (RO/EN) website for Voost Vision, a Romanian full-stack web development agency helping businesses achieve 2026-standard digital presence.
+
+## Tech Stack
+
+- **Frontend**: React 18 + TypeScript + Vite + Tailwind CSS
+- **Backend**: Supabase (Auth, Database, Edge Functions, Storage)
+- **Styling**: Tailwind CSS + custom design system
+- **i18n**: react-i18next for RO/EN
+- **Hosting**: Netlify (frontend) + Supabase (backend)
+
+## Brand
+
+- **Company**: Voost Vision
+- **Tagline**: "Viziune digitală pentru afacerea ta" / "Digital vision for your business"
+- **Colors**: To be defined (modern, professional - suggest dark theme with accent color)
+- **Logo**: Provided by client
+
+## Pages & Sections
+
+### 1. Home (Landing Page)
+- Hero section with animated headline, CTA buttons
+- Services overview (4 cards linking to detail pages)
+- Featured portfolio projects (3-4 highlights)
+- Testimonials carousel
+- Blog preview (latest 3 articles)
+- CTA section for booking
+- Footer with contact info, social links, language switcher
+
+### 2. About (/about, /despre)
+- Company story and mission
+- Team section (if applicable)
+- Values/approach
+- Why choose us
+
+### 3. Services (/services, /servicii)
+Main page + 4 subpages:
+
+#### 3.1 Web Development (/services/web-development)
+- Landing pages, corporate sites, e-commerce
+- Technologies: React, Next.js, WordPress, Shopify
+- Process overview
+- Pricing tiers (optional)
+
+#### 3.2 Web Applications (/services/web-apps)
+- SaaS, dashboards, custom platforms
+- Full-stack development
+- API integrations
+- Case studies
+
+#### 3.3 Mobile Apps (/services/mobile)
+- iOS & Android development
+- React Native, Flutter
+- App Store deployment
+- Maintenance packages
+
+#### 3.4 UI/UX Design (/services/design)
+- User research
+- Wireframes & prototypes
+- Design systems
+- Brand identity
+
+### 4. Portfolio (/portfolio, /portofoliu)
+- Grid of projects with filtering by category
+- Each project card: image, title, category, tech stack
+- Project detail page: full description, images gallery, tech stack, link to live site
+
+### 5. Blog (/blog)
+- Article list with pagination
+- Categories/tags filtering
+- Article detail page with rich content
+- Related articles
+- Social sharing
+
+### 6. Booking (/booking, /programare)
+- Discovery Call booking (30 min, free)
+- Calendar integration (Google Calendar recommended)
+- Available slots display
+- Booking form: name, email, company, brief description
+- Email confirmation
+
+### 7. Contact (/contact)
+- Contact form (name, email, subject, message)
+- Company info (address, phone, email)
+- Google Maps embed (if office location)
+- Social media links
+
+## Database Schema (Supabase)
+
+### Tables
+
+```sql
+-- Portfolio projects
+CREATE TABLE projects (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title_ro TEXT NOT NULL,
+  title_en TEXT NOT NULL,
+  description_ro TEXT,
+  description_en TEXT,
+  category TEXT NOT NULL, -- 'web', 'app', 'mobile', 'design'
+  tech_stack TEXT[], -- ['React', 'Supabase', 'Tailwind']
+  thumbnail_url TEXT,
+  images TEXT[], -- array of image URLs
+  live_url TEXT,
+  featured BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  published BOOLEAN DEFAULT true
+);
+
+-- Blog articles
+CREATE TABLE articles (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug TEXT UNIQUE NOT NULL,
+  title_ro TEXT NOT NULL,
+  title_en TEXT NOT NULL,
+  excerpt_ro TEXT,
+  excerpt_en TEXT,
+  content_ro TEXT NOT NULL,
+  content_en TEXT NOT NULL,
+  cover_image TEXT,
+  category TEXT,
+  tags TEXT[],
+  author TEXT DEFAULT 'Voost Vision',
+  published BOOLEAN DEFAULT false,
+  published_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Booking slots
+CREATE TABLE bookings (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  client_name TEXT NOT NULL,
+  client_email TEXT NOT NULL,
+  company TEXT,
+  description TEXT,
+  booking_date DATE NOT NULL,
+  booking_time TIME NOT NULL,
+  duration INTEGER DEFAULT 30, -- minutes
+  status TEXT DEFAULT 'pending', -- pending, confirmed, cancelled
+  google_calendar_event_id TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Contact form submissions
+CREATE TABLE contact_submissions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  subject TEXT,
+  message TEXT NOT NULL,
+  read BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Admin users (for CMS)
+CREATE TABLE admin_users (
+  id UUID PRIMARY KEY REFERENCES auth.users(id),
+  email TEXT NOT NULL,
+  role TEXT DEFAULT 'editor', -- admin, editor
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+## Features
+
+### Core Features
+- [ ] Responsive design (mobile-first)
+- [ ] Dark/light mode toggle
+- [ ] Language switcher (RO/EN) with URL prefix (/en/*, /ro/*)
+- [ ] SEO optimized (meta tags, Open Graph, sitemap)
+- [ ] Performance optimized (lazy loading, image optimization)
+- [ ] Accessibility (WCAG 2.1 AA)
+
+### Portfolio
+- [ ] Project listing with category filter
+- [ ] Project detail pages
+- [ ] Image gallery with lightbox
+- [ ] Tech stack badges
+
+### Blog
+- [ ] Article listing with pagination
+- [ ] Category/tag filtering
+- [ ] Rich text content (Markdown or HTML)
+- [ ] Social sharing buttons
+- [ ] Related articles
+
+### Booking System
+- [ ] Calendar view with available slots
+- [ ] Booking form with validation
+- [ ] Email confirmation (Resend)
+- [ ] Google Calendar integration
+- [ ] Admin panel to manage bookings
+
+### Contact
+- [ ] Contact form with validation
+- [ ] CAPTCHA protection (Cloudflare Turnstile)
+- [ ] Email notification to admin
+- [ ] Success/error feedback
+
+### Admin Panel (/admin)
+- [ ] Protected by Supabase Auth (Google OAuth)
+- [ ] Dashboard with stats
+- [ ] Portfolio management (CRUD)
+- [ ] Blog management (CRUD with rich editor)
+- [ ] Booking management (view, confirm, cancel)
+- [ ] Contact submissions (view, mark as read)
+
+## Integrations
+
+- **Email**: Resend (booking confirmations, contact notifications)
+- **Calendar**: Google Calendar (booking sync)
+- **Analytics**: Google Analytics 4 or Plausible
+- **CAPTCHA**: Cloudflare Turnstile
+- **Maps**: Google Maps (contact page)
+
+## Design Guidelines
+
+- Modern, clean, professional
+- 2026 web standards (animations, micro-interactions)
+- Dark theme primary with light mode option
+- Accent color: suggest vibrant blue or purple
+- Typography: Inter or similar modern sans-serif
+- Smooth scroll, fade-in animations on scroll
+- Glassmorphism elements where appropriate
+
+## Content to Generate
+
+Since client has only logo, generate placeholder content for:
+- Service descriptions (4 services)
+- About page text
+- Sample portfolio projects (3-4 mockups)
+- Sample blog articles (2-3)
+- Testimonials (3-4)
+
+Use realistic Romanian business context.
+
+## Deployment
+
+1. Frontend: Netlify with continuous deployment from GitHub
+2. Backend: Supabase project (EU region)
+3. Domain: TBD (client will provide)
+4. SSL: Automatic via Netlify
+
+## Priority Order
+
+1. Landing page with all sections
+2. Services pages
+3. Portfolio (with sample data)
+4. Contact page + form
+5. Booking system
+6. Blog
+7. Admin panel
+8. i18n (RO/EN)
+9. Final polish (animations, SEO)
+</project_specification>

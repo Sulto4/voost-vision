@@ -1,0 +1,107 @@
+{
+  "nav": {
+    "home": "Acasa",
+    "about": "Despre noi",
+    "services": "Servicii",
+    "portfolio": "Portofoliu",
+    "blog": "Blog",
+    "contact": "Contact",
+    "bookCall": "Programeaza un apel"
+  },
+  "hero": {
+    "title": "Viziune digitala pentru afacerea ta",
+    "subtitle": "Transformam ideile tale in experiente digitale exceptionale. Dezvoltare web, aplicatii mobile si design UI/UX pentru afaceri ambitioase.",
+    "cta": "Incepe un proiect",
+    "secondaryCta": "Vezi portofoliu"
+  },
+  "services": {
+    "title": "Serviciile noastre",
+    "subtitle": "Solutii complete pentru prezenta ta digitala",
+    "webDev": "Dezvoltare Web",
+    "webDevDesc": "Site-uri web moderne, rapide si responsive. De la landing pages la platforme e-commerce complexe.",
+    "webApps": "Aplicatii Web",
+    "webAppsDesc": "Platforme SaaS, dashboards si aplicatii web personalizate pentru nevoile afacerii tale.",
+    "mobile": "Aplicatii Mobile",
+    "mobileDesc": "Aplicatii iOS si Android native sau cross-platform pentru o experienta mobila de exceptie.",
+    "design": "Design UI/UX",
+    "designDesc": "Design centrat pe utilizator pentru o experienta memorabila si conversii mai bune.",
+    "learnMore": "Afla mai multe"
+  },
+  "portfolio": {
+    "title": "Proiecte recente",
+    "subtitle": "O selectie din lucrarile noastre pentru clienti din diverse industrii",
+    "viewAll": "Vezi toate proiectele",
+    "viewProject": "Vezi proiect"
+  },
+  "testimonials": {
+    "title": "Ce spun clientii nostri",
+    "subtitle": "Feedback-ul clientilor multumiti"
+  },
+  "blogPreview": {
+    "title": "Din blogul nostru",
+    "subtitle": "Ultimele articole si insights din lumea digitala",
+    "readMore": "Citeste mai mult",
+    "viewAll": "Vezi toate articolele"
+  },
+  "cta": {
+    "title": "Pregatit sa-ti transformi prezenta digitala?",
+    "subtitle": "Programeaza o consultatie gratuita de 30 de minute si hai sa discutam despre proiectul tau.",
+    "button": "Programeaza acum"
+  },
+  "footer": {
+    "tagline": "Viziune digitala pentru afacerea ta. Construim experiente web exceptionale pentru afaceri ambitioase.",
+    "services": "Servicii",
+    "quickLinks": "Link-uri rapide",
+    "contact": "Contact",
+    "rights": "Toate drepturile rezervate.",
+    "privacy": "Politica de confidentialitate",
+    "terms": "Termeni si conditii"
+  },
+  "about": {
+    "pageTitle": "Despre noi",
+    "pageSubtitle": "Echipa ta de incredere pentru solutii digitale",
+    "story": "Povestea noastra",
+    "storyText": "Voost Vision a luat nastere din pasiunea pentru tehnologie si dorinta de a ajuta afacerile romanesti sa prospere in era digitala. Cu o experienta de peste 5 ani in industrie, am livrat proiecte pentru clienti din diverse domenii.",
+    "mission": "Misiunea noastra",
+    "missionText": "Ne propunem sa oferim solutii digitale de calitate superioara, accesibile pentru afaceri de toate dimensiunile. Credem ca fiecare business merita o prezenta online profesionala.",
+    "whyUs": "De ce noi?",
+    "expertise": "Expertiza tehnica",
+    "expertiseDesc": "Echipa noastra are cunostinte avansate in cele mai noi tehnologii web si mobile.",
+    "quality": "Calitate garantata",
+    "qualityDesc": "Livram proiecte la standardele anului 2026, cu atentie la detalii.",
+    "support": "Suport dedicat",
+    "supportDesc": "Suntem alaturi de tine pe tot parcursul proiectului si dupa lansare."
+  },
+  "contact": {
+    "pageTitle": "Contact",
+    "pageSubtitle": "Suntem aici sa te ajutam. Trimite-ne un mesaj!",
+    "name": "Nume",
+    "email": "Email",
+    "subject": "Subiect",
+    "message": "Mesaj",
+    "send": "Trimite mesaj",
+    "sending": "Se trimite...",
+    "success": "Mesaj trimis cu succes!",
+    "error": "A aparut o eroare. Te rugam sa incerci din nou."
+  },
+  "booking": {
+    "pageTitle": "Programeaza o consultatie",
+    "pageSubtitle": "30 de minute gratuite pentru a discuta despre proiectul tau",
+    "selectDate": "Selecteaza o data",
+    "selectTime": "Selecteaza ora",
+    "yourDetails": "Detaliile tale",
+    "name": "Nume complet",
+    "email": "Email",
+    "company": "Companie (optional)",
+    "description": "Descriere proiect",
+    "book": "Confirma programarea",
+    "booking": "Se programeaza...",
+    "success": "Programare confirmata! Vei primi un email de confirmare.",
+    "error": "A aparut o eroare. Te rugam sa incerci din nou."
+  },
+  "common": {
+    "loading": "Se incarca...",
+    "error": "A aparut o eroare",
+    "retry": "Incearca din nou"
+  }
+}
