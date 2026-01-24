@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { ArrowLeft, ExternalLink } from 'lucide-react'
+import { ArrowLeft, ExternalLink, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { supabase, Project } from '@/lib/supabase'
 
@@ -11,6 +11,27 @@ export default function PortfolioDetail() {
   const [project, setProject] = useState<Project | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [lightboxIndex, setLightboxIndex] = useState(0)
+
+  const allImages = project ? [project.thumbnail_url, ...(project.images || [])].filter(Boolean) as string[] : []
+
+  const openLightbox = (index: number) => {
+    setLightboxIndex(index)
+    setLightboxOpen(true)
+  }
+
+  const closeLightbox = () => {
+    setLightboxOpen(false)
+  }
+
+  const nextImage = () => {
+    setLightboxIndex((prev) => (prev + 1) % allImages.length)
+  }
+
+  const prevImage = () => {
+    setLightboxIndex((prev) => (prev - 1 + allImages.length) % allImages.length)
+  }
 
   useEffect(() => {
     async function fetchProject() {
@@ -92,7 +113,8 @@ export default function PortfolioDetail() {
               <img
                 src={project.thumbnail_url || defaultImage}
                 alt={currentLang === 'en' ? project.title_en : project.title_ro}
-                className="w-full rounded-2xl mb-8"
+                className="w-full rounded-2xl mb-8 cursor-pointer hover:opacity-90 transition-opacity"
+                onClick={() => openLightbox(0)}
               />
 
               {project.images && project.images.length > 0 && (
@@ -102,7 +124,8 @@ export default function PortfolioDetail() {
                       key={idx}
                       src={img}
                       alt=""
-                      className="w-full rounded-xl"
+                      className="w-full rounded-xl cursor-pointer hover:opacity-90 transition-opacity"
+                      onClick={() => openLightbox(idx + 1)}
                     />
                   ))}
                 </div>
@@ -152,6 +175,60 @@ export default function PortfolioDetail() {
           </div>
         </div>
       </section>
+
+      {/* Lightbox Modal */}
+      {lightboxOpen && allImages.length > 0 && (
+        <div
+          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
+          onClick={closeLightbox}
+        >
+          {/* Close button */}
+          <button
+            onClick={closeLightbox}
+            className="absolute top-4 right-4 p-2 text-white/70 hover:text-white transition-colors z-10"
+            aria-label="Close lightbox"
+          >
+            <X className="w-8 h-8" />
+          </button>
+
+          {/* Previous button */}
+          {allImages.length > 1 && (
+            <button
+              onClick={(e) => { e.stopPropagation(); prevImage(); }}
+              className="absolute left-4 p-2 text-white/70 hover:text-white transition-colors z-10"
+              aria-label="Previous image"
+            >
+              <ChevronLeft className="w-10 h-10" />
+            </button>
+          )}
+
+          {/* Image */}
+          <img
+            src={allImages[lightboxIndex]}
+            alt=""
+            className="max-h-[90vh] max-w-[90vw] object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
+
+          {/* Next button */}
+          {allImages.length > 1 && (
+            <button
+              onClick={(e) => { e.stopPropagation(); nextImage(); }}
+              className="absolute right-4 p-2 text-white/70 hover:text-white transition-colors z-10"
+              aria-label="Next image"
+            >
+              <ChevronRight className="w-10 h-10" />
+            </button>
+          )}
+
+          {/* Image counter */}
+          {allImages.length > 1 && (
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/70 text-sm">
+              {lightboxIndex + 1} / {allImages.length}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }
