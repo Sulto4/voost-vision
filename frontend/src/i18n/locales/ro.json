@@ -82,7 +82,12 @@
     "send": "Trimite mesaj",
     "sending": "Se trimite...",
     "success": "Mesaj trimis cu succes!",
-    "error": "A aparut o eroare. Te rugam sa incerci din nou."
+    "error": "A aparut o eroare. Te rugam sa incerci din nou.",
+    "captcha": "Verificare de securitate",
+    "captchaVerified": "Verificare reusita",
+    "captchaRequired": "Te rugam sa completezi verificarea CAPTCHA",
+    "captchaExpired": "Verificarea CAPTCHA a expirat. Te rugam sa incerci din nou.",
+    "captchaError": "Eroare la incarcarea CAPTCHA. Te rugam sa reimprospatezi pagina."
   },
   "booking": {
     "pageTitle": "Programeaza o consultatie",

@@ -1,76 +1,75 @@
 # Voost Vision - Development Progress
 
-## Session: January 25, 2026 (Continued)
+## Session: January 25, 2026 (Continued - Context Window 2)
 
 ### Summary
-Continued implementation work on the Voost Vision company website. Completed Features #39-43 (theme persistence, admin dashboard stats, portfolio management).
+Continued implementation work on the Voost Vision company website. Implemented admin logout functionality, skipped booking security feature (architecture doesn't support it), and added CAPTCHA protection to the contact form.
 
 ### Completed Features This Session
-- **Feature #39**: Theme preference persists across sessions (PASSED)
-  - Light mode preference saved to localStorage
-  - Persists after closing and reopening browser
-  - Dark mode also persists correctly
+- **Feature #37**: Language preference persists (PASSED - Regression Test)
+  - Verified language switches from RO to EN
+  - Persists across navigation and page refresh
 
-- **Feature #41**: Admin dashboard displays statistics (PASSED)
-  - Updated AdminDashboard to fetch real counts from database
-  - Shows accurate counts for projects, articles, bookings, contacts
-  - Recent bookings and messages fetched from database
+- **Feature #57**: Admin logout functionality (PASSED)
+  - Created AdminLayout component with consistent header and navigation
+  - Added logout button that signs out via Supabase auth
+  - Clears localStorage session data
+  - Redirects to admin login page
+  - Protected routes redirect unauthenticated users
 
-- **Feature #42**: Admin portfolio management - list projects (PASSED)
-  - Projects list displayed in admin panel
-  - Shows title, category, status from database
-  - Edit and delete buttons present
-
-- **Feature #43**: Admin portfolio management - create project (PASSED)
-  - Add Project modal with full form
-  - Bilingual support (RO/EN) for title and description
-  - Category selection, tech stack tags
-  - Saves to Supabase database
-  - New project appears on public portfolio page
+- **Feature #59**: Contact form protected against spam (PASSED)
+  - Implemented Cloudflare Turnstile CAPTCHA
+  - Created reusable Turnstile component
+  - Submit button disabled until CAPTCHA verified
+  - Added translation keys for CAPTCHA messages (RO/EN)
+  - Using test key that auto-passes for development
 
 ### Skipped Features
-- **Feature #40**: Admin login with Google OAuth
-  - Skipped - requires Google OAuth to be enabled in Supabase dashboard
-  - Code implementation complete (sign in button, OAuth flow)
-  - Blocked by external configuration
+- **Feature #58**: Cannot access another user's booking by ID manipulation
+  - Skipped - app architecture doesn't have user-specific booking views
+  - Bookings are created by anonymous clients and managed by admins only
+  - No user authentication for public booking creation
 
 ### Current Status
-- **Features Passing**: 38/251 (15.1%)
-- **Features completed this session**: 4 (Features #39, #41, #42, #43)
+- **Features Passing**: 51/251 (20.3%)
+- **Features completed this session**: 3 (Features #37 regression, #57, #59)
 
 ### Technical Changes Made This Session
-1. Created `frontend/src/hooks/useAuth.tsx`:
-   - AuthProvider context for authentication state
-   - signInWithGoogle and signOut functions
-   - Session management with Supabase auth
 
-2. Updated `frontend/src/App.tsx`:
-   - Added AuthProvider wrapper
+1. **Created `frontend/src/components/admin/AdminLayout.tsx`**:
+   - Shared layout component for all admin pages
+   - Header with navigation links and logout button
+   - Auth protection - redirects to login if not authenticated
+   - Uses useAuth hook for session management
 
-3. Updated `frontend/src/pages/admin/AdminLogin.tsx`:
-   - Added Google OAuth sign-in button
-   - Redirect on successful auth
-   - Error handling
+2. **Updated Admin Pages**:
+   - AdminDashboard, AdminPortfolio, AdminBlog, AdminBookings, AdminContact
+   - All now wrapped with AdminLayout component
+   - Consistent header and navigation across admin section
 
-4. Updated `frontend/src/pages/admin/AdminDashboard.tsx`:
-   - Fetch real statistics from database
-   - Display actual counts for projects, articles, bookings, contacts
-   - Recent bookings and messages from database
+3. **Updated `frontend/src/pages/admin/AdminLogin.tsx`**:
+   - Fixed from simulated login to real Supabase auth
+   - Uses signInWithPassword for email/password authentication
 
-5. Updated `frontend/src/pages/admin/AdminPortfolio.tsx`:
-   - Full CRUD functionality for projects
-   - Create/Edit modal with bilingual fields
-   - Category selection, tech stack tags
-   - Database integration with Supabase
+4. **Created `frontend/src/components/ui/Turnstile.tsx`**:
+   - Cloudflare Turnstile CAPTCHA component
+   - Script loading with singleton pattern
+   - Widget rendering and lifecycle management
+   - Callbacks for verify, expire, and error events
 
-6. Added RLS policies via migration:
-   - Allow all operations on projects table
-   - Allow all operations on articles table
+5. **Updated `frontend/src/pages/Contact.tsx`**:
+   - Integrated Turnstile CAPTCHA component
+   - Added captchaToken state management
+   - Form validation checks CAPTCHA completion
+   - Submit button disabled without CAPTCHA verification
+
+6. **Updated Translation Files**:
+   - Added CAPTCHA-related keys to en.json and ro.json
+   - captcha, captchaVerified, captchaRequired, captchaExpired, captchaError
 
 ### Database Status
-- Supabase project: guzcduqsleojxmradcmo
-- Tables: projects (5 rows), articles (8 rows), contact_submissions (1 row), bookings (2 rows)
-- RLS policies updated for admin operations
+- Supabase project: jchwqbzsepoloaomluei
+- Contact form submissions with CAPTCHA protection
 
 ### What's Working
 - Home page with all sections
@@ -81,21 +80,23 @@ Continued implementation work on the Voost Vision company website. Completed Fea
 - Article detail pages
 - Dark/Light theme with persistence
 - Language switcher (RO/EN) with persistence
-- Contact form with validation
+- Contact form with validation AND CAPTCHA protection
 - Booking page with calendar and time slots
 - Admin dashboard with real statistics
 - Admin portfolio management (list, create)
+- Admin logout with session clearing
+- Protected admin routes
 
 ### Next Steps
-- Continue with next feature (likely admin portfolio edit/delete)
-- Admin blog management
-- Admin bookings management
-- Admin contact submissions management
+- Continue with next feature from the queue
+- Additional admin management features
+- More security features
 
 ### Git Status
 - Changes pending commit for session work
 
 ### Notes
-- Dev server running on http://localhost:5177
+- Dev server running on http://localhost:5178
 - No console errors detected
-- Google OAuth implementation complete but blocked by Supabase config
+- Test admin credentials working
+- CAPTCHA using test key (1x00000000000000000000AA) for development

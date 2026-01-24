@@ -82,7 +82,12 @@
     "send": "Send message",
     "sending": "Sending...",
     "success": "Message sent successfully!",
-    "error": "An error occurred. Please try again."
+    "error": "An error occurred. Please try again.",
+    "captcha": "Security verification",
+    "captchaVerified": "Verification successful",
+    "captchaRequired": "Please complete the CAPTCHA verification",
+    "captchaExpired": "CAPTCHA verification expired. Please try again.",
+    "captchaError": "CAPTCHA loading error. Please refresh the page."
   },
   "booking": {
     "pageTitle": "Book a Consultation",

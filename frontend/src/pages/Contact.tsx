@@ -1,13 +1,15 @@
 import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
-import { Mail, Phone, MapPin, Send, Check, User, MessageSquare, AlertCircle } from 'lucide-react'
+import { Mail, Phone, MapPin, Send, Check, User, MessageSquare, AlertCircle, ShieldCheck } from 'lucide-react'
 import { supabase } from '../lib/supabase'
+import Turnstile from '../components/ui/Turnstile'
 
 interface FormErrors {
   name?: string
   email?: string
   subject?: string
   message?: string
+  captcha?: string
 }
 
 export default function Contact() {
@@ -21,6 +23,8 @@ export default function Contact() {
   const [errors, setErrors] = useState<FormErrors>({})
   const [touched, setTouched] = useState<Record<string, boolean>>({})
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null)
+  const [captchaError, setCaptchaError] = useState<string | null>(null)
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -44,8 +48,33 @@ export default function Contact() {
       newErrors.message = 'Mesajul este obligatoriu'
     }
 
+    if (!captchaToken) {
+      newErrors.captcha = t('contact.captchaRequired')
+      setCaptchaError(t('contact.captchaRequired'))
+    }
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
+  }
+
+  const handleCaptchaVerify = (token: string) => {
+    setCaptchaToken(token)
+    setCaptchaError(null)
+    // Clear captcha error from errors state
+    setErrors(prev => {
+      const { captcha, ...rest } = prev
+      return rest
+    })
+  }
+
+  const handleCaptchaExpire = () => {
+    setCaptchaToken(null)
+    setCaptchaError(t('contact.captchaExpired'))
+  }
+
+  const handleCaptchaError = () => {
+    setCaptchaToken(null)
+    setCaptchaError(t('contact.captchaError'))
   }
 
   const handleBlur = (field: string) => {
@@ -113,6 +142,8 @@ export default function Contact() {
       setFormData({ name: '', email: '', subject: '', message: '' })
       setErrors({})
       setTouched({})
+      setCaptchaToken(null)
+      setCaptchaError(null)
     } catch (err) {
       console.error('Error submitting contact form:', err)
       setStatus('error')
@@ -256,9 +287,37 @@ export default function Contact() {
                       </div>
                     )}
                   </div>
+
+                  {/* CAPTCHA Verification */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2 flex items-center gap-2">
+                      <ShieldCheck className="w-4 h-4 text-primary-400" />
+                      {t('contact.captcha') || 'Verificare de securitate'} <span className="text-red-400">*</span>
+                    </label>
+                    <Turnstile
+                      onVerify={handleCaptchaVerify}
+                      onExpire={handleCaptchaExpire}
+                      onError={handleCaptchaError}
+                      theme="dark"
+                      className="mb-2"
+                    />
+                    {captchaToken && (
+                      <div className="flex items-center gap-1 text-green-400 text-sm">
+                        <Check className="w-4 h-4" />
+                        <span>{t('contact.captchaVerified') || 'Verificare reusita'}</span>
+                      </div>
+                    )}
+                    {(captchaError || errors.captcha) && (
+                      <div className="flex items-center gap-1 text-red-400 text-sm">
+                        <AlertCircle className="w-4 h-4" />
+                        <span>{captchaError || errors.captcha}</span>
+                      </div>
+                    )}
+                  </div>
+
                   <button
                     type="submit"
-                    disabled={status === 'submitting'}
+                    disabled={status === 'submitting' || !captchaToken}
                     className="btn-primary w-full text-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {status === 'submitting' ? (
