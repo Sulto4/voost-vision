@@ -293,7 +293,6 @@ export default function AdminBlog() {
             </table>
           )}
         </div>
-      </main>
 
       {/* Create/Edit Modal */}
       {showModal && (

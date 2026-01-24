@@ -264,7 +264,6 @@ export default function AdminPortfolio() {
             </table>
           )}
         </div>
-      </main>
 
       {/* Create/Edit Modal */}
       {showModal && (
