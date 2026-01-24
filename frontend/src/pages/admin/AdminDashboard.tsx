@@ -1,48 +1,104 @@
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { FolderKanban, FileText, Calendar, Mail, ArrowRight, Users } from 'lucide-react'
+import { FolderKanban, FileText, Calendar, Mail, ArrowRight } from 'lucide-react'
+import { supabase } from '../../lib/supabase'
+import AdminLayout from '../../components/admin/AdminLayout'
 
-const stats = [
-  { label: 'Portfolio Projects', value: 4, icon: FolderKanban, href: '/admin/portfolio' },
-  { label: 'Blog Articles', value: 3, icon: FileText, href: '/admin/blog' },
-  { label: 'Bookings', value: 12, icon: Calendar, href: '/admin/bookings' },
-  { label: 'Contact Messages', value: 5, icon: Mail, href: '/admin/contact' },
-]
+interface DashboardStats {
+  projects: number
+  articles: number
+  bookings: number
+  contacts: number
+}
+
+interface RecentBooking {
+  id: string
+  client_name: string
+  description: string | null
+  status: string
+}
+
+interface RecentMessage {
+  id: string
+  name: string
+  message: string
+  read: boolean
+}
 
 export default function AdminDashboard() {
-  return (
-    <div className="min-h-screen bg-surface-900">
-      <header className="bg-surface-950 border-b border-white/5 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <Link to="/admin/dashboard" className="text-xl font-bold gradient-text">
-              Voost Vision Admin
-            </Link>
-            <nav className="hidden md:flex items-center space-x-6">
-              <Link to="/admin/portfolio" className="text-surface-300 hover:text-white transition-colors">
-                Portfolio
-              </Link>
-              <Link to="/admin/blog" className="text-surface-300 hover:text-white transition-colors">
-                Blog
-              </Link>
-              <Link to="/admin/bookings" className="text-surface-300 hover:text-white transition-colors">
-                Bookings
-              </Link>
-              <Link to="/admin/contact" className="text-surface-300 hover:text-white transition-colors">
-                Contact
-              </Link>
-            </nav>
-            <Link to="/" className="text-surface-400 hover:text-white text-sm">
-              View Site
-            </Link>
-          </div>
-        </div>
-      </header>
+  const [stats, setStats] = useState<DashboardStats>({
+    projects: 0,
+    articles: 0,
+    bookings: 0,
+    contacts: 0
+  })
+  const [recentBookings, setRecentBookings] = useState<RecentBooking[]>([])
+  const [recentMessages, setRecentMessages] = useState<RecentMessage[]>([])
+  const [loading, setLoading] = useState(true)
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 className="heading-2 mb-8">Dashboard</h1>
+  useEffect(() => {
+    async function fetchDashboardData() {
+      try {
+        // Fetch counts in parallel
+        const [
+          { count: projectsCount },
+          { count: articlesCount },
+          { count: bookingsCount },
+          { count: contactsCount },
+          { data: bookingsData },
+          { data: messagesData }
+        ] = await Promise.all([
+          supabase.from('projects').select('*', { count: 'exact', head: true }),
+          supabase.from('articles').select('*', { count: 'exact', head: true }),
+          supabase.from('bookings').select('*', { count: 'exact', head: true }),
+          supabase.from('contact_submissions').select('*', { count: 'exact', head: true }),
+          supabase.from('bookings').select('id, client_name, description, status').order('created_at', { ascending: false }).limit(3),
+          supabase.from('contact_submissions').select('id, name, message, read').order('created_at', { ascending: false }).limit(3)
+        ])
+
+        setStats({
+          projects: projectsCount || 0,
+          articles: articlesCount || 0,
+          bookings: bookingsCount || 0,
+          contacts: contactsCount || 0
+        })
+
+        setRecentBookings(bookingsData || [])
+        setRecentMessages(messagesData || [])
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchDashboardData()
+  }, [])
+
+  const statCards = [
+    { label: 'Portfolio Projects', value: stats.projects, icon: FolderKanban, href: '/admin/portfolio' },
+    { label: 'Blog Articles', value: stats.articles, icon: FileText, href: '/admin/blog' },
+    { label: 'Bookings', value: stats.bookings, icon: Calendar, href: '/admin/bookings' },
+    { label: 'Contact Messages', value: stats.contacts, icon: Mail, href: '/admin/contact' },
+  ]
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'confirmed':
+        return 'bg-green-500/20 text-green-400'
+      case 'cancelled':
+        return 'bg-red-500/20 text-red-400'
+      default:
+        return 'bg-yellow-500/20 text-yellow-400'
+    }
+  }
+
+  return (
+    <AdminLayout>
+      <h1 className="heading-2 mb-8">Dashboard</h1>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {stats.map((stat) => (
+          {statCards.map((stat) => (
             <Link
               key={stat.label}
               to={stat.href}
@@ -51,7 +107,9 @@ export default function AdminDashboard() {
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-surface-400 text-sm">{stat.label}</p>
-                  <p className="text-3xl font-bold mt-1">{stat.value}</p>
+                  <p className="text-3xl font-bold mt-1">
+                    {loading ? '...' : stat.value}
+                  </p>
                 </div>
                 <div className="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center">
                   <stat.icon className="w-6 h-6 text-primary-400" />
@@ -69,52 +127,53 @@ export default function AdminDashboard() {
           <div className="glass-card p-6">
             <h2 className="text-xl font-semibold mb-4">Recent Bookings</h2>
             <div className="space-y-4">
-              <div className="flex items-center justify-between py-3 border-b border-white/5">
-                <div>
-                  <p className="font-medium">Maria Popescu</p>
-                  <p className="text-surface-400 text-sm">Discovery Call</p>
-                </div>
-                <span className="px-3 py-1 text-xs bg-yellow-500/20 text-yellow-400 rounded-full">
-                  Pending
-                </span>
-              </div>
-              <div className="flex items-center justify-between py-3 border-b border-white/5">
-                <div>
-                  <p className="font-medium">Andrei Ionescu</p>
-                  <p className="text-surface-400 text-sm">Project Discussion</p>
-                </div>
-                <span className="px-3 py-1 text-xs bg-green-500/20 text-green-400 rounded-full">
-                  Confirmed
-                </span>
-              </div>
+              {loading ? (
+                <p className="text-surface-400">Loading...</p>
+              ) : recentBookings.length === 0 ? (
+                <p className="text-surface-400">No bookings yet</p>
+              ) : (
+                recentBookings.map((booking) => (
+                  <div key={booking.id} className="flex items-center justify-between py-3 border-b border-white/5">
+                    <div>
+                      <p className="font-medium">{booking.client_name}</p>
+                      <p className="text-surface-400 text-sm">{booking.description || 'Consultation'}</p>
+                    </div>
+                    <span className={`px-3 py-1 text-xs rounded-full capitalize ${getStatusColor(booking.status)}`}>
+                      {booking.status}
+                    </span>
+                  </div>
+                ))
+              )}
             </div>
           </div>
 
           <div className="glass-card p-6">
             <h2 className="text-xl font-semibold mb-4">Recent Messages</h2>
             <div className="space-y-4">
-              <div className="py-3 border-b border-white/5">
-                <div className="flex items-center justify-between mb-1">
-                  <p className="font-medium">Ion Georgescu</p>
-                  <span className="w-2 h-2 rounded-full bg-primary-400"></span>
-                </div>
-                <p className="text-surface-400 text-sm line-clamp-1">
-                  I'm interested in developing a new e-commerce platform...
-                </p>
-              </div>
-              <div className="py-3 border-b border-white/5">
-                <div className="flex items-center justify-between mb-1">
-                  <p className="font-medium">Ana Dobre</p>
-                  <span className="text-surface-500 text-xs">Read</span>
-                </div>
-                <p className="text-surface-400 text-sm line-clamp-1">
-                  Thank you for the quick response regarding our project...
-                </p>
-              </div>
+              {loading ? (
+                <p className="text-surface-400">Loading...</p>
+              ) : recentMessages.length === 0 ? (
+                <p className="text-surface-400">No messages yet</p>
+              ) : (
+                recentMessages.map((message) => (
+                  <div key={message.id} className="py-3 border-b border-white/5">
+                    <div className="flex items-center justify-between mb-1">
+                      <p className="font-medium">{message.name}</p>
+                      {!message.read ? (
+                        <span className="w-2 h-2 rounded-full bg-primary-400"></span>
+                      ) : (
+                        <span className="text-surface-500 text-xs">Read</span>
+                      )}
+                    </div>
+                    <p className="text-surface-400 text-sm line-clamp-1">
+                      {message.message}
+                    </p>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>
-      </main>
-    </div>
+    </AdminLayout>
   )
 }

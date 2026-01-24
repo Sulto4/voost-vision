@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { Suspense, lazy } from 'react'
 import { ThemeProvider } from '@/hooks/useTheme'
+import { AuthProvider } from '@/hooks/useAuth'
 import Layout from '@/components/layout/Layout'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
 
@@ -31,9 +32,10 @@ const AdminContact = lazy(() => import('@/pages/admin/AdminContact'))
 function App() {
   return (
     <ThemeProvider>
-      <Router>
-        <Suspense fallback={<LoadingSpinner fullScreen />}>
-          <Routes>
+      <AuthProvider>
+        <Router>
+          <Suspense fallback={<LoadingSpinner fullScreen />}>
+            <Routes>
             {/* Public routes with layout */}
             <Route element={<Layout />}>
               <Route path="/" element={<Home />} />
@@ -103,9 +105,10 @@ function App() {
 
             {/* 404 */}
             <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
-      </Router>
+            </Routes>
+          </Suspense>
+        </Router>
+      </AuthProvider>
     </ThemeProvider>
   )
 }

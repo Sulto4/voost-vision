@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { ArrowLeft, Check, X, Calendar } from 'lucide-react'
 import { supabase, Booking } from '@/lib/supabase'
+import AdminLayout from '../../components/admin/AdminLayout'
 
 export default function AdminBookings() {
   const [bookings, setBookings] = useState<Booking[]>([])
@@ -39,31 +40,17 @@ export default function AdminBookings() {
   }
 
   return (
-    <div className="min-h-screen bg-surface-900">
-      <header className="bg-surface-950 border-b border-white/5 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <Link to="/admin/dashboard" className="text-xl font-bold gradient-text">
-              Voost Vision Admin
-            </Link>
-            <Link to="/" className="text-surface-400 hover:text-white text-sm">
-              View Site
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="mb-8">
-          <Link
-            to="/admin/dashboard"
-            className="inline-flex items-center text-surface-400 hover:text-white transition-colors mb-2"
-          >
-            <ArrowLeft className="w-4 h-4 mr-1" />
-            Back to Dashboard
-          </Link>
-          <h1 className="heading-2">Booking Management</h1>
-        </div>
+    <AdminLayout>
+      <div className="mb-8">
+        <Link
+          to="/admin/dashboard"
+          className="inline-flex items-center text-surface-400 hover:text-white transition-colors mb-2"
+        >
+          <ArrowLeft className="w-4 h-4 mr-1" />
+          Back to Dashboard
+        </Link>
+        <h1 className="heading-2">Booking Management</h1>
+      </div>
 
         <div className="glass-card overflow-hidden">
           {loading ? (
@@ -129,7 +116,6 @@ export default function AdminBookings() {
             </table>
           )}
         </div>
-      </main>
-    </div>
+    </AdminLayout>
   )
 }
