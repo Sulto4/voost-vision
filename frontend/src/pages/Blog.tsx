@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { supabase, Article } from '@/lib/supabase'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, X } from 'lucide-react'
 
 const ARTICLES_PER_PAGE = 6
 
@@ -27,6 +27,7 @@ export default function Blog() {
 
   const currentPage = parseInt(searchParams.get('page') || '1', 10)
   const currentCategory = searchParams.get('category') || 'all'
+  const currentTag = searchParams.get('tag') || ''
   const totalPages = Math.ceil(totalCount / ARTICLES_PER_PAGE)
 
   useEffect(() => {
@@ -45,6 +46,10 @@ export default function Blog() {
         countQuery = countQuery.eq('category', currentCategory)
       }
 
+      if (currentTag) {
+        countQuery = countQuery.contains('tags', [currentTag])
+      }
+
       const { count } = await countQuery
       setTotalCount(count || 0)
 
@@ -59,6 +64,10 @@ export default function Blog() {
         articlesQuery = articlesQuery.eq('category', currentCategory)
       }
 
+      if (currentTag) {
+        articlesQuery = articlesQuery.contains('tags', [currentTag])
+      }
+
       const { data, error } = await articlesQuery.range(from, to)
 
       if (error) {
@@ -70,7 +79,7 @@ export default function Blog() {
     }
 
     fetchArticles()
-  }, [currentPage, currentCategory])
+  }, [currentPage, currentCategory, currentTag])
 
   const goToPage = (page: number) => {
     const params: Record<string, string> = { page: page.toString() }
@@ -85,6 +94,28 @@ export default function Blog() {
     const params: Record<string, string> = { page: '1' }
     if (category !== 'all') {
       params.category = category
+    }
+    if (currentTag) {
+      params.tag = currentTag
+    }
+    setSearchParams(params)
+  }
+
+  const setTag = (tag: string) => {
+    const params: Record<string, string> = { page: '1' }
+    if (currentCategory !== 'all') {
+      params.category = currentCategory
+    }
+    if (tag) {
+      params.tag = tag
+    }
+    setSearchParams(params)
+  }
+
+  const clearTag = () => {
+    const params: Record<string, string> = { page: '1' }
+    if (currentCategory !== 'all') {
+      params.category = currentCategory
     }
     setSearchParams(params)
   }
@@ -103,7 +134,7 @@ export default function Blog() {
           </div>
 
           {/* Category Filter */}
-          <div className="flex flex-wrap justify-center gap-3 mb-12">
+          <div className="flex flex-wrap justify-center gap-3 mb-8">
             {categories.map((cat) => (
               <button
                 key={cat.id}
@@ -118,6 +149,25 @@ export default function Blog() {
               </button>
             ))}
           </div>
+
+          {/* Active Tag Filter Indicator */}
+          {currentTag && (
+            <div className="flex justify-center items-center gap-2 mb-8">
+              <span className="text-surface-400 text-sm">
+                {currentLang === 'en' ? 'Filtered by tag:' : 'Filtrat dupa tag:'}
+              </span>
+              <span className="inline-flex items-center gap-1 px-3 py-1 bg-accent-500/20 text-accent-300 rounded-full text-sm">
+                #{currentTag}
+                <button
+                  onClick={clearTag}
+                  className="ml-1 hover:text-white transition-colors"
+                  aria-label="Clear tag filter"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </span>
+            </div>
+          )}
 
           {loading ? (
             <div className="flex justify-center items-center py-20">
@@ -150,9 +200,26 @@ export default function Blog() {
                     <h3 className="text-xl font-semibold mb-3">
                       {currentLang === 'en' ? article.title_en : article.title_ro}
                     </h3>
-                    <p className="text-surface-400">
+                    <p className="text-surface-400 mb-4">
                       {currentLang === 'en' ? article.excerpt_en : article.excerpt_ro}
                     </p>
+                    {article.tags && article.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {article.tags.slice(0, 3).map((tag) => (
+                          <button
+                            key={tag}
+                            onClick={(e) => {
+                              e.preventDefault()
+                              e.stopPropagation()
+                              setTag(tag)
+                            }}
+                            className="text-xs px-2 py-1 bg-white/5 hover:bg-accent-500/20 text-surface-400 hover:text-accent-300 rounded transition-colors"
+                          >
+                            #{tag}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </Link>
               ))}

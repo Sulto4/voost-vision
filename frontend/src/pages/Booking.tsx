@@ -1,13 +1,15 @@
 import { useTranslation } from 'react-i18next'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Calendar, Clock, User, Mail, Building, FileText, Check } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
 
-const availableTimes = ['09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00']
+const allTimeSlots = ['09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00']
 
 export default function Booking() {
   const { t } = useTranslation()
   const [selectedDate, setSelectedDate] = useState('')
   const [selectedTime, setSelectedTime] = useState('')
+  const [bookedSlots, setBookedSlots] = useState<string[]>([])
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -16,13 +18,59 @@ export default function Booking() {
   })
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
 
+  // Fetch booked slots for selected date
+  useEffect(() => {
+    async function fetchBookedSlots() {
+      if (!selectedDate) {
+        setBookedSlots([])
+        return
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from('bookings')
+          .select('booking_time')
+          .eq('booking_date', selectedDate)
+          .in('status', ['pending', 'confirmed'])
+
+        if (!error && data) {
+          setBookedSlots(data.map((b) => b.booking_time))
+        }
+      } catch (err) {
+        console.error('Error fetching booked slots:', err)
+      }
+    }
+
+    fetchBookedSlots()
+    // Clear selected time when date changes
+    setSelectedTime('')
+  }, [selectedDate])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setStatus('submitting')
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    setStatus('success')
+    try {
+      const { error } = await supabase.from('bookings').insert({
+        client_name: formData.name,
+        client_email: formData.email,
+        company: formData.company || null,
+        description: formData.description,
+        booking_date: selectedDate,
+        booking_time: selectedTime,
+        status: 'pending',
+      })
+
+      if (error) {
+        console.error('Error creating booking:', error)
+        setStatus('error')
+      } else {
+        setStatus('success')
+      }
+    } catch (err) {
+      console.error('Error:', err)
+      setStatus('error')
+    }
   }
 
   if (status === 'success') {
@@ -83,21 +131,33 @@ export default function Booking() {
                   {t('booking.selectTime')}
                 </h3>
                 <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
-                  {availableTimes.map((time) => (
-                    <button
-                      key={time}
-                      type="button"
-                      onClick={() => setSelectedTime(time)}
-                      className={`py-3 rounded-xl transition-colors ${
-                        selectedTime === time
-                          ? 'bg-primary-500 text-white'
-                          : 'bg-white/5 text-surface-300 hover:bg-white/10'
-                      }`}
-                    >
-                      {time}
-                    </button>
-                  ))}
+                  {allTimeSlots.map((time) => {
+                    const isBooked = bookedSlots.includes(time)
+                    const isSelected = selectedTime === time
+                    return (
+                      <button
+                        key={time}
+                        type="button"
+                        onClick={() => !isBooked && setSelectedTime(time)}
+                        disabled={isBooked}
+                        className={`py-3 rounded-xl transition-colors ${
+                          isBooked
+                            ? 'bg-surface-700/50 text-surface-500 cursor-not-allowed line-through'
+                            : isSelected
+                            ? 'bg-primary-500 text-white'
+                            : 'bg-white/5 text-surface-300 hover:bg-white/10'
+                        }`}
+                      >
+                        {time}
+                      </button>
+                    )
+                  })}
                 </div>
+                {bookedSlots.length > 0 && (
+                  <p className="text-xs text-surface-500 mt-3">
+                    {t('booking.bookedSlotsNote') || 'Crossed out times are already booked'}
+                  </p>
+                )}
               </div>
 
               {/* Contact Details */}

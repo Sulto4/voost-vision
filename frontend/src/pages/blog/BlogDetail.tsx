@@ -1,136 +1,88 @@
 import { useParams, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { useState, useEffect } from 'react'
 import { ArrowLeft, Calendar, User, Facebook, Twitter, Linkedin } from 'lucide-react'
-
-const articles = [
-  {
-    id: '1',
-    slug: 'tendinte-web-2026',
-    title_ro: 'Tendinte in Dezvoltare Web pentru 2026',
-    title_en: 'Web Development Trends for 2026',
-    content_ro: `
-      <p>Anul 2026 aduce noi provocari si oportunitati in lumea dezvoltarii web. Vom explora cele mai importante tendinte care vor modela industria.</p>
-
-      <h2>1. AI-Powered Development</h2>
-      <p>Inteligenta artificiala devine un partener esential in procesul de dezvoltare. De la generarea de cod la optimizarea performantei, AI transforma modul in care construim aplicatii web.</p>
-
-      <h2>2. Edge Computing</h2>
-      <p>Procesarea datelor mai aproape de utilizator devine standardul. Edge functions si CDN-uri inteligente permit experiente ultra-rapide.</p>
-
-      <h2>3. Web Components Maturity</h2>
-      <p>Componentele web native devin din ce in ce mai populare, oferind interoperabilitate intre framework-uri.</p>
-
-      <h2>Concluzie</h2>
-      <p>Adaptarea la aceste tendinte va fi esentiala pentru succesul proiectelor web in 2026 si dincolo.</p>
-    `,
-    content_en: `
-      <p>2026 brings new challenges and opportunities in the web development world. We'll explore the most important trends shaping the industry.</p>
-
-      <h2>1. AI-Powered Development</h2>
-      <p>Artificial intelligence becomes an essential partner in the development process. From code generation to performance optimization, AI is transforming how we build web applications.</p>
-
-      <h2>2. Edge Computing</h2>
-      <p>Processing data closer to the user becomes the standard. Edge functions and intelligent CDNs enable ultra-fast experiences.</p>
-
-      <h2>3. Web Components Maturity</h2>
-      <p>Native web components are becoming increasingly popular, offering interoperability between frameworks.</p>
-
-      <h2>Conclusion</h2>
-      <p>Adapting to these trends will be essential for web project success in 2026 and beyond.</p>
-    `,
-    cover_image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&auto=format&fit=crop&q=80',
-    category: 'Development',
-    published_at: '2026-01-15',
-    author: 'Voost Vision',
-  },
-  {
-    id: '2',
-    slug: 'importanta-ux-design',
-    title_ro: 'Importanta UX Design pentru Conversii',
-    title_en: 'The Importance of UX Design for Conversions',
-    content_ro: `
-      <p>Un design bun nu inseamna doar estetica. UX-ul impacteaza direct rata de conversie a site-ului tau.</p>
-
-      <h2>Ce este UX Design?</h2>
-      <p>User Experience Design se concentreaza pe crearea de experiente digitale intuitive si placute pentru utilizatori.</p>
-
-      <h2>Impactul asupra conversiilor</h2>
-      <p>Studiile arata ca un UX imbunatatit poate creste conversiile cu pana la 400%. Investitia in design se intoarce mereu.</p>
-
-      <h2>Principii esentiale</h2>
-      <ul>
-        <li>Simplitate si claritate</li>
-        <li>Consistenta vizuala</li>
-        <li>Feedback instant</li>
-        <li>Accesibilitate</li>
-      </ul>
-    `,
-    content_en: `
-      <p>Good design isn't just about aesthetics. UX directly impacts your website's conversion rate.</p>
-
-      <h2>What is UX Design?</h2>
-      <p>User Experience Design focuses on creating intuitive and enjoyable digital experiences for users.</p>
-
-      <h2>Impact on conversions</h2>
-      <p>Studies show that improved UX can increase conversions by up to 400%. Investment in design always pays off.</p>
-
-      <h2>Essential principles</h2>
-      <ul>
-        <li>Simplicity and clarity</li>
-        <li>Visual consistency</li>
-        <li>Instant feedback</li>
-        <li>Accessibility</li>
-      </ul>
-    `,
-    cover_image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=1200&auto=format&fit=crop&q=80',
-    category: 'Design',
-    published_at: '2026-01-10',
-    author: 'Voost Vision',
-  },
-  {
-    id: '3',
-    slug: 'mobile-first-strategy',
-    title_ro: 'Strategia Mobile-First in 2026',
-    title_en: 'Mobile-First Strategy in 2026',
-    content_ro: `
-      <p>Cu peste 60% din traficul web venind de pe dispozitive mobile, abordarea mobile-first nu mai este optionala.</p>
-
-      <h2>De ce Mobile-First?</h2>
-      <p>Designul mobile-first te forteaza sa prioritizezi continutul si functionalitatea esentiala.</p>
-
-      <h2>Beneficii cheie</h2>
-      <p>Performance imbunatatit, UX mai bun pe toate dispozitivele si SEO optimizat sunt doar cateva dintre avantaje.</p>
-
-      <h2>Cum sa implementezi</h2>
-      <p>Incepe cu designul pentru ecrane mici si adauga progresiv complexitate pentru ecrane mai mari.</p>
-    `,
-    content_en: `
-      <p>With over 60% of web traffic coming from mobile devices, the mobile-first approach is no longer optional.</p>
-
-      <h2>Why Mobile-First?</h2>
-      <p>Mobile-first design forces you to prioritize essential content and functionality.</p>
-
-      <h2>Key benefits</h2>
-      <p>Improved performance, better UX across all devices, and optimized SEO are just some of the advantages.</p>
-
-      <h2>How to implement</h2>
-      <p>Start with design for small screens and progressively add complexity for larger screens.</p>
-    `,
-    cover_image: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&auto=format&fit=crop&q=80',
-    category: 'Strategy',
-    published_at: '2026-01-05',
-    author: 'Voost Vision',
-  },
-]
+import { supabase, Article } from '@/lib/supabase'
 
 export default function BlogDetail() {
   const { slug } = useParams()
   const { i18n } = useTranslation()
   const currentLang = i18n.language
+  const [article, setArticle] = useState<Article | null>(null)
+  const [relatedArticles, setRelatedArticles] = useState<Article[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  const article = articles.find((a) => a.slug === slug)
+  useEffect(() => {
+    async function fetchArticle() {
+      if (!slug) {
+        setError('No article slug provided')
+        setLoading(false)
+        return
+      }
 
-  if (!article) {
+      try {
+        const { data, error: fetchError } = await supabase
+          .from('articles')
+          .select('*')
+          .eq('slug', slug)
+          .eq('published', true)
+          .single()
+
+        if (fetchError) {
+          console.error('Error fetching article:', fetchError)
+          setError('Article not found')
+        } else {
+          setArticle(data)
+        }
+      } catch (err) {
+        console.error('Error:', err)
+        setError('An error occurred')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchArticle()
+  }, [slug])
+
+  // Fetch related articles based on category
+  useEffect(() => {
+    async function fetchRelatedArticles() {
+      if (!article) return
+
+      try {
+        const { data, error: fetchError } = await supabase
+          .from('articles')
+          .select('*')
+          .eq('published', true)
+          .eq('category', article.category)
+          .neq('slug', article.slug)
+          .order('published_at', { ascending: false })
+          .limit(3)
+
+        if (!fetchError && data) {
+          setRelatedArticles(data)
+        }
+      } catch (err) {
+        console.error('Error fetching related articles:', err)
+      }
+    }
+
+    fetchRelatedArticles()
+  }, [article])
+
+  if (loading) {
+    return (
+      <div className="pt-16 md:pt-20">
+        <section className="section min-h-[60vh] flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
+        </section>
+      </div>
+    )
+  }
+
+  if (error || !article) {
     return (
       <div className="pt-16 md:pt-20">
         <section className="section min-h-[60vh] flex items-center">
@@ -197,6 +149,21 @@ export default function BlogDetail() {
               }}
             />
 
+            {/* Tags */}
+            {article.tags && article.tags.length > 0 && (
+              <div className="mt-8 flex flex-wrap gap-2">
+                {article.tags.map((tag) => (
+                  <Link
+                    key={tag}
+                    to={`/blog?tag=${encodeURIComponent(tag)}`}
+                    className="text-sm px-3 py-1 bg-accent-500/20 text-accent-300 rounded-full hover:bg-accent-500/30 transition-colors"
+                  >
+                    #{tag}
+                  </Link>
+                ))}
+              </div>
+            )}
+
             {/* Share buttons */}
             <div className="mt-12 pt-8 border-t border-white/10">
               <p className="text-surface-400 mb-4">Share this article:</p>
@@ -230,6 +197,47 @@ export default function BlogDetail() {
           </div>
         </div>
       </article>
+
+      {/* Related Articles */}
+      {relatedArticles.length > 0 && (
+        <section className="section pt-0">
+          <div className="container-custom">
+            <h2 className="heading-2 mb-8 text-center">
+              {currentLang === 'en' ? 'Related Articles' : 'Articole similare'}
+            </h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              {relatedArticles.map((relatedArticle) => (
+                <Link
+                  key={relatedArticle.id}
+                  to={`/blog/${relatedArticle.slug}`}
+                  className="glass-card overflow-hidden group"
+                >
+                  <div className="aspect-video overflow-hidden">
+                    <img
+                      src={relatedArticle.cover_image || ''}
+                      alt={currentLang === 'en' ? relatedArticle.title_en : relatedArticle.title_ro}
+                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                  <div className="p-5">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs text-primary-400 font-medium uppercase tracking-wide">
+                        {relatedArticle.category || ''}
+                      </span>
+                      <span className="text-xs text-surface-500">
+                        {relatedArticle.published_at ? new Date(relatedArticle.published_at).toLocaleDateString(currentLang === 'en' ? 'en-US' : 'ro-RO') : ''}
+                      </span>
+                    </div>
+                    <h3 className="text-lg font-semibold line-clamp-2">
+                      {currentLang === 'en' ? relatedArticle.title_en : relatedArticle.title_ro}
+                    </h3>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   )
 }
