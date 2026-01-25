@@ -4,6 +4,7 @@ import { Plus, Edit, Trash2, ArrowLeft, X, Save } from 'lucide-react'
 import { supabase, Article } from '../../lib/supabase'
 import AdminLayout from '../../components/admin/AdminLayout'
 import RichTextEditor from '../../components/ui/RichTextEditor'
+import { useToast } from '../../components/ui/Toast'
 
 interface ArticleFormData {
   slug: string
@@ -45,6 +46,7 @@ export default function AdminBlog() {
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState<string | null>(null)
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
+  const { addToast } = useToast()
 
   useEffect(() => {
     fetchArticles()
@@ -169,6 +171,7 @@ export default function AdminBlog() {
 
         if (error) throw error
         setMessage({ type: 'success', text: 'Article updated successfully!' })
+        addToast('success', 'Article updated successfully!')
       } else {
         const { error } = await supabase
           .from('articles')
@@ -190,6 +193,7 @@ export default function AdminBlog() {
 
         if (error) throw error
         setMessage({ type: 'success', text: 'Article created successfully!' })
+        addToast('success', 'Article created successfully!')
       }
 
       await fetchArticles()
@@ -203,8 +207,10 @@ export default function AdminBlog() {
 
       if (errorObj?.code === '23505' || errorMessage.includes('duplicate') || errorMessage.includes('unique')) {
         setMessage({ type: 'error', text: 'An article with this slug already exists. Please use a different slug.' })
+        addToast('error', 'An article with this slug already exists.')
       } else {
         setMessage({ type: 'error', text: 'Failed to save article. Please try again.' })
+        addToast('error', 'Failed to save article. Please try again.')
       }
     } finally {
       setSaving(false)
@@ -228,9 +234,10 @@ export default function AdminBlog() {
 
       if (error) throw error
       await fetchArticles()
+      addToast('success', 'Article deleted successfully!')
     } catch (error) {
       console.error('Error deleting article:', error)
-      alert('Failed to delete article. Please try again.')
+      addToast('error', 'Failed to delete article. Please try again.')
     } finally {
       setDeleting(null)
     }

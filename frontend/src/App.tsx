@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { Suspense, lazy } from 'react'
 import { ThemeProvider } from '@/hooks/useTheme'
 import { AuthProvider } from '@/hooks/useAuth'
+import { ToastProvider } from '@/components/ui/Toast'
 import Layout from '@/components/layout/Layout'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
 
@@ -33,6 +34,7 @@ function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
+        <ToastProvider>
         <Router>
           <Suspense fallback={<LoadingSpinner fullScreen />}>
             <Routes>
@@ -108,6 +110,7 @@ function App() {
             </Routes>
           </Suspense>
         </Router>
+        </ToastProvider>
       </AuthProvider>
     </ThemeProvider>
   )

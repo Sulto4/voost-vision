@@ -3,11 +3,13 @@ import { ArrowLeft, Mail, Check, Trash2, Loader2 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { supabase, ContactSubmission } from '../../lib/supabase'
 import AdminLayout from '../../components/admin/AdminLayout'
+import { useToast } from '../../components/ui/Toast'
 
 export default function AdminContact() {
   const [messages, setMessages] = useState<ContactSubmission[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const { addToast } = useToast()
 
   useEffect(() => {
     fetchMessages()
@@ -40,8 +42,10 @@ export default function AdminContact() {
 
       if (error) throw error
       setMessages(messages.map(m => m.id === id ? { ...m, read: true } : m))
+      addToast('success', 'Message marked as read')
     } catch (err) {
       console.error('Error marking as read:', err)
+      addToast('error', 'Failed to mark message as read')
     }
   }
 
@@ -56,8 +60,10 @@ export default function AdminContact() {
 
       if (error) throw error
       setMessages(messages.filter(m => m.id !== id))
+      addToast('success', 'Message deleted successfully')
     } catch (err) {
       console.error('Error deleting message:', err)
+      addToast('error', 'Failed to delete message')
     }
   }
 

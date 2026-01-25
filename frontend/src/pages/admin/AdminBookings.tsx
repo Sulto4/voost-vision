@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { ArrowLeft, Check, X, Calendar, Filter } from 'lucide-react'
 import { supabase, Booking } from '@/lib/supabase'
 import AdminLayout from '../../components/admin/AdminLayout'
+import { useToast } from '../../components/ui/Toast'
 
 type DateFilter = 'all' | 'today' | 'this-week'
 
@@ -10,6 +11,7 @@ export default function AdminBookings() {
   const [bookings, setBookings] = useState<Booking[]>([])
   const [loading, setLoading] = useState(true)
   const [dateFilter, setDateFilter] = useState<DateFilter>('all')
+  const { addToast } = useToast()
 
   useEffect(() => {
     fetchBookings()
@@ -60,8 +62,10 @@ export default function AdminBookings() {
 
     if (error) {
       console.error('Error updating booking:', error)
+      addToast('error', 'Failed to update booking status.')
     } else {
       fetchBookings()
+      addToast('success', `Booking ${status === 'confirmed' ? 'confirmed' : 'cancelled'} successfully!`)
     }
   }
 

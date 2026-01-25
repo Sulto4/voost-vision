@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Plus, Edit, Trash2, ArrowLeft, X, Save } from 'lucide-react'
 import { supabase, Project } from '../../lib/supabase'
 import AdminLayout from '../../components/admin/AdminLayout'
+import { useToast } from '../../components/ui/Toast'
 
 interface ProjectFormData {
   title_ro: string
@@ -40,6 +41,7 @@ export default function AdminPortfolio() {
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState<string | null>(null)
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
+  const { addToast } = useToast()
 
   useEffect(() => {
     fetchProjects()
@@ -149,6 +151,7 @@ export default function AdminPortfolio() {
 
         if (error) throw error
         setMessage({ type: 'success', text: 'Project updated successfully!' })
+        addToast('success', 'Project updated successfully!')
       } else {
         // Create new project
         const { error } = await supabase
@@ -168,6 +171,7 @@ export default function AdminPortfolio() {
 
         if (error) throw error
         setMessage({ type: 'success', text: 'Project created successfully!' })
+        addToast('success', 'Project created successfully!')
       }
 
       // Refresh the projects list
@@ -186,8 +190,10 @@ export default function AdminPortfolio() {
 
       if (errorObj?.code === '23505' || errorMessage.includes('duplicate') || errorMessage.includes('unique')) {
         setMessage({ type: 'error', text: 'A project with this title already exists. Please use a different title.' })
+        addToast('error', 'A project with this title already exists.')
       } else {
         setMessage({ type: 'error', text: 'Failed to save project. Please try again.' })
+        addToast('error', 'Failed to save project. Please try again.')
       }
     } finally {
       setSaving(false)
@@ -211,9 +217,10 @@ export default function AdminPortfolio() {
 
       if (error) throw error
       await fetchProjects()
+      addToast('success', 'Project deleted successfully!')
     } catch (error) {
       console.error('Error deleting project:', error)
-      alert('Failed to delete project. Please try again.')
+      addToast('error', 'Failed to delete project. Please try again.')
     } finally {
       setDeleting(null)
     }
