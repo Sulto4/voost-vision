@@ -230,17 +230,18 @@ export default function Contact() {
               ) : (
                 <form onSubmit={handleSubmit} className="glass-card p-8 space-y-6" noValidate>
                   {status === 'error' && (
-                    <div className="p-4 rounded-lg bg-red-500/20 text-red-400 border border-red-500/30 flex items-center gap-3">
-                      <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                    <div role="alert" aria-live="assertive" className="p-4 rounded-lg bg-red-500/20 text-red-400 border border-red-500/30 flex items-center gap-3">
+                      <AlertCircle className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
                       <span>{t('contact.error')}</span>
                     </div>
                   )}
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm font-medium mb-2">{t('contact.name')} <span className="text-red-400">*</span></label>
+                      <label htmlFor="contact-name" className="block text-sm font-medium mb-2">{t('contact.name')} <span className="text-red-400">*</span></label>
                       <div className="relative">
                         <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-surface-500" />
                         <input
+                          id="contact-name"
                           type="text"
                           value={formData.name}
                           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -251,17 +252,18 @@ export default function Contact() {
                         />
                       </div>
                       {touched.name && errors.name && (
-                        <div id="name-error" className="flex items-center gap-1 mt-2 text-red-400 text-sm">
-                          <AlertCircle className="w-4 h-4" />
+                        <div id="name-error" role="alert" aria-live="polite" className="flex items-center gap-1 mt-2 text-red-400 text-sm">
+                          <AlertCircle className="w-4 h-4" aria-hidden="true" />
                           <span>{errors.name}</span>
                         </div>
                       )}
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-2">{t('contact.email')} <span className="text-red-400">*</span></label>
+                      <label htmlFor="contact-email" className="block text-sm font-medium mb-2">{t('contact.email')} <span className="text-red-400">*</span></label>
                       <div className="relative">
                         <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-surface-500" />
                         <input
+                          id="contact-email"
                           type="email"
                           value={formData.email}
                           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -272,16 +274,17 @@ export default function Contact() {
                         />
                       </div>
                       {touched.email && errors.email && (
-                        <div id="email-error" className="flex items-center gap-1 mt-2 text-red-400 text-sm">
-                          <AlertCircle className="w-4 h-4" />
+                        <div id="email-error" role="alert" aria-live="polite" className="flex items-center gap-1 mt-2 text-red-400 text-sm">
+                          <AlertCircle className="w-4 h-4" aria-hidden="true" />
                           <span>{errors.email}</span>
                         </div>
                       )}
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">{t('contact.subject')}</label>
+                    <label htmlFor="contact-subject" className="block text-sm font-medium mb-2">{t('contact.subject')}</label>
                     <input
+                      id="contact-subject"
                       type="text"
                       value={formData.subject}
                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
@@ -289,10 +292,11 @@ export default function Contact() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">{t('contact.message')} <span className="text-red-400">*</span></label>
+                    <label htmlFor="contact-message" className="block text-sm font-medium mb-2">{t('contact.message')} <span className="text-red-400">*</span></label>
                     <div className="relative">
                       <MessageSquare className="absolute left-4 top-4 w-5 h-5 text-surface-500" />
                       <textarea
+                        id="contact-message"
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                         onBlur={() => handleBlur('message')}
@@ -302,8 +306,8 @@ export default function Contact() {
                       />
                     </div>
                     {touched.message && errors.message && (
-                      <div id="message-error" className="flex items-center gap-1 mt-2 text-red-400 text-sm">
-                        <AlertCircle className="w-4 h-4" />
+                      <div id="message-error" role="alert" aria-live="polite" className="flex items-center gap-1 mt-2 text-red-400 text-sm">
+                        <AlertCircle className="w-4 h-4" aria-hidden="true" />
                         <span>{errors.message}</span>
                       </div>
                     )}
@@ -329,8 +333,8 @@ export default function Contact() {
                       </div>
                     )}
                     {(captchaError || errors.captcha) && (
-                      <div className="flex items-center gap-1 text-red-400 text-sm">
-                        <AlertCircle className="w-4 h-4" />
+                      <div id="captcha-error" role="alert" aria-live="polite" className="flex items-center gap-1 text-red-400 text-sm">
+                        <AlertCircle className="w-4 h-4" aria-hidden="true" />
                         <span>{captchaError || errors.captcha}</span>
                       </div>
                     )}

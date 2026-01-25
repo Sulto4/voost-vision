@@ -1,22 +1,48 @@
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { ArrowLeft, Check, X, Calendar } from 'lucide-react'
+import { ArrowLeft, Check, X, Calendar, Filter } from 'lucide-react'
 import { supabase, Booking } from '@/lib/supabase'
 import AdminLayout from '../../components/admin/AdminLayout'
+
+type DateFilter = 'all' | 'today' | 'this-week'
 
 export default function AdminBookings() {
   const [bookings, setBookings] = useState<Booking[]>([])
   const [loading, setLoading] = useState(true)
+  const [dateFilter, setDateFilter] = useState<DateFilter>('all')
 
   useEffect(() => {
     fetchBookings()
-  }, [])
+  }, [dateFilter])
 
   async function fetchBookings() {
-    const { data, error } = await supabase
+    const today = new Date().toISOString().split('T')[0]
+
+    // Calculate start of week (Monday)
+    const now = new Date()
+    const dayOfWeek = now.getDay()
+    const diffToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1
+    const monday = new Date(now)
+    monday.setDate(now.getDate() - diffToMonday)
+    const startOfWeek = monday.toISOString().split('T')[0]
+
+    // Calculate end of week (Sunday)
+    const sunday = new Date(monday)
+    sunday.setDate(monday.getDate() + 6)
+    const endOfWeek = sunday.toISOString().split('T')[0]
+
+    let query = supabase
       .from('bookings')
       .select('*')
       .order('booking_date', { ascending: false })
+
+    if (dateFilter === 'today') {
+      query = query.eq('booking_date', today)
+    } else if (dateFilter === 'this-week') {
+      query = query.gte('booking_date', startOfWeek).lte('booking_date', endOfWeek)
+    }
+
+    const { data, error } = await query
 
     if (error) {
       console.error('Error fetching bookings:', error)
@@ -50,6 +76,46 @@ export default function AdminBookings() {
           Back to Dashboard
         </Link>
         <h1 className="heading-2">Booking Management</h1>
+      </div>
+
+      {/* Date Filters */}
+      <div className="mb-6 flex items-center gap-4">
+        <div className="flex items-center gap-2 text-surface-400">
+          <Filter className="w-4 h-4" />
+          <span className="text-sm">Filter:</span>
+        </div>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setDateFilter('all')}
+            className={`px-4 py-2 text-sm rounded-lg transition-colors ${
+              dateFilter === 'all'
+                ? 'bg-primary-500 text-white'
+                : 'bg-white/5 text-surface-300 hover:bg-white/10'
+            }`}
+          >
+            All
+          </button>
+          <button
+            onClick={() => setDateFilter('today')}
+            className={`px-4 py-2 text-sm rounded-lg transition-colors ${
+              dateFilter === 'today'
+                ? 'bg-primary-500 text-white'
+                : 'bg-white/5 text-surface-300 hover:bg-white/10'
+            }`}
+          >
+            Today
+          </button>
+          <button
+            onClick={() => setDateFilter('this-week')}
+            className={`px-4 py-2 text-sm rounded-lg transition-colors ${
+              dateFilter === 'this-week'
+                ? 'bg-primary-500 text-white'
+                : 'bg-white/5 text-surface-300 hover:bg-white/10'
+            }`}
+          >
+            This Week
+          </button>
+        </div>
       </div>
 
         <div className="glass-card overflow-hidden">
