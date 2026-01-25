@@ -212,6 +212,14 @@ export default function AdminPortfolio() {
     }
 
     setDeleting(project.id)
+
+    // Store original state for rollback (optimistic update)
+    const originalProjects = [...projects]
+    const projectIndex = projects.findIndex(p => p.id === project.id)
+
+    // Optimistically remove the project from UI immediately
+    setProjects(projects.filter(p => p.id !== project.id))
+
     try {
       const { error } = await supabase
         .from('projects')
@@ -219,11 +227,12 @@ export default function AdminPortfolio() {
         .eq('id', project.id)
 
       if (error) throw error
-      await fetchProjects()
       addToast('success', 'Project deleted successfully!')
     } catch (error) {
       console.error('Error deleting project:', error)
-      addToast('error', 'Failed to delete project. Please try again.')
+      // Rollback: restore the project to its original position
+      setProjects(originalProjects)
+      addToast('error', 'Failed to delete project. The item has been restored.')
     } finally {
       setDeleting(null)
     }
@@ -261,21 +270,30 @@ export default function AdminPortfolio() {
     }
 
     setBulkDeleting(true)
+
+    // Store original state for rollback (optimistic update)
+    const originalProjects = [...projects]
+    const originalSelection = new Set(selectedProjects)
+
+    // Optimistically remove selected projects from UI immediately
+    setProjects(projects.filter(p => !selectedProjects.has(p.id)))
+    setSelectedProjects(new Set())
+
     try {
       const { error } = await supabase
         .from('projects')
         .delete()
-        .in('id', Array.from(selectedProjects))
+        .in('id', Array.from(originalSelection))
 
       if (error) throw error
 
-      // Clear selection and refresh
-      setSelectedProjects(new Set())
-      await fetchProjects()
       addToast('success', `${count} project${count > 1 ? 's' : ''} deleted successfully!`)
     } catch (error) {
       console.error('Error bulk deleting projects:', error)
-      addToast('error', 'Failed to delete projects. Please try again.')
+      // Rollback: restore projects and selection
+      setProjects(originalProjects)
+      setSelectedProjects(originalSelection)
+      addToast('error', 'Failed to delete projects. Items have been restored.')
     } finally {
       setBulkDeleting(false)
     }
