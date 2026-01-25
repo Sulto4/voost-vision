@@ -108,7 +108,10 @@
     "book": "Confirm booking",
     "booking": "Booking...",
     "success": "Booking confirmed! You will receive a confirmation email.",
-    "error": "An error occurred. Please try again."
+    "error": "An error occurred. Please try again.",
+    "rateLimitError": "Too many booking attempts. Please wait before trying again.",
+    "waitMessage": "Please wait",
+    "bookAnother": "Book another consultation"
   },
   "common": {
     "loading": "Loading...",

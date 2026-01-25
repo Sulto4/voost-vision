@@ -108,7 +108,10 @@
     "book": "Confirmă programarea",
     "booking": "Se programează...",
     "success": "Programare confirmată! Vei primi un email de confirmare.",
-    "error": "A apărut o eroare. Te rugăm să încerci din nou."
+    "error": "A apărut o eroare. Te rugăm să încerci din nou.",
+    "rateLimitError": "Prea multe încercări de programare. Te rugăm să aștepți înainte de a încerca din nou.",
+    "waitMessage": "Te rugăm să aștepți",
+    "bookAnother": "Programează altă consultație"
   },
   "common": {
     "loading": "Se încarcă...",

@@ -1,7 +1,12 @@
 import { useTranslation } from 'react-i18next'
-import { useState, useEffect } from 'react'
-import { Calendar, Clock, User, Mail, Building, FileText, Check } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { Calendar, Clock, User, Mail, Building, FileText, Check, AlertCircle } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+
+// Rate limiting configuration
+const RATE_LIMIT_MAX_SUBMISSIONS = 3 // Maximum submissions in the time window
+const RATE_LIMIT_WINDOW_MS = 300000 // 5 minute window (300000ms)
+const RATE_LIMIT_COOLDOWN_MS = 10000 // 10 second cooldown after hitting limit
 
 const allTimeSlots = ['09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00']
 
@@ -16,7 +21,59 @@ export default function Booking() {
     company: '',
     description: '',
   })
-  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error' | 'rate_limited'>('idle')
+
+  // Rate limiting state
+  const submissionTimestamps = useRef<number[]>([])
+  const [rateLimitCooldown, setRateLimitCooldown] = useState<number>(0)
+  const cooldownIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  // Check if rate limited
+  const checkRateLimit = (): boolean => {
+    const now = Date.now()
+    // Filter out timestamps older than the window
+    submissionTimestamps.current = submissionTimestamps.current.filter(
+      (ts) => now - ts < RATE_LIMIT_WINDOW_MS
+    )
+    // Check if we've exceeded the max submissions
+    if (submissionTimestamps.current.length >= RATE_LIMIT_MAX_SUBMISSIONS) {
+      return true // Rate limited
+    }
+    return false
+  }
+
+  // Start cooldown timer
+  const startCooldown = () => {
+    setRateLimitCooldown(Math.ceil(RATE_LIMIT_COOLDOWN_MS / 1000))
+    setStatus('rate_limited')
+
+    if (cooldownIntervalRef.current) {
+      clearInterval(cooldownIntervalRef.current)
+    }
+
+    cooldownIntervalRef.current = setInterval(() => {
+      setRateLimitCooldown((prev) => {
+        if (prev <= 1) {
+          if (cooldownIntervalRef.current) {
+            clearInterval(cooldownIntervalRef.current)
+            cooldownIntervalRef.current = null
+          }
+          setStatus('idle')
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+  }
+
+  // Cleanup interval on unmount
+  useEffect(() => {
+    return () => {
+      if (cooldownIntervalRef.current) {
+        clearInterval(cooldownIntervalRef.current)
+      }
+    }
+  }, [])
 
   // Fetch booked slots for selected date
   useEffect(() => {
@@ -48,9 +105,19 @@ export default function Booking() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    // Check rate limit before processing
+    if (checkRateLimit()) {
+      startCooldown()
+      return
+    }
+
     setStatus('submitting')
 
     try {
+      // Record this submission timestamp
+      submissionTimestamps.current.push(Date.now())
+
       const { error } = await supabase.from('bookings').insert({
         client_name: formData.name,
         client_email: formData.email,
@@ -73,6 +140,13 @@ export default function Booking() {
     }
   }
 
+  const handleBookAnother = () => {
+    setStatus('idle')
+    setSelectedDate('')
+    setSelectedTime('')
+    setFormData({ name: '', email: '', company: '', description: '' })
+  }
+
   if (status === 'success') {
     return (
       <div className="pt-16 md:pt-20">
@@ -83,9 +157,15 @@ export default function Booking() {
                 <Check className="w-10 h-10 text-green-400" />
               </div>
               <h2 className="heading-3 mb-4">{t('booking.success')}</h2>
-              <p className="text-surface-400">
+              <p className="text-surface-400 mb-6">
                 {selectedDate} at {selectedTime}
               </p>
+              <button
+                onClick={handleBookAnother}
+                className="btn-secondary"
+              >
+                {t('booking.bookAnother')}
+              </button>
             </div>
           </div>
         </section>
@@ -220,12 +300,36 @@ export default function Booking() {
                 </div>
               </div>
 
+              {/* Rate Limit Alert */}
+              {status === 'rate_limited' && (
+                <div className="flex items-start gap-3 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl">
+                  <AlertCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-amber-200">
+                      {t('booking.rateLimitError')} ({rateLimitCooldown}s)
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Error Alert */}
+              {status === 'error' && (
+                <div className="flex items-start gap-3 p-4 bg-red-500/10 border border-red-500/30 rounded-xl">
+                  <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+                  <p className="text-red-200">{t('booking.error')}</p>
+                </div>
+              )}
+
               <button
                 type="submit"
-                disabled={status === 'submitting' || !selectedDate || !selectedTime}
+                disabled={status === 'submitting' || status === 'rate_limited' || !selectedDate || !selectedTime}
                 className="btn-primary w-full text-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {status === 'submitting' ? t('booking.booking') : t('booking.book')}
+                {status === 'submitting'
+                  ? t('booking.booking')
+                  : status === 'rate_limited'
+                  ? `${t('booking.waitMessage')} (${rateLimitCooldown}s)`
+                  : t('booking.book')}
               </button>
             </form>
           </div>
