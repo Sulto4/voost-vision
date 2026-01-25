@@ -1,10 +1,16 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowRight, Check, Globe, Zap, Shield, Smartphone } from 'lucide-react'
+import Breadcrumbs from '@/components/ui/Breadcrumbs'
 
 export default function WebDevelopment() {
   const { t, i18n } = useTranslation()
   const currentLang = i18n.language
+
+  const breadcrumbItems = [
+    { label: currentLang === 'en' ? 'Services' : 'Servicii', href: currentLang === 'en' ? '/services' : '/servicii' },
+    { label: t('services.webDev') }
+  ]
 
   const features = [
     'Landing pages & corporate sites',
@@ -21,6 +27,8 @@ export default function WebDevelopment() {
     <div className="pt-16 md:pt-20">
       <section className="section">
         <div className="container-custom">
+          <Breadcrumbs items={breadcrumbItems} className="mb-8" />
+
           <div className="max-w-3xl mx-auto text-center mb-16">
             <div className="w-20 h-20 rounded-2xl bg-primary-500/20 flex items-center justify-center mx-auto mb-8">
               <Globe className="w-10 h-10 text-primary-400" />

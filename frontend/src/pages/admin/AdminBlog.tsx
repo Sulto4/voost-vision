@@ -5,6 +5,7 @@ import { supabase, Article } from '../../lib/supabase'
 import AdminLayout from '../../components/admin/AdminLayout'
 import RichTextEditor from '../../components/ui/RichTextEditor'
 import { useToast } from '../../components/ui/Toast'
+import ImageUpload from '../../components/admin/ImageUpload'
 
 interface ArticleFormData {
   slug: string
@@ -435,7 +436,7 @@ export default function AdminBlog() {
                 />
               </div>
 
-              <div className="grid md:grid-cols-3 gap-4">
+              <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-2">Category</label>
                   <select
@@ -461,17 +462,16 @@ export default function AdminBlog() {
                     required
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Cover Image URL</label>
-                  <input
-                    type="url"
-                    value={formData.cover_image}
-                    onChange={(e) => setFormData({ ...formData, cover_image: e.target.value })}
-                    className="input"
-                    placeholder="https://..."
-                  />
-                </div>
               </div>
+
+              <ImageUpload
+                value={formData.cover_image}
+                onChange={(url) => setFormData({ ...formData, cover_image: url })}
+                bucket="images"
+                folder="articles"
+                label="Cover Image"
+                placeholder="Upload image or enter URL"
+              />
 
               <div>
                 <label className="block text-sm font-medium mb-2">Tags</label>

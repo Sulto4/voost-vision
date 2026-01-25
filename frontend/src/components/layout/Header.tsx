@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { useState, useMemo } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Menu, X, Sun, Moon, Globe } from 'lucide-react'
 import { useTheme } from '@/hooks/useTheme'
@@ -10,21 +10,43 @@ export default function Header() {
   const { t, i18n } = useTranslation()
   const { theme, toggleTheme } = useTheme()
   const location = useLocation()
+  const navigate = useNavigate()
 
   const currentLang = i18n.language
 
+  // Detect if current URL has a language prefix
+  const urlPrefix = useMemo(() => {
+    if (location.pathname.startsWith('/en/') || location.pathname === '/en') return '/en'
+    if (location.pathname.startsWith('/ro/') || location.pathname === '/ro') return '/ro'
+    return ''
+  }, [location.pathname])
+
+  // Helper to add prefix to paths
+  const withPrefix = (path: string) => {
+    if (!urlPrefix) return path
+    if (path === '/') return urlPrefix
+    return `${urlPrefix}${path}`
+  }
+
   const navLinks = [
-    { href: '/', label: t('nav.home') },
-    { href: currentLang === 'en' ? '/about' : '/despre', label: t('nav.about') },
-    { href: currentLang === 'en' ? '/services' : '/servicii', label: t('nav.services') },
-    { href: currentLang === 'en' ? '/portfolio' : '/portofoliu', label: t('nav.portfolio') },
-    { href: '/blog', label: t('nav.blog') },
-    { href: '/contact', label: t('nav.contact') },
+    { href: withPrefix('/'), label: t('nav.home') },
+    { href: withPrefix(currentLang === 'en' ? '/about' : '/despre'), label: t('nav.about') },
+    { href: withPrefix(currentLang === 'en' ? '/services' : '/servicii'), label: t('nav.services') },
+    { href: withPrefix(currentLang === 'en' ? '/portfolio' : '/portofoliu'), label: t('nav.portfolio') },
+    { href: withPrefix('/blog'), label: t('nav.blog') },
+    { href: withPrefix('/contact'), label: t('nav.contact') },
   ]
 
   const changeLanguage = (lang: string) => {
     i18n.changeLanguage(lang)
     setIsLangMenuOpen(false)
+
+    // If we're on a prefixed URL, navigate to the equivalent in the new language
+    if (urlPrefix) {
+      const pathWithoutPrefix = location.pathname.replace(/^\/(en|ro)/, '') || '/'
+      const newPrefix = lang === 'en' ? '/en' : '/ro'
+      navigate(pathWithoutPrefix === '/' ? newPrefix : `${newPrefix}${pathWithoutPrefix}`)
+    }
   }
 
   const isActive = (href: string) => {
@@ -108,7 +130,7 @@ export default function Header() {
 
             {/* CTA Button */}
             <Link
-              to={currentLang === 'en' ? '/booking' : '/programare'}
+              to={withPrefix(currentLang === 'en' ? '/booking' : '/programare')}
               className="btn-primary text-sm"
             >
               {t('nav.bookCall')}
@@ -168,7 +190,7 @@ export default function Header() {
               </button>
             </div>
             <Link
-              to={currentLang === 'en' ? '/booking' : '/programare'}
+              to={withPrefix(currentLang === 'en' ? '/booking' : '/programare')}
               onClick={() => setIsMenuOpen(false)}
               className="btn-primary w-full text-center"
             >

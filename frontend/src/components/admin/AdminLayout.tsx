@@ -8,7 +8,7 @@ interface AdminLayoutProps {
 }
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
-  const { user, loading, signOut } = useAuth()
+  const { user, loading, isAdmin, signOut } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -17,7 +17,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     if (!loading && !user) {
       navigate('/admin', { replace: true })
     }
-  }, [user, loading, navigate])
+    // Redirect if authenticated but not an admin
+    if (!loading && user && !isAdmin) {
+      navigate('/admin?error=unauthorized', { replace: true })
+    }
+  }, [user, loading, isAdmin, navigate])
 
   const handleLogout = async () => {
     try {
@@ -52,8 +56,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     )
   }
 
-  // Don't render content if not authenticated
-  if (!user) {
+  // Don't render content if not authenticated or not admin
+  if (!user || !isAdmin) {
     return null
   }
 

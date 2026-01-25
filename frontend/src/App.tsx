@@ -1,8 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { Suspense, lazy } from 'react'
+import { Suspense, lazy, useEffect } from 'react'
 import { ThemeProvider } from '@/hooks/useTheme'
 import { AuthProvider } from '@/hooks/useAuth'
 import { ToastProvider } from '@/components/ui/Toast'
+import { initGA, usePageTracking } from '@/hooks/useAnalytics'
 import Layout from '@/components/layout/Layout'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
 
@@ -30,12 +31,24 @@ const AdminBlog = lazy(() => import('@/pages/admin/AdminBlog'))
 const AdminBookings = lazy(() => import('@/pages/admin/AdminBookings'))
 const AdminContact = lazy(() => import('@/pages/admin/AdminContact'))
 
+// Component to handle analytics tracking inside Router
+function AnalyticsTracker({ children }: { children: React.ReactNode }) {
+  usePageTracking()
+  return <>{children}</>
+}
+
 function App() {
+  // Initialize Google Analytics on mount
+  useEffect(() => {
+    initGA()
+  }, [])
+
   return (
     <ThemeProvider>
       <AuthProvider>
         <ToastProvider>
         <Router>
+          <AnalyticsTracker>
           <Suspense fallback={<LoadingSpinner fullScreen />}>
             <Routes>
             {/* Public routes with layout */}
@@ -109,6 +122,7 @@ function App() {
             <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
+          </AnalyticsTracker>
         </Router>
         </ToastProvider>
       </AuthProvider>

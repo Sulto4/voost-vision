@@ -118,7 +118,7 @@ export default function Booking() {
       // Record this submission timestamp
       submissionTimestamps.current.push(Date.now())
 
-      const { error } = await supabase.from('bookings').insert({
+      const { data: bookingData, error } = await supabase.from('bookings').insert({
         client_name: formData.name,
         client_email: formData.email,
         company: formData.company || null,
@@ -126,12 +126,37 @@ export default function Booking() {
         booking_date: selectedDate,
         booking_time: selectedTime,
         status: 'pending',
-      })
+      }).select().single()
 
       if (error) {
         console.error('Error creating booking:', error)
         setStatus('error')
       } else {
+        // Send confirmation email via Edge Function
+        try {
+          const emailResponse = await supabase.functions.invoke('send-booking-confirmation', {
+            body: {
+              id: bookingData.id,
+              client_name: formData.name,
+              client_email: formData.email,
+              company: formData.company || null,
+              description: formData.description,
+              booking_date: selectedDate,
+              booking_time: selectedTime,
+            }
+          })
+
+          if (emailResponse.error) {
+            console.warn('Email notification failed:', emailResponse.error)
+            // Don't fail the booking - just log the error
+          } else {
+            console.log('Confirmation email sent:', emailResponse.data)
+          }
+        } catch (emailErr) {
+          console.warn('Email notification error:', emailErr)
+          // Don't fail the booking - email is secondary
+        }
+
         setStatus('success')
       }
     } catch (err) {

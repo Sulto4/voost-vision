@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { ArrowLeft, ExternalLink, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { supabase, Project } from '@/lib/supabase'
+import Breadcrumbs from '@/components/ui/Breadcrumbs'
 
 export default function PortfolioDetail() {
   const { id } = useParams()
@@ -97,17 +98,16 @@ export default function PortfolioDetail() {
 
   const defaultImage = 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&auto=format&fit=crop&q=80'
 
+  const breadcrumbItems = [
+    { label: currentLang === 'en' ? 'Portfolio' : 'Portofoliu', href: currentLang === 'en' ? '/portfolio' : '/portofoliu' },
+    { label: currentLang === 'en' ? project.title_en : project.title_ro }
+  ]
+
   return (
     <div className="pt-16 md:pt-20">
       <section className="section">
         <div className="container-custom">
-          <Link
-            to={currentLang === 'en' ? '/portfolio' : '/portofoliu'}
-            className="inline-flex items-center text-surface-400 hover:text-white transition-colors mb-8"
-          >
-            <ArrowLeft className="w-5 h-5 mr-2" />
-            Back to Portfolio
-          </Link>
+          <Breadcrumbs items={breadcrumbItems} className="mb-8" />
 
           <div className="grid lg:grid-cols-3 gap-12">
             <div className="lg:col-span-2">

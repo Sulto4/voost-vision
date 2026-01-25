@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Lock, Mail, Eye, EyeOff } from 'lucide-react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { Lock, Mail, Eye, EyeOff, AlertTriangle } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import { supabase } from '../../lib/supabase'
 
@@ -12,14 +12,22 @@ export default function AdminLogin() {
   const [googleLoading, setGoogleLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
-  const { user, signInWithGoogle } = useAuth()
+  const [searchParams] = useSearchParams()
+  const { user, isAdmin, signInWithGoogle, signOut } = useAuth()
 
-  // Redirect if already logged in
+  // Check for unauthorized error from redirect
   useEffect(() => {
-    if (user) {
+    if (searchParams.get('error') === 'unauthorized') {
+      setError('Access denied. You do not have admin privileges.')
+    }
+  }, [searchParams])
+
+  // Redirect if already logged in AND is admin
+  useEffect(() => {
+    if (user && isAdmin) {
       navigate('/admin/dashboard')
     }
-  }, [user, navigate])
+  }, [user, isAdmin, navigate])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -28,7 +36,7 @@ export default function AdminLogin() {
 
     try {
       // Sign in with Supabase auth
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
       })
@@ -39,6 +47,14 @@ export default function AdminLogin() {
         } else {
           setError(error.message)
         }
+        return
+      }
+
+      // Check if user has admin privileges (using the same logic as useAuth)
+      const ADMIN_EMAILS = ['admin@voostvision.ro', 'contact@voostvision.ro']
+      if (data.user && !ADMIN_EMAILS.includes(data.user.email || '')) {
+        setError('Access denied. You do not have admin privileges.')
+        await signOut()
         return
       }
 

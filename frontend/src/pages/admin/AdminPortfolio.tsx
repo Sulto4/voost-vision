@@ -4,6 +4,7 @@ import { Plus, Edit, Trash2, ArrowLeft, X, Save } from 'lucide-react'
 import { supabase, Project } from '../../lib/supabase'
 import AdminLayout from '../../components/admin/AdminLayout'
 import { useToast } from '../../components/ui/Toast'
+import ImageUpload from '../../components/admin/ImageUpload'
 
 interface ProjectFormData {
   title_ro: string
@@ -376,31 +377,28 @@ export default function AdminPortfolio() {
                 </div>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-2">Category</label>
-                  <select
-                    value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="input"
-                  >
-                    <option value="web">Web Development</option>
-                    <option value="app">Web Application</option>
-                    <option value="mobile">Mobile App</option>
-                    <option value="design">Design</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Thumbnail URL</label>
-                  <input
-                    type="url"
-                    value={formData.thumbnail_url}
-                    onChange={(e) => setFormData({ ...formData, thumbnail_url: e.target.value })}
-                    className="input"
-                    placeholder="https://..."
-                  />
-                </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Category</label>
+                <select
+                  value={formData.category}
+                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                  className="input"
+                >
+                  <option value="web">Web Development</option>
+                  <option value="app">Web Application</option>
+                  <option value="mobile">Mobile App</option>
+                  <option value="design">Design</option>
+                </select>
               </div>
+
+              <ImageUpload
+                value={formData.thumbnail_url}
+                onChange={(url) => setFormData({ ...formData, thumbnail_url: url })}
+                bucket="images"
+                folder="projects"
+                label="Thumbnail Image"
+                placeholder="Upload image or enter URL"
+              />
 
               <div>
                 <label className="block text-sm font-medium mb-2">Tech Stack</label>

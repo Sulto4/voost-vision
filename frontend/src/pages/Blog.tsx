@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router-dom'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { supabase, Article } from '@/lib/supabase'
-import { ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { ChevronLeft, ChevronRight, X, Search } from 'lucide-react'
 import ErrorMessage from '@/components/ui/ErrorMessage'
 
 const ARTICLES_PER_PAGE = 6
@@ -32,6 +32,8 @@ export default function Blog() {
   const currentPage = isNaN(parsedPage) || parsedPage < 1 ? 1 : parsedPage
   const currentCategory = searchParams.get('category') || 'all'
   const currentTag = searchParams.get('tag') || ''
+  const searchQuery = searchParams.get('q') || ''
+  const [searchInput, setSearchInput] = useState(searchQuery)
   const totalPages = Math.ceil(totalCount / ARTICLES_PER_PAGE)
 
   const fetchArticles = useCallback(async () => {
@@ -55,6 +57,10 @@ export default function Blog() {
 
       if (currentTag) {
         countQuery = countQuery.contains('tags', [currentTag])
+      }
+
+      if (searchQuery) {
+        countQuery = countQuery.or(`title_en.ilike.%${searchQuery}%,title_ro.ilike.%${searchQuery}%,excerpt_en.ilike.%${searchQuery}%,excerpt_ro.ilike.%${searchQuery}%`)
       }
 
       const { count, error: countError } = await countQuery
@@ -88,6 +94,10 @@ export default function Blog() {
         articlesQuery = articlesQuery.contains('tags', [currentTag])
       }
 
+      if (searchQuery) {
+        articlesQuery = articlesQuery.or(`title_en.ilike.%${searchQuery}%,title_ro.ilike.%${searchQuery}%,excerpt_en.ilike.%${searchQuery}%,excerpt_ro.ilike.%${searchQuery}%`)
+      }
+
       const { data, error: fetchError } = await articlesQuery.range(from, to)
 
       if (fetchError) {
@@ -116,7 +126,7 @@ export default function Blog() {
     } finally {
       setLoading(false)
     }
-  }, [currentPage, currentCategory, currentTag])
+  }, [currentPage, currentCategory, currentTag, searchQuery])
 
   useEffect(() => {
     fetchArticles()
@@ -158,6 +168,36 @@ export default function Blog() {
     if (currentCategory !== 'all') {
       params.category = currentCategory
     }
+    if (searchQuery) {
+      params.q = searchQuery
+    }
+    setSearchParams(params)
+  }
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    const params: Record<string, string> = { page: '1' }
+    if (currentCategory !== 'all') {
+      params.category = currentCategory
+    }
+    if (currentTag) {
+      params.tag = currentTag
+    }
+    if (searchInput.trim()) {
+      params.q = searchInput.trim()
+    }
+    setSearchParams(params)
+  }
+
+  const clearSearch = () => {
+    setSearchInput('')
+    const params: Record<string, string> = { page: '1' }
+    if (currentCategory !== 'all') {
+      params.category = currentCategory
+    }
+    if (currentTag) {
+      params.tag = currentTag
+    }
     setSearchParams(params)
   }
 
@@ -173,6 +213,48 @@ export default function Blog() {
               {t('blogPreview.subtitle')}
             </p>
           </div>
+
+          {/* Search Bar */}
+          <form onSubmit={handleSearch} className="max-w-md mx-auto mb-8">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-surface-400" />
+              <input
+                type="text"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                placeholder={currentLang === 'en' ? 'Search articles...' : 'Caută articole...'}
+                className="w-full pl-12 pr-12 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-surface-400 focus:outline-none focus:border-primary-500 transition-colors"
+              />
+              {searchInput && (
+                <button
+                  type="button"
+                  onClick={clearSearch}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-surface-400 hover:text-white transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              )}
+            </div>
+          </form>
+
+          {/* Active Search Indicator */}
+          {searchQuery && (
+            <div className="flex justify-center items-center gap-2 mb-4">
+              <span className="text-surface-400 text-sm">
+                {currentLang === 'en' ? 'Search results for:' : 'Rezultate pentru:'}
+              </span>
+              <span className="inline-flex items-center gap-1 px-3 py-1 bg-primary-500/20 text-primary-300 rounded-full text-sm">
+                "{searchQuery}"
+                <button
+                  onClick={clearSearch}
+                  className="ml-1 hover:text-white transition-colors"
+                  aria-label="Clear search"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </span>
+            </div>
+          )}
 
           {/* Category Filter */}
           <div className="flex flex-wrap justify-center gap-3 mb-8">

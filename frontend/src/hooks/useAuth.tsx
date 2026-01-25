@@ -6,9 +6,18 @@ interface AuthContextType {
   user: User | null
   session: Session | null
   loading: boolean
+  isAdmin: boolean
   signInWithGoogle: () => Promise<void>
   signOut: () => Promise<void>
 }
+
+// Admin emails list - in production, this should be stored in the database
+// or managed via Supabase custom claims
+const ADMIN_EMAILS = [
+  'admin@voostvision.ro',
+  'contact@voostvision.ro',
+  // Add more admin emails as needed
+]
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
@@ -16,6 +25,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
+
+  // Check if current user has admin privileges
+  const isAdmin = user?.email ? ADMIN_EMAILS.includes(user.email) : false
 
   useEffect(() => {
     // Get initial session
@@ -59,7 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, signInWithGoogle, signOut }}>
+    <AuthContext.Provider value={{ user, session, loading, isAdmin, signInWithGoogle, signOut }}>
       {children}
     </AuthContext.Provider>
   )

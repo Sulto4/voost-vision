@@ -224,6 +224,28 @@ export default function Contact() {
         return
       }
 
+      // Send admin notification email via Edge Function
+      try {
+        const notificationResponse = await supabase.functions.invoke('send-contact-notification', {
+          body: {
+            name: formData.name.trim(),
+            email: formData.email.trim(),
+            subject: formData.subject.trim() || null,
+            message: formData.message.trim(),
+          }
+        })
+
+        if (notificationResponse.error) {
+          console.warn('Admin notification failed:', notificationResponse.error)
+          // Don't fail the submission - just log the error
+        } else {
+          console.log('Admin notification sent:', notificationResponse.data)
+        }
+      } catch (notifyErr) {
+        console.warn('Admin notification error:', notifyErr)
+        // Don't fail the submission - notification is secondary
+      }
+
       // Record successful submission for rate limiting
       submissionTimestamps.current.push(Date.now())
 

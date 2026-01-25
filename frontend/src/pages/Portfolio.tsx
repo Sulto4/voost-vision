@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useState, useEffect, useCallback } from 'react'
 import { supabase, Project } from '@/lib/supabase'
-import { X, ChevronLeft, ChevronRight } from 'lucide-react'
+import { X, ChevronLeft, ChevronRight, ArrowUpDown } from 'lucide-react'
 import ErrorMessage from '@/components/ui/ErrorMessage'
 
 const categories = [
@@ -13,12 +13,19 @@ const categories = [
   { id: 'design', label_ro: 'Design', label_en: 'Design' },
 ]
 
+const sortOptions = [
+  { id: 'newest', label_ro: 'Cele mai noi', label_en: 'Newest' },
+  { id: 'oldest', label_ro: 'Cele mai vechi', label_en: 'Oldest' },
+]
+
 export default function Portfolio() {
   const { t, i18n } = useTranslation()
   const currentLang = i18n.language
   const [searchParams, setSearchParams] = useSearchParams()
   const filterFromUrl = searchParams.get('filter') || 'all'
+  const sortFromUrl = searchParams.get('sort') || 'newest'
   const [filter, setFilterState] = useState(filterFromUrl)
+  const [sort, setSortState] = useState(sortFromUrl)
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -30,17 +37,26 @@ export default function Portfolio() {
   // Sync filter state with URL
   const setFilter = (newFilter: string) => {
     setFilterState(newFilter)
-    if (newFilter === 'all') {
-      setSearchParams({})
-    } else {
-      setSearchParams({ filter: newFilter })
-    }
+    const params: Record<string, string> = {}
+    if (newFilter !== 'all') params.filter = newFilter
+    if (sort !== 'newest') params.sort = sort
+    setSearchParams(params)
+  }
+
+  // Sync sort state with URL
+  const setSort = (newSort: string) => {
+    setSortState(newSort)
+    const params: Record<string, string> = {}
+    if (filter !== 'all') params.filter = filter
+    if (newSort !== 'newest') params.sort = newSort
+    setSearchParams(params)
   }
 
   // Sync from URL on mount/change
   useEffect(() => {
     setFilterState(filterFromUrl)
-  }, [filterFromUrl])
+    setSortState(sortFromUrl)
+  }, [filterFromUrl, sortFromUrl])
 
   const fetchProjects = useCallback(async () => {
     setLoading(true)
@@ -52,7 +68,7 @@ export default function Portfolio() {
         .from('projects')
         .select('*')
         .eq('published', true)
-        .order('created_at', { ascending: false })
+        .order('created_at', { ascending: sort === 'oldest' })
 
       if (fetchError) {
         // Check if it's a network error
@@ -78,7 +94,7 @@ export default function Portfolio() {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [sort])
 
   useEffect(() => {
     fetchProjects()
@@ -135,21 +151,37 @@ export default function Portfolio() {
             </p>
           </div>
 
-          {/* Filter */}
-          <div className="flex flex-wrap justify-center gap-4 mb-12">
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setFilter(cat.id)}
-                className={`px-6 py-2 rounded-full transition-colors ${
-                  filter === cat.id
-                    ? 'bg-primary-500 text-white'
-                    : 'bg-white/5 text-surface-300 hover:bg-white/10'
-                }`}
+          {/* Filter and Sort */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-12">
+            <div className="flex flex-wrap justify-center gap-4">
+              {categories.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setFilter(cat.id)}
+                  className={`px-6 py-2 rounded-full transition-colors ${
+                    filter === cat.id
+                      ? 'bg-primary-500 text-white'
+                      : 'bg-white/5 text-surface-300 hover:bg-white/10'
+                  }`}
+                >
+                  {currentLang === 'en' ? cat.label_en : cat.label_ro}
+                </button>
+              ))}
+            </div>
+            <div className="flex items-center gap-2">
+              <ArrowUpDown className="w-4 h-4 text-surface-400" />
+              <select
+                value={sort}
+                onChange={(e) => setSort(e.target.value)}
+                className="bg-white/5 border border-white/10 text-surface-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
-                {currentLang === 'en' ? cat.label_en : cat.label_ro}
-              </button>
-            ))}
+                {sortOptions.map((option) => (
+                  <option key={option.id} value={option.id} className="bg-surface-900">
+                    {currentLang === 'en' ? option.label_en : option.label_ro}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           {/* Projects Grid */}
