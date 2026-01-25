@@ -244,7 +244,8 @@ export default function AdminPortfolio() {
           ) : projects.length === 0 ? (
             <div className="p-8 text-center text-surface-400">No projects yet. Click "Add Project" to create one.</div>
           ) : (
-            <table className="w-full">
+            <div className="overflow-x-auto">
+            <table className="w-full min-w-[600px]">
               <thead>
                 <tr className="border-b border-white/10">
                   <th className="text-left py-4 px-6 text-surface-400 font-medium">Title</th>
@@ -276,6 +277,7 @@ export default function AdminPortfolio() {
                         <button
                           onClick={() => openEditModal(project)}
                           className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+                          aria-label={`Edit ${project.title_en}`}
                         >
                           <Edit className="w-4 h-4" />
                         </button>
@@ -283,6 +285,7 @@ export default function AdminPortfolio() {
                           onClick={() => handleDelete(project)}
                           disabled={deleting === project.id}
                           className="p-2 rounded-lg hover:bg-red-500/20 text-red-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          aria-label={`Delete ${project.title_en}`}
                         >
                           <Trash2 className={`w-4 h-4 ${deleting === project.id ? 'animate-pulse' : ''}`} />
                         </button>
@@ -292,6 +295,7 @@ export default function AdminPortfolio() {
                 ))}
               </tbody>
             </table>
+            </div>
           )}
         </div>
 

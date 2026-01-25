@@ -58,7 +58,8 @@ export default function AdminBookings() {
               <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-500"></div>
             </div>
           ) : (
-            <table className="w-full">
+            <div className="overflow-x-auto">
+            <table className="w-full min-w-[700px]">
               <thead>
                 <tr className="border-b border-white/10">
                   <th className="text-left py-4 px-6 text-surface-400 font-medium">Client</th>
@@ -97,12 +98,14 @@ export default function AdminBookings() {
                             <button
                               onClick={() => updateBookingStatus(booking.id, 'confirmed')}
                               className="p-2 rounded-lg bg-green-500/20 text-green-400 hover:bg-green-500/30 transition-colors"
+                              aria-label={`Confirm booking for ${booking.client_name}`}
                             >
                               <Check className="w-4 h-4" />
                             </button>
                             <button
                               onClick={() => updateBookingStatus(booking.id, 'cancelled')}
                               className="p-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors"
+                              aria-label={`Cancel booking for ${booking.client_name}`}
                             >
                               <X className="w-4 h-4" />
                             </button>
@@ -114,6 +117,7 @@ export default function AdminBookings() {
                 ))}
               </tbody>
             </table>
+            </div>
           )}
         </div>
     </AdminLayout>

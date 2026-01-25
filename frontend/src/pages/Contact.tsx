@@ -178,7 +178,7 @@ export default function Contact() {
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-12">
+          <div className="grid lg:grid-cols-3 gap-6 lg:gap-12">
             {/* Contact Info */}
             <div className="lg:col-span-1 space-y-6">
               <div className="glass-card p-6">

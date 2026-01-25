@@ -31,7 +31,7 @@ const emptyFormData: ArticleFormData = {
   category: 'Development',
   tags: [],
   author: 'Voost Vision',
-  published: true
+  published: false
 }
 
 export default function AdminBlog() {
@@ -269,7 +269,8 @@ export default function AdminBlog() {
           ) : articles.length === 0 ? (
             <div className="p-8 text-center text-surface-400">No articles yet. Click "New Article" to create one.</div>
           ) : (
-            <table className="w-full">
+            <div className="overflow-x-auto">
+            <table className="w-full min-w-[700px]">
               <thead>
                 <tr className="border-b border-white/10">
                   <th className="text-left py-4 px-6 text-surface-400 font-medium">Title</th>
@@ -305,6 +306,7 @@ export default function AdminBlog() {
                         <button
                           onClick={() => openEditModal(article)}
                           className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+                          aria-label={`Edit ${article.title_en}`}
                         >
                           <Edit className="w-4 h-4" />
                         </button>
@@ -312,6 +314,7 @@ export default function AdminBlog() {
                           onClick={() => handleDelete(article)}
                           disabled={deleting === article.id}
                           className="p-2 rounded-lg hover:bg-red-500/20 text-red-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          aria-label={`Delete ${article.title_en}`}
                         >
                           <Trash2 className={`w-4 h-4 ${deleting === article.id ? 'animate-pulse' : ''}`} />
                         </button>
@@ -321,6 +324,7 @@ export default function AdminBlog() {
                 ))}
               </tbody>
             </table>
+            </div>
           )}
         </div>
 
