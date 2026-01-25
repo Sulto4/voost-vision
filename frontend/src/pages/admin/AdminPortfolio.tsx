@@ -163,9 +163,18 @@ export default function AdminPortfolio() {
       setTimeout(() => {
         closeModal()
       }, 1500)
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error saving project:', error)
-      setMessage({ type: 'error', text: 'Failed to save project. Please try again.' })
+
+      // Check for duplicate entry error (Postgres unique constraint violation)
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      const errorObj = error as { code?: string; message?: string }
+
+      if (errorObj?.code === '23505' || errorMessage.includes('duplicate') || errorMessage.includes('unique')) {
+        setMessage({ type: 'error', text: 'A project with this title already exists. Please use a different title.' })
+      } else {
+        setMessage({ type: 'error', text: 'Failed to save project. Please try again.' })
+      }
     } finally {
       setSaving(false)
     }

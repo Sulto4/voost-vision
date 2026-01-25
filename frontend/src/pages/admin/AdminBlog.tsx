@@ -179,9 +179,18 @@ export default function AdminBlog() {
 
       await fetchArticles()
       setTimeout(() => closeModal(), 1500)
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error saving article:', error)
-      setMessage({ type: 'error', text: 'Failed to save article. Please try again.' })
+
+      // Check for duplicate slug error (Postgres unique constraint violation)
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      const errorObj = error as { code?: string; message?: string }
+
+      if (errorObj?.code === '23505' || errorMessage.includes('duplicate') || errorMessage.includes('unique')) {
+        setMessage({ type: 'error', text: 'An article with this slug already exists. Please use a different slug.' })
+      } else {
+        setMessage({ type: 'error', text: 'Failed to save article. Please try again.' })
+      }
     } finally {
       setSaving(false)
     }

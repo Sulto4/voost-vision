@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Mail, Phone, MapPin, Send, Check, User, MessageSquare, AlertCircle, ShieldCheck } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import Turnstile from '../components/ui/Turnstile'
@@ -25,6 +25,21 @@ export default function Contact() {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
   const [captchaToken, setCaptchaToken] = useState<string | null>(null)
   const [captchaError, setCaptchaError] = useState<string | null>(null)
+
+  // Warn user about unsaved data on page refresh/close
+  useEffect(() => {
+    const hasUnsavedData = formData.name || formData.email || formData.subject || formData.message
+
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasUnsavedData && status !== 'success') {
+        e.preventDefault()
+        e.returnValue = ''
+      }
+    }
+
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+  }, [formData, status])
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -214,6 +229,12 @@ export default function Contact() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="glass-card p-8 space-y-6" noValidate>
+                  {status === 'error' && (
+                    <div className="p-4 rounded-lg bg-red-500/20 text-red-400 border border-red-500/30 flex items-center gap-3">
+                      <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                      <span>{t('contact.error')}</span>
+                    </div>
+                  )}
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium mb-2">{t('contact.name')} <span className="text-red-400">*</span></label>
