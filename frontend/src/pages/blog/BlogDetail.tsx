@@ -1,6 +1,7 @@
 import { useParams, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useState, useEffect } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { ArrowLeft, Calendar, User, Facebook, Twitter, Linkedin } from 'lucide-react'
 import { supabase, Article } from '@/lib/supabase'
 
@@ -101,8 +102,70 @@ export default function BlogDetail() {
   const shareUrl = encodeURIComponent(window.location.href)
   const shareTitle = encodeURIComponent(currentLang === 'en' ? article.title_en : article.title_ro)
 
+  // SEO data
+  const title = currentLang === 'en' ? article.title_en : article.title_ro
+  const description = currentLang === 'en' ? article.excerpt_en : article.excerpt_ro
+  const canonicalUrl = `https://voostvision.ro/blog/${article.slug}`
+  const publishedDate = article.published_at ? new Date(article.published_at).toISOString() : new Date().toISOString()
+
+  // Article structured data (JSON-LD)
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": title,
+    "description": description,
+    "image": article.cover_image,
+    "author": {
+      "@type": "Person",
+      "name": article.author || "Voost Vision"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Voost Vision",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://voostvision.ro/logo.png"
+      }
+    },
+    "datePublished": publishedDate,
+    "dateModified": publishedDate,
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": canonicalUrl
+    }
+  }
+
   return (
     <div className="pt-16 md:pt-20">
+      <Helmet>
+        <title>{title} | Voost Vision</title>
+        <meta name="description" content={description || ''} />
+        <link rel="canonical" href={canonicalUrl} />
+
+        {/* Open Graph */}
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description || ''} />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:image" content={article.cover_image || ''} />
+        <meta property="article:published_time" content={publishedDate} />
+        <meta property="article:author" content={article.author || 'Voost Vision'} />
+        {article.tags?.map(tag => (
+          <meta key={tag} property="article:tag" content={tag} />
+        ))}
+
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description || ''} />
+        <meta name="twitter:image" content={article.cover_image || ''} />
+
+        {/* Structured Data */}
+        <script type="application/ld+json">
+          {JSON.stringify(articleSchema)}
+        </script>
+      </Helmet>
+
       <article className="section">
         <div className="container-custom">
           <div className="max-w-3xl mx-auto">
@@ -139,6 +202,7 @@ export default function BlogDetail() {
             <img
               src={article.cover_image}
               alt={currentLang === 'en' ? article.title_en : article.title_ro}
+              loading="lazy"
               className="w-full rounded-2xl mb-12"
             />
 
@@ -216,6 +280,7 @@ export default function BlogDetail() {
                     <img
                       src={relatedArticle.cover_image || ''}
                       alt={currentLang === 'en' ? relatedArticle.title_en : relatedArticle.title_ro}
+                      loading="lazy"
                       className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                     />
                   </div>

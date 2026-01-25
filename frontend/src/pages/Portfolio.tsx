@@ -189,6 +189,7 @@ export default function Portfolio() {
                     <img
                       src={project.thumbnail_url || ''}
                       alt={currentLang === 'en' ? project.title_en : project.title_ro}
+                      loading="lazy"
                       className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">

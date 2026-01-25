@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Plus, Edit, Trash2, ArrowLeft, X, Save } from 'lucide-react'
 import { supabase, Article } from '../../lib/supabase'
 import AdminLayout from '../../components/admin/AdminLayout'
+import RichTextEditor from '../../components/ui/RichTextEditor'
 
 interface ArticleFormData {
   slug: string
@@ -411,23 +412,19 @@ export default function AdminBlog() {
 
               <div>
                 <label className="block text-sm font-medium mb-2">Content (Romanian)</label>
-                <textarea
-                  value={formData.content_ro}
-                  onChange={(e) => setFormData({ ...formData, content_ro: e.target.value })}
-                  className="input min-h-[150px]"
+                <RichTextEditor
+                  content={formData.content_ro}
+                  onChange={(content) => setFormData({ ...formData, content_ro: content })}
                   placeholder="Continutul articolului..."
-                  required
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium mb-2">Content (English)</label>
-                <textarea
-                  value={formData.content_en}
-                  onChange={(e) => setFormData({ ...formData, content_en: e.target.value })}
-                  className="input min-h-[150px]"
+                <RichTextEditor
+                  content={formData.content_en}
+                  onChange={(content) => setFormData({ ...formData, content_en: content })}
                   placeholder="Article content..."
-                  required
                 />
               </div>
 

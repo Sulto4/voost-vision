@@ -257,6 +257,7 @@ export default function Blog() {
                     <img
                       src={article.cover_image || ''}
                       alt={currentLang === 'en' ? article.title_en : article.title_ro}
+                      loading="lazy"
                       className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                     />
                   </div>

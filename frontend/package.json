@@ -11,14 +11,19 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",
+    "@tiptap/extension-image": "^3.17.1",
+    "@tiptap/extension-link": "^3.17.1",
+    "@tiptap/react": "^3.17.1",
+    "@tiptap/starter-kit": "^3.17.1",
+    "clsx": "^2.1.0",
+    "date-fns": "^3.0.0",
     "i18next": "^23.7.0",
+    "lucide-react": "^0.303.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-helmet-async": "^2.0.5",
     "react-i18next": "^14.0.0",
     "react-router-dom": "^6.21.0",
-    "lucide-react": "^0.303.0",
-    "date-fns": "^3.0.0",
-    "clsx": "^2.1.0",
     "tailwind-merge": "^2.2.0"
   },
   "devDependencies": {

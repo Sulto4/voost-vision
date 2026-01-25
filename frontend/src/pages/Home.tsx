@@ -4,6 +4,7 @@ import { ArrowRight, Code, Smartphone, Palette, Globe, ChevronLeft, ChevronRight
 import { useState, useEffect, useCallback } from 'react'
 import { supabase, Project, Article } from '@/lib/supabase'
 import ErrorMessage from '@/components/ui/ErrorMessage'
+import ResponsiveImage from '@/components/ui/ResponsiveImage'
 
 // Sample testimonials
 const testimonials = [
@@ -274,9 +275,10 @@ export default function Home() {
                   className="glass-card overflow-hidden group"
                 >
                   <div className="aspect-video overflow-hidden">
-                    <img
+                    <ResponsiveImage
                       src={project.thumbnail_url || 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&auto=format&fit=crop&q=60'}
                       alt={currentLang === 'en' ? project.title_en : project.title_ro}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                     />
                   </div>
@@ -338,6 +340,7 @@ export default function Home() {
                   <img
                     src={testimonials[currentTestimonial].avatar}
                     alt={testimonials[currentTestimonial].name}
+                    loading="lazy"
                     className="w-14 h-14 rounded-full object-cover"
                   />
                   <div className="text-left">
@@ -414,9 +417,10 @@ export default function Home() {
                   className="glass-card overflow-hidden group"
                 >
                   <div className="aspect-video overflow-hidden">
-                    <img
+                    <ResponsiveImage
                       src={article.cover_image || 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&auto=format&fit=crop&q=60'}
                       alt={currentLang === 'en' ? article.title_en : article.title_ro}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                     />
                   </div>

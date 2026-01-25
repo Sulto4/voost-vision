@@ -114,6 +114,7 @@ export default function PortfolioDetail() {
               <img
                 src={project.thumbnail_url || defaultImage}
                 alt={currentLang === 'en' ? project.title_en : project.title_ro}
+                loading="lazy"
                 className="w-full rounded-2xl mb-8 cursor-pointer hover:opacity-90 transition-opacity"
                 onClick={() => openLightbox(0)}
               />
@@ -125,6 +126,7 @@ export default function PortfolioDetail() {
                       key={idx}
                       src={img}
                       alt=""
+                      loading="lazy"
                       className="w-full rounded-xl cursor-pointer hover:opacity-90 transition-opacity"
                       onClick={() => openLightbox(idx + 1)}
                     />
