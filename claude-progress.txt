@@ -1,29 +1,43 @@
 # Voost Vision - Development Progress
 
-## Session: January 25, 2026 (Continued - Context Window 8)
+## Session: January 25, 2026 (Context Window 9)
 
 ### Summary
-Implementing rate limiting for contact and booking forms.
+Verified and implemented navigation and data features for admin panel.
 
 ### Completed Features This Session
-- **Feature #66**: Rate limiting on contact form (PASSED - IMPLEMENTED)
-  - Added rate limiting (3 submissions per 5-minute window)
-  - Added 10-second cooldown with countdown after hitting limit
-  - Shows amber alert with "Too many submissions" message
-  - Button shows "Please wait (Xs)" during cooldown
-  - Translations added for EN/RO
-  - Tested: 3 successful submissions, 4th triggered rate limit, cooldown allowed retry
+- **Feature #87**: Cancel button on forms returns to list (PASSED - VERIFIED)
+  - Tested Cancel button on Portfolio "Add Project" modal
+  - Tested Cancel button on Portfolio "Edit Project" modal
+  - Both correctly close modal and return to project list
 
-- **Feature #67**: Booking form has rate limiting (PASSED - IMPLEMENTED)
-  - Same rate limiting logic (3 submissions per 5-minute window)
-  - Same 10-second cooldown with countdown
-  - Shows amber alert with "Too many booking attempts" message
-  - Added "Book another consultation" button to success screen
-  - Tested: 3 successful bookings, 4th triggered rate limit, cooldown expired and form re-enabled
+- **Feature #88**: After successful save, redirect to list (PASSED - VERIFIED)
+  - Created test project "TEST_PROJECT_12345"
+  - Verified modal closes after save
+  - Verified new project appears in list
+  - Cleaned up test data
+
+- **Feature #100**: Featured projects on home match database (PASSED - VERIFIED)
+  - Verified 4 featured projects show on home page
+  - Unchecked "Brand Identity Design" featured flag
+  - Confirmed it disappeared from home page
+  - Restored featured flag
+
+- **Feature #101**: Latest blog posts on home are newest (PASSED - FIXED & VERIFIED)
+  - Created test article "TEST_NEWEST_ARTICLE_12345"
+  - Found bug: articles with null published_at were showing first
+  - Fixed Home.tsx to use `nullsFirst: false` in order query
+  - Verified newest article now correctly shows first
+  - Cleaned up test data
 
 ### Current Status
-- **Features Passing**: 214/251 (85.3%)
-- **Features completed this session**: 2 (Features #66, #67)
+- **Features Passing**: 218/251 (86.9%)
+- **Features completed this session**: 4 (Features #87, #88, #100, #101)
+
+### Bug Fix Applied
+- `frontend/src/pages/Home.tsx`: Added `nullsFirst: false` to articles query
+  - Before: Articles with null published_at were sorted first
+  - After: Articles properly sorted by published_at descending, nulls last
 
 ### What's Working
 - Home page with all sections
@@ -32,13 +46,13 @@ Implementing rate limiting for contact and booking forms.
 - Portfolio filter state preserved via URL params
 - Tech stack badges from database
 - Testimonials carousel (hardcoded data)
-- Blog preview fetching latest articles
+- Blog preview fetching latest articles (NOW CORRECTLY SORTED)
 - Blog page with category filtering and pagination
 - Article detail pages with full SEO
 - Dark/Light theme with persistence
 - Language switcher (RO/EN) with persistence
-- **Contact form with validation, CAPTCHA, AND rate limiting**
-- **Booking form with rate limiting**
+- Contact form with validation, CAPTCHA, and rate limiting
+- Booking form with rate limiting
 - Google Maps embed on Contact page
 - Booking page with calendar and time slots
 - Admin dashboard with real statistics
@@ -52,6 +66,10 @@ Implementing rate limiting for contact and booking forms.
 - Image lazy loading on all pages
 - Responsive images with srcset
 - Consistent micro-interactions and transitions
+- **Admin form Cancel buttons work correctly**
+- **Admin form Save redirects to list**
+- **Featured projects sync with database**
+- **Blog preview shows newest articles first**
 
 ### Architecture Notes
 1. **Images**: URL-based (no Supabase Storage upload)
@@ -64,10 +82,10 @@ Implementing rate limiting for contact and booking forms.
 8. **Analytics**: Not implemented
 
 ### Git Commits This Session
-- `96db224` feat(contact): add client-side rate limiting to contact form
-- `36acf9c` feat(booking): add client-side rate limiting to booking form
+- `13fa011` Fix blog articles sorting to show newest first on home page
 
 ### Notes
-- Dev server running on http://localhost:5176
+- Dev server running on http://localhost:5177
 - CAPTCHA using test key for development (always passes)
-- Supabase project: jchwqbzsepoloaomluei
+- Supabase project: guzcduqsleojxmradcmo
+- Admin password updated: VoostAdmin123!
