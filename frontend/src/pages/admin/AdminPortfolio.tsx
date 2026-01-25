@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Plus, Edit, Trash2, ArrowLeft, X, Save } from 'lucide-react'
+import { Plus, Edit, Trash2, ArrowLeft, X, Save, CheckSquare, Square, Trash } from 'lucide-react'
 import { supabase, Project } from '../../lib/supabase'
 import AdminLayout from '../../components/admin/AdminLayout'
 import { useToast } from '../../components/ui/Toast'
@@ -42,6 +42,8 @@ export default function AdminPortfolio() {
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState<string | null>(null)
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
+  const [selectedProjects, setSelectedProjects] = useState<Set<string>>(new Set())
+  const [bulkDeleting, setBulkDeleting] = useState(false)
   const { addToast } = useToast()
 
   useEffect(() => {
@@ -227,6 +229,58 @@ export default function AdminPortfolio() {
     }
   }
 
+  // Bulk selection functions
+  function toggleSelectProject(projectId: string) {
+    setSelectedProjects(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(projectId)) {
+        newSet.delete(projectId)
+      } else {
+        newSet.add(projectId)
+      }
+      return newSet
+    })
+  }
+
+  function toggleSelectAll() {
+    if (selectedProjects.size === projects.length) {
+      // Deselect all
+      setSelectedProjects(new Set())
+    } else {
+      // Select all
+      setSelectedProjects(new Set(projects.map(p => p.id)))
+    }
+  }
+
+  async function handleBulkDelete() {
+    if (selectedProjects.size === 0) return
+
+    const count = selectedProjects.size
+    if (!confirm(`Are you sure you want to delete ${count} project${count > 1 ? 's' : ''}? This action cannot be undone.`)) {
+      return
+    }
+
+    setBulkDeleting(true)
+    try {
+      const { error } = await supabase
+        .from('projects')
+        .delete()
+        .in('id', Array.from(selectedProjects))
+
+      if (error) throw error
+
+      // Clear selection and refresh
+      setSelectedProjects(new Set())
+      await fetchProjects()
+      addToast('success', `${count} project${count > 1 ? 's' : ''} deleted successfully!`)
+    } catch (error) {
+      console.error('Error bulk deleting projects:', error)
+      addToast('error', 'Failed to delete projects. Please try again.')
+    } finally {
+      setBulkDeleting(false)
+    }
+  }
+
   return (
     <AdminLayout>
       <div className="flex items-center justify-between mb-8">
@@ -240,10 +294,22 @@ export default function AdminPortfolio() {
           </Link>
           <h1 className="heading-2">Portfolio Management</h1>
         </div>
-        <button onClick={openCreateModal} className="btn-primary">
-          <Plus className="w-5 h-5 mr-2" />
-          Add Project
-        </button>
+        <div className="flex items-center gap-3">
+          {selectedProjects.size > 0 && (
+            <button
+              onClick={handleBulkDelete}
+              disabled={bulkDeleting}
+              className="btn-secondary bg-red-500/20 hover:bg-red-500/30 text-red-400 border-red-500/30"
+            >
+              <Trash className="w-4 h-4 mr-2" />
+              {bulkDeleting ? 'Deleting...' : `Delete (${selectedProjects.size})`}
+            </button>
+          )}
+          <button onClick={openCreateModal} className="btn-primary">
+            <Plus className="w-5 h-5 mr-2" />
+            Add Project
+          </button>
+        </div>
       </div>
 
         <div className="glass-card overflow-hidden">
@@ -256,6 +322,19 @@ export default function AdminPortfolio() {
             <table className="w-full min-w-[600px]">
               <thead>
                 <tr className="border-b border-white/10">
+                  <th className="text-left py-4 px-6 text-surface-400 font-medium w-12">
+                    <button
+                      onClick={toggleSelectAll}
+                      className="p-1 rounded hover:bg-white/10 transition-colors"
+                      aria-label={selectedProjects.size === projects.length ? "Deselect all" : "Select all"}
+                    >
+                      {selectedProjects.size === projects.length && projects.length > 0 ? (
+                        <CheckSquare className="w-5 h-5 text-primary-400" />
+                      ) : (
+                        <Square className="w-5 h-5" />
+                      )}
+                    </button>
+                  </th>
                   <th className="text-left py-4 px-6 text-surface-400 font-medium">Title</th>
                   <th className="text-left py-4 px-6 text-surface-400 font-medium">Category</th>
                   <th className="text-left py-4 px-6 text-surface-400 font-medium">Status</th>
@@ -264,7 +343,20 @@ export default function AdminPortfolio() {
               </thead>
               <tbody>
                 {projects.map((project) => (
-                  <tr key={project.id} className="border-b border-white/5 last:border-0">
+                  <tr key={project.id} className={`border-b border-white/5 last:border-0 ${selectedProjects.has(project.id) ? 'bg-primary-500/10' : ''}`}>
+                    <td className="py-4 px-6">
+                      <button
+                        onClick={() => toggleSelectProject(project.id)}
+                        className="p-1 rounded hover:bg-white/10 transition-colors"
+                        aria-label={selectedProjects.has(project.id) ? `Deselect ${project.title_en}` : `Select ${project.title_en}`}
+                      >
+                        {selectedProjects.has(project.id) ? (
+                          <CheckSquare className="w-5 h-5 text-primary-400" />
+                        ) : (
+                          <Square className="w-5 h-5" />
+                        )}
+                      </button>
+                    </td>
                     <td className="py-4 px-6 font-medium">{project.title_en}</td>
                     <td className="py-4 px-6">
                       <span className="px-3 py-1 text-xs bg-primary-500/20 text-primary-300 rounded-full capitalize">
