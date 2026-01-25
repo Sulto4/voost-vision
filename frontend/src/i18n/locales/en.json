@@ -111,7 +111,8 @@
     "error": "An error occurred. Please try again.",
     "rateLimitError": "Too many booking attempts. Please wait before trying again.",
     "waitMessage": "Please wait",
-    "bookAnother": "Book another consultation"
+    "bookAnother": "Book another consultation",
+    "bookedSlotsNote": "Crossed out times are already booked"
   },
   "common": {
     "loading": "Loading...",

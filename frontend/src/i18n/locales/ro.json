@@ -111,7 +111,8 @@
     "error": "A apărut o eroare. Te rugăm să încerci din nou.",
     "rateLimitError": "Prea multe încercări de programare. Te rugăm să aștepți înainte de a încerca din nou.",
     "waitMessage": "Te rugăm să aștepți",
-    "bookAnother": "Programează altă consultație"
+    "bookAnother": "Programează altă consultație",
+    "bookedSlotsNote": "Orele tăiate sunt deja rezervate"
   },
   "common": {
     "loading": "Se încarcă...",
