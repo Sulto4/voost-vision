@@ -87,7 +87,11 @@
     "captchaVerified": "Verification successful",
     "captchaRequired": "Please complete the CAPTCHA verification",
     "captchaExpired": "CAPTCHA verification expired. Please try again.",
-    "captchaError": "CAPTCHA loading error. Please refresh the page."
+    "captchaError": "CAPTCHA loading error. Please refresh the page.",
+    "nameRequired": "Name is required",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Invalid email format",
+    "messageRequired": "Message is required"
   },
   "booking": {
     "pageTitle": "Book a Consultation",

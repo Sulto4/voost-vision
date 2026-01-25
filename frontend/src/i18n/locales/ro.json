@@ -1,80 +1,80 @@
 {
   "nav": {
-    "home": "Acasa",
+    "home": "Acasă",
     "about": "Despre noi",
     "services": "Servicii",
     "portfolio": "Portofoliu",
     "blog": "Blog",
     "contact": "Contact",
-    "bookCall": "Programeaza un apel"
+    "bookCall": "Programează un apel"
   },
   "hero": {
-    "title": "Viziune digitala pentru afacerea ta",
-    "subtitle": "Transformam ideile tale in experiente digitale exceptionale. Dezvoltare web, aplicatii mobile si design UI/UX pentru afaceri ambitioase.",
-    "cta": "Incepe un proiect",
+    "title": "Viziune digitală pentru afacerea ta",
+    "subtitle": "Transformăm ideile tale în experiențe digitale excepționale. Dezvoltare web, aplicații mobile și design UI/UX pentru afaceri ambițioase.",
+    "cta": "Începe un proiect",
     "secondaryCta": "Vezi portofoliu"
   },
   "services": {
     "title": "Serviciile noastre",
-    "subtitle": "Solutii complete pentru prezenta ta digitala",
+    "subtitle": "Soluții complete pentru prezența ta digitală",
     "webDev": "Dezvoltare Web",
-    "webDevDesc": "Site-uri web moderne, rapide si responsive. De la landing pages la platforme e-commerce complexe.",
-    "webApps": "Aplicatii Web",
-    "webAppsDesc": "Platforme SaaS, dashboards si aplicatii web personalizate pentru nevoile afacerii tale.",
-    "mobile": "Aplicatii Mobile",
-    "mobileDesc": "Aplicatii iOS si Android native sau cross-platform pentru o experienta mobila de exceptie.",
+    "webDevDesc": "Site-uri web moderne, rapide și responsive. De la landing pages la platforme e-commerce complexe.",
+    "webApps": "Aplicații Web",
+    "webAppsDesc": "Platforme SaaS, dashboards și aplicații web personalizate pentru nevoile afacerii tale.",
+    "mobile": "Aplicații Mobile",
+    "mobileDesc": "Aplicații iOS și Android native sau cross-platform pentru o experiență mobilă de excepție.",
     "design": "Design UI/UX",
-    "designDesc": "Design centrat pe utilizator pentru o experienta memorabila si conversii mai bune.",
-    "learnMore": "Afla mai multe"
+    "designDesc": "Design centrat pe utilizator pentru o experiență memorabilă și conversii mai bune.",
+    "learnMore": "Află mai multe"
   },
   "portfolio": {
     "title": "Proiecte recente",
-    "subtitle": "O selectie din lucrarile noastre pentru clienti din diverse industrii",
+    "subtitle": "O selecție din lucrările noastre pentru clienți din diverse industrii",
     "viewAll": "Vezi toate proiectele",
     "viewProject": "Vezi proiect"
   },
   "testimonials": {
-    "title": "Ce spun clientii nostri",
-    "subtitle": "Feedback-ul clientilor multumiti"
+    "title": "Ce spun clienții noștri",
+    "subtitle": "Feedback-ul clienților mulțumiți"
   },
   "blogPreview": {
     "title": "Din blogul nostru",
-    "subtitle": "Ultimele articole si insights din lumea digitala",
-    "readMore": "Citeste mai mult",
+    "subtitle": "Ultimele articole și insights din lumea digitală",
+    "readMore": "Citește mai mult",
     "viewAll": "Vezi toate articolele"
   },
   "cta": {
-    "title": "Pregatit sa-ti transformi prezenta digitala?",
-    "subtitle": "Programeaza o consultatie gratuita de 30 de minute si hai sa discutam despre proiectul tau.",
-    "button": "Programeaza acum"
+    "title": "Pregătit să-ți transformi prezența digitală?",
+    "subtitle": "Programează o consultație gratuită de 30 de minute și hai să discutăm despre proiectul tău.",
+    "button": "Programează acum"
   },
   "footer": {
-    "tagline": "Viziune digitala pentru afacerea ta. Construim experiente web exceptionale pentru afaceri ambitioase.",
+    "tagline": "Viziune digitală pentru afacerea ta. Construim experiențe web excepționale pentru afaceri ambițioase.",
     "services": "Servicii",
     "quickLinks": "Link-uri rapide",
     "contact": "Contact",
     "rights": "Toate drepturile rezervate.",
-    "privacy": "Politica de confidentialitate",
-    "terms": "Termeni si conditii"
+    "privacy": "Politica de confidențialitate",
+    "terms": "Termeni și condiții"
   },
   "about": {
     "pageTitle": "Despre noi",
-    "pageSubtitle": "Echipa ta de incredere pentru solutii digitale",
-    "story": "Povestea noastra",
-    "storyText": "Voost Vision a luat nastere din pasiunea pentru tehnologie si dorinta de a ajuta afacerile romanesti sa prospere in era digitala. Cu o experienta de peste 5 ani in industrie, am livrat proiecte pentru clienti din diverse domenii.",
-    "mission": "Misiunea noastra",
-    "missionText": "Ne propunem sa oferim solutii digitale de calitate superioara, accesibile pentru afaceri de toate dimensiunile. Credem ca fiecare business merita o prezenta online profesionala.",
+    "pageSubtitle": "Echipa ta de încredere pentru soluții digitale",
+    "story": "Povestea noastră",
+    "storyText": "Voost Vision a luat naștere din pasiunea pentru tehnologie și dorința de a ajuta afacerile românești să prospere în era digitală. Cu o experiență de peste 5 ani în industrie, am livrat proiecte pentru clienți din diverse domenii.",
+    "mission": "Misiunea noastră",
+    "missionText": "Ne propunem să oferim soluții digitale de calitate superioară, accesibile pentru afaceri de toate dimensiunile. Credem că fiecare business merită o prezență online profesională.",
     "whyUs": "De ce noi?",
-    "expertise": "Expertiza tehnica",
-    "expertiseDesc": "Echipa noastra are cunostinte avansate in cele mai noi tehnologii web si mobile.",
-    "quality": "Calitate garantata",
-    "qualityDesc": "Livram proiecte la standardele anului 2026, cu atentie la detalii.",
+    "expertise": "Expertiză tehnică",
+    "expertiseDesc": "Echipa noastră are cunoștințe avansate în cele mai noi tehnologii web și mobile.",
+    "quality": "Calitate garantată",
+    "qualityDesc": "Livrăm proiecte la standardele anului 2026, cu atenție la detalii.",
     "support": "Suport dedicat",
-    "supportDesc": "Suntem alaturi de tine pe tot parcursul proiectului si dupa lansare."
+    "supportDesc": "Suntem alături de tine pe tot parcursul proiectului și după lansare."
   },
   "contact": {
     "pageTitle": "Contact",
-    "pageSubtitle": "Suntem aici sa te ajutam. Trimite-ne un mesaj!",
+    "pageSubtitle": "Suntem aici să te ajutăm. Trimite-ne un mesaj!",
     "name": "Nume",
     "email": "Email",
     "subject": "Subiect",
@@ -82,35 +82,39 @@
     "send": "Trimite mesaj",
     "sending": "Se trimite...",
     "success": "Mesaj trimis cu succes!",
-    "error": "A aparut o eroare. Te rugam sa incerci din nou.",
+    "error": "A apărut o eroare. Te rugăm să încerci din nou.",
     "captcha": "Verificare de securitate",
-    "captchaVerified": "Verificare reusita",
-    "captchaRequired": "Te rugam sa completezi verificarea CAPTCHA",
-    "captchaExpired": "Verificarea CAPTCHA a expirat. Te rugam sa incerci din nou.",
-    "captchaError": "Eroare la incarcarea CAPTCHA. Te rugam sa reimprospatezi pagina."
+    "captchaVerified": "Verificare reușită",
+    "captchaRequired": "Te rugăm să completezi verificarea CAPTCHA",
+    "captchaExpired": "Verificarea CAPTCHA a expirat. Te rugăm să încerci din nou.",
+    "captchaError": "Eroare la încărcarea CAPTCHA. Te rugăm să reîmprospătezi pagina.",
+    "nameRequired": "Numele este obligatoriu",
+    "emailRequired": "Email-ul este obligatoriu",
+    "emailInvalid": "Format email invalid",
+    "messageRequired": "Mesajul este obligatoriu"
   },
   "booking": {
-    "pageTitle": "Programeaza o consultatie",
-    "pageSubtitle": "30 de minute gratuite pentru a discuta despre proiectul tau",
-    "selectDate": "Selecteaza o data",
-    "selectTime": "Selecteaza ora",
+    "pageTitle": "Programează o consultație",
+    "pageSubtitle": "30 de minute gratuite pentru a discuta despre proiectul tău",
+    "selectDate": "Selectează o dată",
+    "selectTime": "Selectează ora",
     "yourDetails": "Detaliile tale",
     "name": "Nume complet",
     "email": "Email",
-    "company": "Companie (optional)",
+    "company": "Companie (opțional)",
     "description": "Descriere proiect",
-    "book": "Confirma programarea",
-    "booking": "Se programeaza...",
-    "success": "Programare confirmata! Vei primi un email de confirmare.",
-    "error": "A aparut o eroare. Te rugam sa incerci din nou."
+    "book": "Confirmă programarea",
+    "booking": "Se programează...",
+    "success": "Programare confirmată! Vei primi un email de confirmare.",
+    "error": "A apărut o eroare. Te rugăm să încerci din nou."
   },
   "common": {
-    "loading": "Se incarca...",
-    "error": "A aparut o eroare",
-    "retry": "Incearca din nou",
+    "loading": "Se încarcă...",
+    "error": "A apărut o eroare",
+    "retry": "Încearcă din nou",
     "networkError": "Nu ne putem conecta la server",
-    "networkErrorDesc": "Verifica conexiunea la internet si incearca din nou.",
-    "somethingWentWrong": "Ceva nu a functionat",
-    "tryAgainLater": "Te rugam sa incerci mai tarziu."
+    "networkErrorDesc": "Verifică conexiunea la internet și încearcă din nou.",
+    "somethingWentWrong": "Ceva nu a funcționat",
+    "tryAgainLater": "Te rugăm să încerci mai târziu."
   }
 }

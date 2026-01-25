@@ -40,9 +40,19 @@ html.light :focus-visible {
 
 /* Component utilities */
 @layer components {
-  /* Glassmorphism card */
+  /* Glassmorphism card - enhanced with visible blur, transparency, and glow */
   .glass-card {
-    @apply bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl;
+    @apply bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl;
+    box-shadow:
+      0 4px 30px rgba(0, 0, 0, 0.1),
+      inset 0 0 20px rgba(255, 255, 255, 0.02);
+  }
+
+  .glass-card:hover {
+    @apply border-white/20;
+    box-shadow:
+      0 8px 32px rgba(99, 102, 241, 0.15),
+      inset 0 0 20px rgba(255, 255, 255, 0.05);
   }
 
   /* Gradient text */
@@ -69,7 +79,7 @@ html.light :focus-visible {
 
   /* Input base */
   .input {
-    @apply w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-surface-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors;
+    @apply w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-surface-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30 transition-all;
   }
 
   /* Container */
@@ -100,6 +110,30 @@ html.light :focus-visible {
 html.light .glass-card {
   background-color: rgba(15, 23, 42, 0.05);
   border-color: rgba(15, 23, 42, 0.1);
+  box-shadow:
+    0 4px 30px rgba(0, 0, 0, 0.05),
+    inset 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+html.light .glass-card:hover {
+  border-color: rgba(15, 23, 42, 0.2);
+  box-shadow:
+    0 8px 32px rgba(99, 102, 241, 0.1),
+    inset 0 0 20px rgba(255, 255, 255, 0.15);
+}
+
+/* Keep glass-card content white in dark sections (main content area) in light mode */
+html.light main .glass-card {
+  color: #ffffff;
+}
+
+html.light main .glass-card h1,
+html.light main .glass-card h2,
+html.light main .glass-card h3,
+html.light main .glass-card h4,
+html.light main .glass-card h5,
+html.light main .glass-card h6 {
+  color: #ffffff;
 }
 
 html.light .btn-secondary {
@@ -139,9 +173,17 @@ html.light .dark-section .btn-outline:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
+/* Dark section input overrides in light mode - keep dark styling for inputs in dark sections */
+html.light .dark-section .input,
+html.light .glass-card .input {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
 html.light .input {
   background-color: rgba(15, 23, 42, 0.05);
-  border-color: rgba(15, 23, 42, 0.1);
+  border-color: rgba(15, 23, 42, 0.2);
   color: #0f172a;
 }
 

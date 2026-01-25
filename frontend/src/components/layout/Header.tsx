@@ -32,7 +32,7 @@ export default function Header() {
   }
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-lg border-b ${theme === 'light' ? 'bg-white/80 border-surface-900/5' : 'bg-surface-900/80 border-white/5'}`}>
+    <header className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b shadow-lg ${theme === 'light' ? 'bg-white/70 border-surface-900/5 shadow-surface-200/20' : 'bg-surface-900/70 border-white/10 shadow-black/20'}`}>
       <div className="container-custom">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
@@ -72,7 +72,7 @@ export default function Header() {
                 <span className="text-sm uppercase">{currentLang}</span>
               </button>
               {isLangMenuOpen && (
-                <div className={`absolute right-0 mt-2 w-32 py-2 rounded-lg shadow-xl border ${theme === 'light' ? 'bg-white border-surface-200' : 'bg-surface-800 border-white/10'}`}>
+                <div className={`absolute right-0 mt-2 w-32 py-2 rounded-xl shadow-2xl border backdrop-blur-xl ${theme === 'light' ? 'bg-white/90 border-surface-200/50' : 'bg-surface-800/90 border-white/10'}`}>
                   <button
                     onClick={() => changeLanguage('ro')}
                     className={`w-full px-4 py-2 text-left text-sm ${theme === 'light' ? 'hover:bg-surface-100' : 'hover:bg-white/10'} ${

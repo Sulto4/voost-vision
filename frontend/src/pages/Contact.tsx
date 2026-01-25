@@ -98,23 +98,23 @@ export default function Contact() {
     const newErrors: FormErrors = { ...errors }
 
     if (field === 'name' && !formData.name.trim()) {
-      newErrors.name = 'Numele este obligatoriu'
+      newErrors.name = t('contact.nameRequired')
     } else if (field === 'name') {
       delete newErrors.name
     }
 
     if (field === 'email') {
       if (!formData.email.trim()) {
-        newErrors.email = 'Email-ul este obligatoriu'
+        newErrors.email = t('contact.emailRequired')
       } else if (!validateEmail(formData.email)) {
-        newErrors.email = 'Format email invalid'
+        newErrors.email = t('contact.emailInvalid')
       } else {
         delete newErrors.email
       }
     }
 
     if (field === 'message' && !formData.message.trim()) {
-      newErrors.message = 'Mesajul este obligatoriu'
+      newErrors.message = t('contact.messageRequired')
     } else if (field === 'message') {
       delete newErrors.message
     }
