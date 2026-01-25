@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Code, Smartphone, Palette, Globe, ChevronLeft, ChevronRight, Quote } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { ArrowRight, Code, Smartphone, Palette, Globe, ChevronLeft, ChevronRight, Quote, Calendar } from 'lucide-react'
+import { useState, useEffect, useCallback } from 'react'
 import { supabase, Project, Article } from '@/lib/supabase'
-import { Calendar } from 'lucide-react'
+import ErrorMessage from '@/components/ui/ErrorMessage'
 
 // Sample testimonials
 const testimonials = [
@@ -52,63 +52,95 @@ export default function Home() {
   const [blogArticles, setBlogArticles] = useState<Article[]>([])
   const [loadingProjects, setLoadingProjects] = useState(true)
   const [loadingArticles, setLoadingArticles] = useState(true)
+  const [projectsError, setProjectsError] = useState<string | null>(null)
+  const [projectsNetworkError, setProjectsNetworkError] = useState(false)
+  const [articlesError, setArticlesError] = useState<string | null>(null)
+  const [articlesNetworkError, setArticlesNetworkError] = useState(false)
 
   const getLocalizedPath = (enPath: string, roPath: string) => {
     return currentLang === 'en' ? enPath : roPath
   }
 
   // Fetch featured projects from database
-  useEffect(() => {
-    async function fetchFeaturedProjects() {
-      try {
-        const { data, error } = await supabase
-          .from('projects')
-          .select('*')
-          .eq('featured', true)
-          .eq('published', true)
-          .order('created_at', { ascending: false })
-          .limit(4)
+  const fetchFeaturedProjects = useCallback(async () => {
+    setLoadingProjects(true)
+    setProjectsError(null)
+    setProjectsNetworkError(false)
 
-        if (error) {
-          console.error('Error fetching projects:', error)
-        } else {
-          setFeaturedProjects(data || [])
-        }
-      } catch (err) {
-        console.error('Error:', err)
-      } finally {
-        setLoadingProjects(false)
+    try {
+      const { data, error } = await supabase
+        .from('projects')
+        .select('*')
+        .eq('featured', true)
+        .eq('published', true)
+        .order('created_at', { ascending: false })
+        .limit(4)
+
+      if (error) {
+        const isNetwork = !navigator.onLine ||
+          error.message?.includes('fetch') ||
+          error.message?.includes('network') ||
+          error.message?.includes('Failed to fetch')
+        setProjectsNetworkError(isNetwork)
+        setProjectsError(error.message)
+        console.error('Error fetching projects:', error.message)
+      } else {
+        setFeaturedProjects(data || [])
       }
+    } catch (err) {
+      const isNetwork = !navigator.onLine ||
+        (err instanceof TypeError && err.message?.includes('fetch'))
+      setProjectsNetworkError(isNetwork)
+      setProjectsError(err instanceof Error ? err.message : 'Unknown error')
+      console.error('Error:', err instanceof Error ? err.message : 'Unknown error')
+    } finally {
+      setLoadingProjects(false)
     }
-
-    fetchFeaturedProjects()
   }, [])
+
+  useEffect(() => {
+    fetchFeaturedProjects()
+  }, [fetchFeaturedProjects])
 
   // Fetch latest blog articles from database
-  useEffect(() => {
-    async function fetchLatestArticles() {
-      try {
-        const { data, error } = await supabase
-          .from('articles')
-          .select('*')
-          .eq('published', true)
-          .order('published_at', { ascending: false })
-          .limit(3)
+  const fetchLatestArticles = useCallback(async () => {
+    setLoadingArticles(true)
+    setArticlesError(null)
+    setArticlesNetworkError(false)
 
-        if (error) {
-          console.error('Error fetching articles:', error)
-        } else {
-          setBlogArticles(data || [])
-        }
-      } catch (err) {
-        console.error('Error:', err)
-      } finally {
-        setLoadingArticles(false)
+    try {
+      const { data, error } = await supabase
+        .from('articles')
+        .select('*')
+        .eq('published', true)
+        .order('published_at', { ascending: false })
+        .limit(3)
+
+      if (error) {
+        const isNetwork = !navigator.onLine ||
+          error.message?.includes('fetch') ||
+          error.message?.includes('network') ||
+          error.message?.includes('Failed to fetch')
+        setArticlesNetworkError(isNetwork)
+        setArticlesError(error.message)
+        console.error('Error fetching articles:', error.message)
+      } else {
+        setBlogArticles(data || [])
       }
+    } catch (err) {
+      const isNetwork = !navigator.onLine ||
+        (err instanceof TypeError && err.message?.includes('fetch'))
+      setArticlesNetworkError(isNetwork)
+      setArticlesError(err instanceof Error ? err.message : 'Unknown error')
+      console.error('Error:', err instanceof Error ? err.message : 'Unknown error')
+    } finally {
+      setLoadingArticles(false)
     }
-
-    fetchLatestArticles()
   }, [])
+
+  useEffect(() => {
+    fetchLatestArticles()
+  }, [fetchLatestArticles])
 
   // Auto-rotate testimonials
   useEffect(() => {
@@ -223,6 +255,12 @@ export default function Home() {
             <div className="flex justify-center">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
             </div>
+          ) : projectsError ? (
+            <ErrorMessage
+              error={projectsError}
+              isNetworkError={projectsNetworkError}
+              onRetry={fetchFeaturedProjects}
+            />
           ) : featuredProjects.length === 0 ? (
             <div className="text-center text-surface-400">
               <p>{t('portfolio.noProjects', 'No projects available yet.')}</p>
@@ -357,6 +395,12 @@ export default function Home() {
             <div className="flex justify-center">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
             </div>
+          ) : articlesError ? (
+            <ErrorMessage
+              error={articlesError}
+              isNetworkError={articlesNetworkError}
+              onRetry={fetchLatestArticles}
+            />
           ) : blogArticles.length === 0 ? (
             <div className="text-center text-surface-400">
               <p>{t('blogPreview.noArticles', 'No articles available yet.')}</p>

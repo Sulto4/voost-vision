@@ -1,8 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { supabase, Article } from '@/lib/supabase'
 import { ChevronLeft, ChevronRight, X } from 'lucide-react'
+import ErrorMessage from '@/components/ui/ErrorMessage'
 
 const ARTICLES_PER_PAGE = 6
 
@@ -24,15 +25,20 @@ export default function Blog() {
   const [articles, setArticles] = useState<Article[]>([])
   const [totalCount, setTotalCount] = useState(0)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [isNetworkError, setIsNetworkError] = useState(false)
 
   const currentPage = parseInt(searchParams.get('page') || '1', 10)
   const currentCategory = searchParams.get('category') || 'all'
   const currentTag = searchParams.get('tag') || ''
   const totalPages = Math.ceil(totalCount / ARTICLES_PER_PAGE)
 
-  useEffect(() => {
-    async function fetchArticles() {
-      setLoading(true)
+  const fetchArticles = useCallback(async () => {
+    setLoading(true)
+    setError(null)
+    setIsNetworkError(false)
+
+    try {
       const from = (currentPage - 1) * ARTICLES_PER_PAGE
       const to = from + ARTICLES_PER_PAGE - 1
 
@@ -50,7 +56,20 @@ export default function Blog() {
         countQuery = countQuery.contains('tags', [currentTag])
       }
 
-      const { count } = await countQuery
+      const { count, error: countError } = await countQuery
+
+      if (countError) {
+        const isNetwork = !navigator.onLine ||
+          countError.message?.includes('fetch') ||
+          countError.message?.includes('network') ||
+          countError.message?.includes('Failed to fetch')
+        setIsNetworkError(isNetwork)
+        setError(countError.message)
+        console.error('Error fetching articles count:', countError.message)
+        setLoading(false)
+        return
+      }
+
       setTotalCount(count || 0)
 
       // Build query for articles
@@ -68,18 +87,39 @@ export default function Blog() {
         articlesQuery = articlesQuery.contains('tags', [currentTag])
       }
 
-      const { data, error } = await articlesQuery.range(from, to)
+      const { data, error: fetchError } = await articlesQuery.range(from, to)
 
-      if (error) {
-        console.error('Error fetching articles:', error)
+      if (fetchError) {
+        const isNetwork = !navigator.onLine ||
+          fetchError.message?.includes('fetch') ||
+          fetchError.message?.includes('network') ||
+          fetchError.message?.includes('Failed to fetch')
+
+        setIsNetworkError(isNetwork)
+        setError(fetchError.message)
+        console.error('Error fetching articles:', fetchError.message)
       } else {
         setArticles(data || [])
       }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error'
+      const isNetwork = !navigator.onLine ||
+        (err instanceof TypeError && errorMessage?.includes('fetch')) ||
+        errorMessage?.includes('Failed to fetch') ||
+        errorMessage?.includes('network') ||
+        errorMessage?.includes('NetworkError')
+
+      setIsNetworkError(isNetwork)
+      setError(errorMessage)
+      console.error('Error fetching articles:', errorMessage)
+    } finally {
       setLoading(false)
     }
-
-    fetchArticles()
   }, [currentPage, currentCategory, currentTag])
+
+  useEffect(() => {
+    fetchArticles()
+  }, [fetchArticles])
 
   const goToPage = (page: number) => {
     const params: Record<string, string> = { page: page.toString() }
@@ -172,6 +212,37 @@ export default function Blog() {
           {loading ? (
             <div className="flex justify-center items-center py-20">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
+            </div>
+          ) : error ? (
+            <ErrorMessage
+              error={error}
+              isNetworkError={isNetworkError}
+              onRetry={fetchArticles}
+            />
+          ) : articles.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <div className="text-6xl mb-4">📝</div>
+              <h3 className="text-xl font-semibold mb-2">
+                {currentLang === 'en' ? 'No articles found' : 'Nu am găsit articole'}
+              </h3>
+              <p className="text-surface-400 mb-6">
+                {currentTag
+                  ? (currentLang === 'en'
+                    ? `No articles with the tag "${currentTag}"`
+                    : `Nu există articole cu tag-ul "${currentTag}"`)
+                  : (currentLang === 'en'
+                    ? 'Try selecting a different category'
+                    : 'Încercați să selectați o altă categorie')}
+              </p>
+              {currentTag && (
+                <button
+                  onClick={clearTag}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white rounded-lg transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                  {currentLang === 'en' ? 'Clear filter' : 'Șterge filtrul'}
+                </button>
+              )}
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">

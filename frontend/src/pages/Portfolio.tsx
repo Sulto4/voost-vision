@@ -1,8 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { supabase, Project } from '@/lib/supabase'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
+import ErrorMessage from '@/components/ui/ErrorMessage'
 
 const categories = [
   { id: 'all', label_ro: 'Toate', label_en: 'All' },
@@ -20,6 +21,8 @@ export default function Portfolio() {
   const [filter, setFilterState] = useState(filterFromUrl)
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [isNetworkError, setIsNetworkError] = useState(false)
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [lightboxProject, setLightboxProject] = useState<Project | null>(null)
   const [lightboxIndex, setLightboxIndex] = useState(0)
@@ -39,24 +42,47 @@ export default function Portfolio() {
     setFilterState(filterFromUrl)
   }, [filterFromUrl])
 
-  useEffect(() => {
-    async function fetchProjects() {
-      const { data, error } = await supabase
+  const fetchProjects = useCallback(async () => {
+    setLoading(true)
+    setError(null)
+    setIsNetworkError(false)
+
+    try {
+      const { data, error: fetchError } = await supabase
         .from('projects')
         .select('*')
         .eq('published', true)
         .order('created_at', { ascending: false })
 
-      if (error) {
-        console.error('Error fetching projects:', error)
+      if (fetchError) {
+        // Check if it's a network error
+        const isNetwork = !navigator.onLine ||
+          fetchError.message?.includes('fetch') ||
+          fetchError.message?.includes('network') ||
+          fetchError.message?.includes('Failed to fetch')
+
+        setIsNetworkError(isNetwork)
+        setError(fetchError.message)
+        console.error('Error fetching projects:', fetchError.message)
       } else {
         setProjects(data || [])
       }
+    } catch (err) {
+      // Handle network/connection errors
+      const isNetwork = !navigator.onLine ||
+        (err instanceof TypeError && err.message?.includes('fetch'))
+
+      setIsNetworkError(isNetwork)
+      setError(err instanceof Error ? err.message : 'Unknown error')
+      console.error('Error fetching projects:', err instanceof Error ? err.message : 'Unknown error')
+    } finally {
       setLoading(false)
     }
-
-    fetchProjects()
   }, [])
+
+  useEffect(() => {
+    fetchProjects()
+  }, [fetchProjects])
 
   const getLocalizedPath = (enPath: string, roPath: string) => {
     return currentLang === 'en' ? enPath : roPath
@@ -130,6 +156,24 @@ export default function Portfolio() {
           {loading ? (
             <div className="flex justify-center items-center py-20">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
+            </div>
+          ) : error ? (
+            <ErrorMessage
+              error={error}
+              isNetworkError={isNetworkError}
+              onRetry={fetchProjects}
+            />
+          ) : filteredProjects.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <div className="text-6xl mb-4">📂</div>
+              <h3 className="text-xl font-semibold mb-2">
+                {currentLang === 'en' ? 'No projects found' : 'Nu am găsit proiecte'}
+              </h3>
+              <p className="text-surface-400">
+                {currentLang === 'en'
+                  ? 'Try selecting a different category'
+                  : 'Încercați să selectați o altă categorie'}
+              </p>
             </div>
           ) : (
             <div className="grid md:grid-cols-2 gap-8">

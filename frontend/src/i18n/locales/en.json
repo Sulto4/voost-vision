@@ -107,6 +107,10 @@
   "common": {
     "loading": "Loading...",
     "error": "An error occurred",
-    "retry": "Try again"
+    "retry": "Try again",
+    "networkError": "Unable to connect to the server",
+    "networkErrorDesc": "Please check your internet connection and try again.",
+    "somethingWentWrong": "Something went wrong",
+    "tryAgainLater": "Please try again later."
   }
 }

@@ -107,6 +107,10 @@
   "common": {
     "loading": "Se incarca...",
     "error": "A aparut o eroare",
-    "retry": "Incearca din nou"
+    "retry": "Incearca din nou",
+    "networkError": "Nu ne putem conecta la server",
+    "networkErrorDesc": "Verifica conexiunea la internet si incearca din nou.",
+    "somethingWentWrong": "Ceva nu a functionat",
+    "tryAgainLater": "Te rugam sa incerci mai tarziu."
   }
 }
