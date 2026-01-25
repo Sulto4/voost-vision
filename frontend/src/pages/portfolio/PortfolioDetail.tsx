@@ -46,6 +46,7 @@ export default function PortfolioDetail() {
           .from('projects')
           .select('*')
           .eq('id', id)
+          .eq('published', true)
           .single()
 
         if (fetchError) {

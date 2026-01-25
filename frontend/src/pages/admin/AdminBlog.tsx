@@ -48,6 +48,19 @@ export default function AdminBlog() {
     fetchArticles()
   }, [])
 
+  // Warn user about unsaved changes when modal is open
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (showModal) {
+        e.preventDefault()
+        e.returnValue = ''
+      }
+    }
+
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+  }, [showModal])
+
   async function fetchArticles() {
     try {
       const { data, error } = await supabase
