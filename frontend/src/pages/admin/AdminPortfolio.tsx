@@ -38,6 +38,7 @@ export default function AdminPortfolio() {
   const [formData, setFormData] = useState<ProjectFormData>(emptyFormData)
   const [techInput, setTechInput] = useState('')
   const [saving, setSaving] = useState(false)
+  const [deleting, setDeleting] = useState<string | null>(null)
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
 
   useEffect(() => {
@@ -194,10 +195,14 @@ export default function AdminPortfolio() {
   }
 
   async function handleDelete(project: Project) {
+    // Prevent rapid clicking
+    if (deleting === project.id) return
+
     if (!confirm(`Are you sure you want to delete "${project.title_en}"?`)) {
       return
     }
 
+    setDeleting(project.id)
     try {
       const { error } = await supabase
         .from('projects')
@@ -209,6 +214,8 @@ export default function AdminPortfolio() {
     } catch (error) {
       console.error('Error deleting project:', error)
       alert('Failed to delete project. Please try again.')
+    } finally {
+      setDeleting(null)
     }
   }
 
@@ -274,9 +281,10 @@ export default function AdminPortfolio() {
                         </button>
                         <button
                           onClick={() => handleDelete(project)}
-                          className="p-2 rounded-lg hover:bg-red-500/20 text-red-400 transition-colors"
+                          disabled={deleting === project.id}
+                          className="p-2 rounded-lg hover:bg-red-500/20 text-red-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className={`w-4 h-4 ${deleting === project.id ? 'animate-pulse' : ''}`} />
                         </button>
                       </div>
                     </td>

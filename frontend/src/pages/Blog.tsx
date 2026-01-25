@@ -28,7 +28,8 @@ export default function Blog() {
   const [error, setError] = useState<string | null>(null)
   const [isNetworkError, setIsNetworkError] = useState(false)
 
-  const currentPage = parseInt(searchParams.get('page') || '1', 10)
+  const parsedPage = parseInt(searchParams.get('page') || '1', 10)
+  const currentPage = isNaN(parsedPage) || parsedPage < 1 ? 1 : parsedPage
   const currentCategory = searchParams.get('category') || 'all'
   const currentTag = searchParams.get('tag') || ''
   const totalPages = Math.ceil(totalCount / ARTICLES_PER_PAGE)

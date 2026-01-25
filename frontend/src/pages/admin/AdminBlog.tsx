@@ -42,6 +42,7 @@ export default function AdminBlog() {
   const [formData, setFormData] = useState<ArticleFormData>(emptyFormData)
   const [tagInput, setTagInput] = useState('')
   const [saving, setSaving] = useState(false)
+  const [deleting, setDeleting] = useState<string | null>(null)
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
 
   useEffect(() => {
@@ -210,10 +211,14 @@ export default function AdminBlog() {
   }
 
   async function handleDelete(article: Article) {
+    // Prevent rapid clicking
+    if (deleting === article.id) return
+
     if (!confirm(`Are you sure you want to delete "${article.title_en}"?`)) {
       return
     }
 
+    setDeleting(article.id)
     try {
       const { error } = await supabase
         .from('articles')
@@ -225,6 +230,8 @@ export default function AdminBlog() {
     } catch (error) {
       console.error('Error deleting article:', error)
       alert('Failed to delete article. Please try again.')
+    } finally {
+      setDeleting(null)
     }
   }
 
@@ -303,9 +310,10 @@ export default function AdminBlog() {
                         </button>
                         <button
                           onClick={() => handleDelete(article)}
-                          className="p-2 rounded-lg hover:bg-red-500/20 text-red-400 transition-colors"
+                          disabled={deleting === article.id}
+                          className="p-2 rounded-lg hover:bg-red-500/20 text-red-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className={`w-4 h-4 ${deleting === article.id ? 'animate-pulse' : ''}`} />
                         </button>
                       </div>
                     </td>
