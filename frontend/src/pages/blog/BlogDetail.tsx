@@ -183,7 +183,7 @@ export default function BlogDetail() {
               </span>
               <div className="flex items-center text-surface-400 text-sm">
                 <Calendar className="w-4 h-4 mr-1" />
-                {new Date(article.published_at).toLocaleDateString(currentLang === 'en' ? 'en-US' : 'ro-RO', {
+                {new Date(article.published_at || article.created_at).toLocaleDateString(currentLang === 'en' ? 'en-US' : 'ro-RO', {
                   year: 'numeric',
                   month: 'long',
                   day: 'numeric',
@@ -199,12 +199,14 @@ export default function BlogDetail() {
               {currentLang === 'en' ? article.title_en : article.title_ro}
             </h1>
 
-            <img
-              src={article.cover_image}
-              alt={currentLang === 'en' ? article.title_en : article.title_ro}
-              loading="lazy"
-              className="w-full rounded-2xl mb-12"
-            />
+            {article.cover_image && (
+              <img
+                src={article.cover_image}
+                alt={currentLang === 'en' ? article.title_en : article.title_ro}
+                loading="lazy"
+                className="w-full rounded-2xl mb-12"
+              />
+            )}
 
             <div
               className="prose prose-invert prose-lg max-w-none"

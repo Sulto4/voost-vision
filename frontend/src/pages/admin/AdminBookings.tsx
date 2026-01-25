@@ -127,8 +127,8 @@ export default function AdminBookings() {
             .eq('id', id)
 
           addToast('success', 'Booking cancelled and removed from Google Calendar!')
-        } else {
-          addToast('success', `Booking ${status === 'confirmed' ? 'confirmed' : 'cancelled'} successfully!`)
+        } else if (status === 'cancelled') {
+          addToast('success', 'Booking cancelled successfully!')
         }
       }
 

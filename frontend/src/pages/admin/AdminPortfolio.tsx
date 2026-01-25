@@ -215,7 +215,6 @@ export default function AdminPortfolio() {
 
     // Store original state for rollback (optimistic update)
     const originalProjects = [...projects]
-    const projectIndex = projects.findIndex(p => p.id === project.id)
 
     // Optimistically remove the project from UI immediately
     setProjects(projects.filter(p => p.id !== project.id))

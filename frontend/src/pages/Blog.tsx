@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router-dom'
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { supabase, Article } from '@/lib/supabase'
 import { ChevronLeft, ChevronRight, X, Search } from 'lucide-react'
 import ErrorMessage from '@/components/ui/ErrorMessage'
