@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { ArrowLeft, Check, X, Calendar, Filter } from 'lucide-react'
+import { ArrowLeft, Check, X, Calendar, Filter, CalendarCheck, Loader2 } from 'lucide-react'
 import { supabase, Booking } from '@/lib/supabase'
 import AdminLayout from '../../components/admin/AdminLayout'
 import { useToast } from '../../components/ui/Toast'
@@ -11,6 +11,7 @@ export default function AdminBookings() {
   const [bookings, setBookings] = useState<Booking[]>([])
   const [loading, setLoading] = useState(true)
   const [dateFilter, setDateFilter] = useState<DateFilter>('all')
+  const [syncingBookingId, setSyncingBookingId] = useState<string | null>(null)
   const { addToast } = useToast()
 
   useEffect(() => {
@@ -54,18 +55,86 @@ export default function AdminBookings() {
     setLoading(false)
   }
 
-  async function updateBookingStatus(id: string, status: 'confirmed' | 'cancelled') {
-    const { error } = await supabase
-      .from('bookings')
-      .update({ status })
-      .eq('id', id)
+  async function syncWithGoogleCalendar(booking: Booking, action: 'create' | 'delete'): Promise<string | null> {
+    try {
+      const response = await supabase.functions.invoke('sync-google-calendar', {
+        body: {
+          action,
+          booking: action === 'create' ? {
+            id: booking.id,
+            client_name: booking.client_name,
+            client_email: booking.client_email,
+            company: booking.company,
+            description: booking.description,
+            booking_date: booking.booking_date,
+            booking_time: booking.booking_time,
+            duration: booking.duration,
+          } : undefined,
+          eventId: action === 'delete' ? booking.google_calendar_event_id : undefined,
+        },
+      })
 
-    if (error) {
-      console.error('Error updating booking:', error)
-      addToast('error', 'Failed to update booking status.')
-    } else {
+      if (response.error) {
+        console.warn('Google Calendar sync warning:', response.error)
+        return null
+      }
+
+      console.log('Google Calendar sync result:', response.data)
+      return response.data?.eventId || null
+    } catch (err) {
+      console.warn('Google Calendar sync error:', err)
+      return null
+    }
+  }
+
+  async function updateBookingStatus(id: string, status: 'confirmed' | 'cancelled') {
+    setSyncingBookingId(id)
+
+    try {
+      // Find the booking to get full details
+      const booking = bookings.find(b => b.id === id)
+
+      // Update the status first
+      const { error } = await supabase
+        .from('bookings')
+        .update({ status })
+        .eq('id', id)
+
+      if (error) {
+        console.error('Error updating booking:', error)
+        addToast('error', 'Failed to update booking status.')
+        return
+      }
+
+      // Sync with Google Calendar
+      if (booking) {
+        if (status === 'confirmed') {
+          // Create calendar event when confirmed
+          const eventId = await syncWithGoogleCalendar(booking, 'create')
+          if (eventId) {
+            addToast('success', 'Booking confirmed and synced to Google Calendar!')
+          } else {
+            addToast('success', 'Booking confirmed! (Calendar sync pending - credentials not configured)')
+          }
+        } else if (status === 'cancelled' && booking.google_calendar_event_id) {
+          // Delete calendar event when cancelled
+          await syncWithGoogleCalendar(booking, 'delete')
+
+          // Clear the event ID in database
+          await supabase
+            .from('bookings')
+            .update({ google_calendar_event_id: null })
+            .eq('id', id)
+
+          addToast('success', 'Booking cancelled and removed from Google Calendar!')
+        } else {
+          addToast('success', `Booking ${status === 'confirmed' ? 'confirmed' : 'cancelled'} successfully!`)
+        }
+      }
+
       fetchBookings()
-      addToast('success', `Booking ${status === 'confirmed' ? 'confirmed' : 'cancelled'} successfully!`)
+    } finally {
+      setSyncingBookingId(null)
     }
   }
 
@@ -151,19 +220,31 @@ export default function AdminBookings() {
                       </div>
                     </td>
                     <td className="py-4 px-6">
-                      <span className={`px-3 py-1 text-xs rounded-full ${
-                        booking.status === 'confirmed'
-                          ? 'bg-green-500/20 text-green-400'
-                          : booking.status === 'cancelled'
-                          ? 'bg-red-500/20 text-red-400'
-                          : 'bg-yellow-500/20 text-yellow-400'
-                      }`}>
-                        {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className={`px-3 py-1 text-xs rounded-full ${
+                          booking.status === 'confirmed'
+                            ? 'bg-green-500/20 text-green-400'
+                            : booking.status === 'cancelled'
+                            ? 'bg-red-500/20 text-red-400'
+                            : 'bg-yellow-500/20 text-yellow-400'
+                        }`}>
+                          {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                        </span>
+                        {booking.google_calendar_event_id && (
+                          <span className="flex items-center gap-1 text-xs text-blue-400" title="Synced to Google Calendar">
+                            <CalendarCheck className="w-3 h-3" />
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="py-4 px-6">
                       <div className="flex items-center justify-end gap-2">
-                        {booking.status === 'pending' && (
+                        {syncingBookingId === booking.id ? (
+                          <div className="flex items-center gap-2 text-surface-400">
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            <span className="text-xs">Syncing...</span>
+                          </div>
+                        ) : booking.status === 'pending' && (
                           <>
                             <button
                               onClick={() => updateBookingStatus(booking.id, 'confirmed')}
