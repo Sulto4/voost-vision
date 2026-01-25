@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
-import { useState, useEffect } from 'react'
-import { Mail, Phone, MapPin, Send, Check, User, MessageSquare, AlertCircle, ShieldCheck } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { Mail, Phone, MapPin, Send, Check, User, MessageSquare, AlertCircle, ShieldCheck, Clock } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import Turnstile from '../components/ui/Turnstile'
 
@@ -10,7 +10,13 @@ interface FormErrors {
   subject?: string
   message?: string
   captcha?: string
+  rateLimit?: string
 }
+
+// Rate limiting configuration
+const RATE_LIMIT_MAX_SUBMISSIONS = 3 // Maximum submissions
+const RATE_LIMIT_WINDOW_MS = 300000 // 5 minute window
+const RATE_LIMIT_COOLDOWN_MS = 10000 // 10 second cooldown after hitting limit (shorter for better UX)
 
 export default function Contact() {
   const { t } = useTranslation()
@@ -22,9 +28,14 @@ export default function Contact() {
   })
   const [errors, setErrors] = useState<FormErrors>({})
   const [touched, setTouched] = useState<Record<string, boolean>>({})
-  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error' | 'rate_limited'>('idle')
   const [captchaToken, setCaptchaToken] = useState<string | null>(null)
   const [captchaError, setCaptchaError] = useState<string | null>(null)
+
+  // Rate limiting state
+  const submissionTimestamps = useRef<number[]>([])
+  const [rateLimitCooldown, setRateLimitCooldown] = useState<number>(0)
+  const cooldownIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   // Warn user about unsaved data on page refresh/close
   useEffect(() => {
@@ -40,6 +51,56 @@ export default function Contact() {
     window.addEventListener('beforeunload', handleBeforeUnload)
     return () => window.removeEventListener('beforeunload', handleBeforeUnload)
   }, [formData, status])
+
+  // Cleanup cooldown interval on unmount
+  useEffect(() => {
+    return () => {
+      if (cooldownIntervalRef.current) {
+        clearInterval(cooldownIntervalRef.current)
+      }
+    }
+  }, [])
+
+  // Check if rate limited
+  const checkRateLimit = (): boolean => {
+    const now = Date.now()
+    // Remove timestamps older than the window
+    submissionTimestamps.current = submissionTimestamps.current.filter(
+      (ts) => now - ts < RATE_LIMIT_WINDOW_MS
+    )
+
+    if (submissionTimestamps.current.length >= RATE_LIMIT_MAX_SUBMISSIONS) {
+      return true // Rate limited
+    }
+    return false
+  }
+
+  // Start cooldown timer
+  const startCooldown = () => {
+    const cooldownSeconds = Math.ceil(RATE_LIMIT_COOLDOWN_MS / 1000)
+    setRateLimitCooldown(cooldownSeconds)
+    setStatus('rate_limited')
+
+    if (cooldownIntervalRef.current) {
+      clearInterval(cooldownIntervalRef.current)
+    }
+
+    cooldownIntervalRef.current = setInterval(() => {
+      setRateLimitCooldown((prev) => {
+        if (prev <= 1) {
+          if (cooldownIntervalRef.current) {
+            clearInterval(cooldownIntervalRef.current)
+            cooldownIntervalRef.current = null
+          }
+          setStatus('idle')
+          // Clear old timestamps to allow new submissions
+          submissionTimestamps.current = []
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+  }
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -125,6 +186,16 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
+    // Check rate limiting first
+    if (checkRateLimit()) {
+      setErrors((prev) => ({
+        ...prev,
+        rateLimit: t('contact.rateLimitError') || 'Too many submissions. Please wait before trying again.',
+      }))
+      startCooldown()
+      return
+    }
+
     // Mark all fields as touched
     setTouched({ name: true, email: true, subject: true, message: true })
 
@@ -152,6 +223,9 @@ export default function Contact() {
         setStatus('error')
         return
       }
+
+      // Record successful submission for rate limiting
+      submissionTimestamps.current.push(Date.now())
 
       setStatus('success')
       setFormData({ name: '', email: '', subject: '', message: '' })
@@ -241,6 +315,13 @@ export default function Contact() {
                     <Check className="w-10 h-10 text-green-400" />
                   </div>
                   <h2 className="heading-3 mb-4">{t('contact.success')}</h2>
+                  <button
+                    type="button"
+                    onClick={() => setStatus('idle')}
+                    className="btn-secondary mt-4"
+                  >
+                    {t('contact.sendAnother') || 'Send another message'}
+                  </button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="glass-card p-8 space-y-6" noValidate>
@@ -248,6 +329,14 @@ export default function Contact() {
                     <div role="alert" aria-live="assertive" className="p-4 rounded-lg bg-red-500/20 text-red-400 border border-red-500/30 flex items-center gap-3">
                       <AlertCircle className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
                       <span>{t('contact.error')}</span>
+                    </div>
+                  )}
+                  {status === 'rate_limited' && (
+                    <div role="alert" aria-live="assertive" className="p-4 rounded-lg bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center gap-3">
+                      <Clock className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
+                      <span>
+                        {t('contact.rateLimitError') || 'Too many submissions. Please wait'} {rateLimitCooldown > 0 && `(${rateLimitCooldown}s)`}
+                      </span>
                     </div>
                   )}
                   <div className="grid md:grid-cols-2 gap-6">
@@ -357,11 +446,16 @@ export default function Contact() {
 
                   <button
                     type="submit"
-                    disabled={status === 'submitting' || !captchaToken}
+                    disabled={status === 'submitting' || status === 'rate_limited' || !captchaToken}
                     className="btn-primary w-full text-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {status === 'submitting' ? (
                       t('contact.sending')
+                    ) : status === 'rate_limited' ? (
+                      <>
+                        <Clock className="w-5 h-5 mr-2" />
+                        {t('contact.waitMessage') || 'Please wait'} ({rateLimitCooldown}s)
+                      </>
                     ) : (
                       <>
                         {t('contact.send')}

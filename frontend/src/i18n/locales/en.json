@@ -91,7 +91,9 @@
     "nameRequired": "Name is required",
     "emailRequired": "Email is required",
     "emailInvalid": "Invalid email format",
-    "messageRequired": "Message is required"
+    "messageRequired": "Message is required",
+    "rateLimitError": "Too many submissions. Please wait before trying again.",
+    "waitMessage": "Please wait"
   },
   "booking": {
     "pageTitle": "Book a Consultation",

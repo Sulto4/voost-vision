@@ -91,7 +91,9 @@
     "nameRequired": "Numele este obligatoriu",
     "emailRequired": "Email-ul este obligatoriu",
     "emailInvalid": "Format email invalid",
-    "messageRequired": "Mesajul este obligatoriu"
+    "messageRequired": "Mesajul este obligatoriu",
+    "rateLimitError": "Prea multe trimiteri. Te rugăm să aștepți înainte de a încerca din nou.",
+    "waitMessage": "Te rugăm să aștepți"
   },
   "booking": {
     "pageTitle": "Programează o consultație",
