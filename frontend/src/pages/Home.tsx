@@ -2,37 +2,9 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowRight, Code, Smartphone, Palette, Globe, ChevronLeft, ChevronRight, Quote, Calendar } from 'lucide-react'
 import { useState, useEffect, useCallback } from 'react'
-import { supabase, Project, Article } from '@/lib/supabase'
+import { supabase, Project, Article, Testimonial } from '@/lib/supabase'
 import ErrorMessage from '@/components/ui/ErrorMessage'
 import ResponsiveImage from '@/components/ui/ResponsiveImage'
-
-// Sample testimonials
-const testimonials = [
-  {
-    id: 1,
-    name: 'Maria Popescu',
-    company: 'TechStart SRL',
-    text_ro: 'Voost Vision a transformat complet prezenta noastra online. Site-ul nou ne-a crescut conversiile cu 40%.',
-    text_en: 'Voost Vision completely transformed our online presence. The new website increased our conversions by 40%.',
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=60',
-  },
-  {
-    id: 2,
-    name: 'Andrei Ionescu',
-    company: 'Digital Solutions',
-    text_ro: 'Profesionalism, creativitate si atentie la detalii. Echipa Voost Vision livreaza rezultate exceptionale.',
-    text_en: 'Professionalism, creativity and attention to detail. The Voost Vision team delivers exceptional results.',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=60',
-  },
-  {
-    id: 3,
-    name: 'Elena Dumitrescu',
-    company: 'Artisan Coffee',
-    text_ro: 'Aplicatia mobila dezvoltata de Voost Vision ne-a ajutat sa ne conectam mai bine cu clientii nostri.',
-    text_en: 'The mobile app developed by Voost Vision helped us connect better with our customers.',
-    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&auto=format&fit=crop&q=60',
-  },
-]
 
 // Helper function to format date
 const formatDate = (dateString: string | null, lang: string): string => {
@@ -57,6 +29,8 @@ export default function Home() {
   const [projectsNetworkError, setProjectsNetworkError] = useState(false)
   const [articlesError, setArticlesError] = useState<string | null>(null)
   const [articlesNetworkError, setArticlesNetworkError] = useState(false)
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([])
+  const [loadingTestimonials, setLoadingTestimonials] = useState(true)
 
   const getLocalizedPath = (enPath: string, roPath: string) => {
     return currentLang === 'en' ? enPath : roPath
@@ -143,13 +117,40 @@ export default function Home() {
     fetchLatestArticles()
   }, [fetchLatestArticles])
 
+  // Fetch testimonials from database
+  const fetchTestimonials = useCallback(async () => {
+    setLoadingTestimonials(true)
+    try {
+      const { data, error } = await supabase
+        .from('testimonials')
+        .select('*')
+        .eq('published', true)
+        .order('display_order', { ascending: true })
+
+      if (error) {
+        console.error('Error fetching testimonials:', error.message)
+      } else {
+        setTestimonials(data || [])
+      }
+    } catch (err) {
+      console.error('Error:', err instanceof Error ? err.message : 'Unknown error')
+    } finally {
+      setLoadingTestimonials(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchTestimonials()
+  }, [fetchTestimonials])
+
   // Auto-rotate testimonials
   useEffect(() => {
+    if (testimonials.length === 0) return
     const interval = setInterval(() => {
       setCurrentTestimonial((prev) => (prev + 1) % testimonials.length)
     }, 5000)
     return () => clearInterval(interval)
-  }, [])
+  }, [testimonials.length])
 
   const services = [
     {
@@ -325,6 +326,15 @@ export default function Home() {
             <p className="text-xl text-surface-400">{t('testimonials.subtitle')}</p>
           </div>
 
+          {loadingTestimonials ? (
+            <div className="flex justify-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
+            </div>
+          ) : testimonials.length === 0 ? (
+            <div className="text-center text-surface-400">
+              <p>{t('testimonials.noTestimonials', 'No testimonials available yet.')}</p>
+            </div>
+          ) : (
           <div className="max-w-4xl mx-auto">
             <div className="glass-card p-8 md:p-12 relative">
               <Quote className="w-12 h-12 text-primary-500/30 absolute top-6 left-6" />
@@ -332,20 +342,20 @@ export default function Home() {
               <div className="text-center">
                 <p className="text-xl md:text-2xl text-surface-200 mb-8 relative z-10">
                   "{currentLang === 'en'
-                    ? testimonials[currentTestimonial].text_en
-                    : testimonials[currentTestimonial].text_ro}"
+                    ? testimonials[currentTestimonial]?.text_en
+                    : testimonials[currentTestimonial]?.text_ro}"
                 </p>
 
                 <div className="flex items-center justify-center gap-4">
                   <img
-                    src={testimonials[currentTestimonial].avatar}
-                    alt={testimonials[currentTestimonial].name}
+                    src={testimonials[currentTestimonial]?.avatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=60'}
+                    alt={testimonials[currentTestimonial]?.name}
                     loading="lazy"
                     className="w-14 h-14 rounded-full object-cover"
                   />
                   <div className="text-left">
-                    <p className="font-semibold">{testimonials[currentTestimonial].name}</p>
-                    <p className="text-surface-400 text-sm">{testimonials[currentTestimonial].company}</p>
+                    <p className="font-semibold">{testimonials[currentTestimonial]?.name}</p>
+                    <p className="text-surface-400 text-sm">{testimonials[currentTestimonial]?.company}</p>
                   </div>
                 </div>
               </div>
@@ -383,6 +393,7 @@ export default function Home() {
               </button>
             </div>
           </div>
+          )}
         </div>
       </section>
 

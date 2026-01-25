@@ -71,3 +71,15 @@ export interface ContactSubmission {
   read: boolean
   created_at: string
 }
+
+export interface Testimonial {
+  id: string
+  name: string
+  company: string
+  text_ro: string
+  text_en: string
+  avatar: string | null
+  published: boolean
+  display_order: number
+  created_at: string
+}
