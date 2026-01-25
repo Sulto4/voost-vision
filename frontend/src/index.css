@@ -120,6 +120,25 @@ html.light .btn-outline:hover {
   background-color: rgba(15, 23, 42, 0.1);
 }
 
+/* Dark section overrides in light mode - for hero and CTA sections with dark backgrounds */
+html.light .dark-section .btn-secondary {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+html.light .dark-section .btn-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+html.light .dark-section .btn-outline {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+html.light .dark-section .btn-outline:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
 html.light .input {
   background-color: rgba(15, 23, 42, 0.05);
   border-color: rgba(15, 23, 42, 0.1);

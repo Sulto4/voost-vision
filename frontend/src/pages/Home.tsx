@@ -180,7 +180,7 @@ export default function Home() {
   return (
     <div className="pt-16 md:pt-20">
       {/* Hero Section */}
-      <section className="section min-h-[90vh] flex items-center relative overflow-hidden">
+      <section className="section min-h-[90vh] flex items-center relative overflow-hidden dark-section bg-surface-900">
         {/* Background gradient effects */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary-500/20 rounded-full blur-3xl -z-10" />
         <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-primary-700/10 rounded-full blur-3xl -z-10" />
@@ -452,7 +452,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="section bg-gradient-to-b from-surface-950 to-surface-900 relative overflow-hidden" id="cta">
+      <section className="section bg-gradient-to-b from-surface-950 to-surface-900 relative overflow-hidden dark-section" id="cta">
         {/* Background effect */}
         <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-primary-700/10" />
 
