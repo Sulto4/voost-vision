@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { User, Session } from '@supabase/supabase-js'
-import { supabase } from '../lib/supabase'
+import { supabase, isSupabaseConfigured } from '../lib/supabase'
 
 interface AuthContextType {
   user: User | null
@@ -16,6 +16,8 @@ interface AuthContextType {
 const ADMIN_EMAILS = [
   'admin@voostvision.ro',
   'contact@voostvision.ro',
+  'meleru.radu4@gmail.com',
+  'meleru.radu4@yahoo.com',
   // Add more admin emails as needed
 ]
 
@@ -30,10 +32,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const isAdmin = user?.email ? ADMIN_EMAILS.includes(user.email) : false
 
   useEffect(() => {
+    // Skip Supabase auth if not configured
+    if (!isSupabaseConfigured) {
+      setLoading(false)
+      return
+    }
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
       setUser(session?.user ?? null)
+      setLoading(false)
+    }).catch((error) => {
+      console.warn('Auth session error:', error)
       setLoading(false)
     })
 
@@ -50,6 +61,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const signInWithGoogle = async () => {
+    if (!isSupabaseConfigured) {
+      console.warn('Supabase not configured. Auth disabled.')
+      return
+    }
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -63,6 +78,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const signOut = async () => {
+    if (!isSupabaseConfigured) {
+      return
+    }
     const { error } = await supabase.auth.signOut()
     if (error) {
       console.error('Error signing out:', error)
