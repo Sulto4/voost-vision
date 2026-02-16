@@ -262,59 +262,49 @@ export default function Contact() {
   }
 
   return (
-    <div className="pt-16 md:pt-20">
-      <section className="section">
+    <div className="page-shell">
+      <section className="section relative overflow-hidden pb-16 pt-28 md:pt-32">
+        <div className="hero-backdrop" />
         <div className="container-custom">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <h1 className="heading-1 mb-6">
+          <div className="mx-auto mb-14 max-w-3xl text-center">
+            <span className="section-kicker">Contact</span>
+            <h1 className="heading-1 mt-3 mb-6">
               <span className="gradient-text">{t('contact.pageTitle')}</span>
             </h1>
-            <p className="text-xl text-surface-300">
-              {t('contact.pageSubtitle')}
-            </p>
+            <p className="text-xl text-surface-300">{t('contact.pageSubtitle')}</p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-6 lg:gap-12">
-            {/* Contact Info */}
-            <div className="lg:col-span-1 space-y-6">
+          <div className="grid gap-6 lg:grid-cols-3 lg:gap-10">
+            <div className="space-y-6 lg:col-span-1">
               <div className="glass-card p-6">
-                <div className="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center mb-4">
-                  <Mail className="w-6 h-6 text-primary-400" />
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl border border-primary-500/30 bg-primary-500/[0.12]">
+                  <Mail className="h-6 w-6 text-primary-300" />
                 </div>
-                <h3 className="font-semibold mb-2">Email</h3>
-                <a
-                  href="mailto:contact@voostvision.ro"
-                  className="text-surface-400 hover:text-primary-400 transition-colors"
-                >
+                <h3 className="mb-2 font-semibold">Email</h3>
+                <a href="mailto:contact@voostvision.ro" className="text-surface-400 transition-colors hover:text-primary-300">
                   contact@voostvision.ro
                 </a>
               </div>
 
               <div className="glass-card p-6">
-                <div className="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center mb-4">
-                  <Phone className="w-6 h-6 text-primary-400" />
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl border border-primary-500/30 bg-primary-500/[0.12]">
+                  <Phone className="h-6 w-6 text-primary-300" />
                 </div>
-                <h3 className="font-semibold mb-2">Telefon</h3>
-                <a
-                  href="tel:+40700000000"
-                  className="text-surface-400 hover:text-primary-400 transition-colors"
-                >
+                <h3 className="mb-2 font-semibold">Telefon</h3>
+                <a href="tel:+40700000000" className="text-surface-400 transition-colors hover:text-primary-300">
                   +40 700 000 000
                 </a>
               </div>
 
               <div className="glass-card p-6">
-                <div className="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center mb-4">
-                  <MapPin className="w-6 h-6 text-primary-400" />
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl border border-primary-500/30 bg-primary-500/[0.12]">
+                  <MapPin className="h-6 w-6 text-primary-300" />
                 </div>
-                <h3 className="font-semibold mb-2">Adresa</h3>
-                <p className="text-surface-400">
-                  Bucuresti, Romania
-                </p>
+                <h3 className="mb-2 font-semibold">Adresa</h3>
+                <p className="text-surface-400">Bucuresti, Romania</p>
               </div>
 
-              {/* Google Maps Embed */}
-              <div className="glass-card p-4 overflow-hidden">
+              <div className="glass-card overflow-hidden p-4">
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d182639.17912975995!2d25.952819499999998!3d44.437713!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40b1f93abf3cad4f%3A0xac0632e37c9ca628!2sBucharest%2C%20Romania!5e0!3m2!1sen!2sus!4v1706200000000!5m2!1sen!2sus"
                   width="100%"
@@ -329,12 +319,11 @@ export default function Contact() {
               </div>
             </div>
 
-            {/* Contact Form */}
             <div className="lg:col-span-2">
               {status === 'success' ? (
                 <div className="glass-card p-12 text-center">
-                  <div className="w-20 h-20 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-6">
-                    <Check className="w-10 h-10 text-green-400" />
+                  <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-green-500/20">
+                    <Check className="h-10 w-10 text-green-400" />
                   </div>
                   <h2 className="heading-3 mb-4">{t('contact.success')}</h2>
                   <button
@@ -346,7 +335,7 @@ export default function Contact() {
                   </button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="glass-card p-8 space-y-6" noValidate>
+                <form onSubmit={handleSubmit} className="glass-card space-y-6 p-8" noValidate>
                   {status === 'error' && (
                     <div role="alert" aria-live="assertive" className="p-4 rounded-lg bg-red-500/20 text-red-400 border border-red-500/30 flex items-center gap-3">
                       <AlertCircle className="w-5 h-5 flex-shrink-0" aria-hidden="true" />

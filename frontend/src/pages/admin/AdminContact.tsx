@@ -79,9 +79,9 @@ export default function AdminContact() {
       <div className="mb-8">
         <Link
           to="/admin/dashboard"
-          className="inline-flex items-center text-surface-400 hover:text-white transition-colors mb-2"
+          className="mb-2 inline-flex items-center text-surface-400 transition-colors hover:text-white"
         >
-          <ArrowLeft className="w-4 h-4 mr-1" />
+          <ArrowLeft className="mr-1 h-4 w-4" />
           Back to Dashboard
         </Link>
         <h1 className="heading-2">Contact Messages</h1>
@@ -132,7 +132,7 @@ export default function AdminContact() {
                     {!message.read && (
                       <button
                         onClick={() => markAsRead(message.id)}
-                        className="p-2 rounded-lg bg-primary-500/20 text-primary-400 hover:bg-primary-500/30 transition-colors"
+                        className="rounded-lg bg-primary-500/20 p-2 text-primary-300 transition-colors hover:bg-primary-500/30"
                         title="Mark as read"
                       >
                         <Check className="w-4 h-4" />
@@ -140,14 +140,14 @@ export default function AdminContact() {
                     )}
                     <a
                       href={`mailto:${message.email}`}
-                      className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+                      className="rounded-lg bg-white/5 p-2 transition-colors hover:bg-white/10"
                       title="Reply via email"
                     >
                       <Mail className="w-4 h-4" />
                     </a>
                     <button
                       onClick={() => deleteMessage(message.id)}
-                      className="p-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors"
+                      className="rounded-lg bg-red-500/20 p-2 text-red-300 transition-colors hover:bg-red-500/30"
                       title="Delete message"
                     >
                       <Trash2 className="w-4 h-4" />

@@ -143,16 +143,16 @@ export default function AdminBookings() {
       <div className="mb-8">
         <Link
           to="/admin/dashboard"
-          className="inline-flex items-center text-surface-400 hover:text-white transition-colors mb-2"
+          className="mb-2 inline-flex items-center text-surface-400 transition-colors hover:text-white"
         >
-          <ArrowLeft className="w-4 h-4 mr-1" />
+          <ArrowLeft className="mr-1 h-4 w-4" />
           Back to Dashboard
         </Link>
         <h1 className="heading-2">Booking Management</h1>
       </div>
 
       {/* Date Filters */}
-      <div className="mb-6 flex items-center gap-4">
+      <div className="mb-6 flex items-center gap-4 rounded-xl border border-white/10 bg-white/5 p-4">
         <div className="flex items-center gap-2 text-surface-400">
           <Filter className="w-4 h-4" />
           <span className="text-sm">Filter:</span>
@@ -163,7 +163,7 @@ export default function AdminBookings() {
             className={`px-4 py-2 text-sm rounded-lg transition-colors ${
               dateFilter === 'all'
                 ? 'bg-primary-500 text-white'
-                : 'bg-white/5 text-surface-300 hover:bg-white/10'
+                : 'border border-white/10 bg-white/5 text-surface-300 hover:bg-white/10'
             }`}
           >
             All
@@ -173,7 +173,7 @@ export default function AdminBookings() {
             className={`px-4 py-2 text-sm rounded-lg transition-colors ${
               dateFilter === 'today'
                 ? 'bg-primary-500 text-white'
-                : 'bg-white/5 text-surface-300 hover:bg-white/10'
+                : 'border border-white/10 bg-white/5 text-surface-300 hover:bg-white/10'
             }`}
           >
             Today
@@ -183,7 +183,7 @@ export default function AdminBookings() {
             className={`px-4 py-2 text-sm rounded-lg transition-colors ${
               dateFilter === 'this-week'
                 ? 'bg-primary-500 text-white'
-                : 'bg-white/5 text-surface-300 hover:bg-white/10'
+                : 'border border-white/10 bg-white/5 text-surface-300 hover:bg-white/10'
             }`}
           >
             This Week
@@ -198,28 +198,28 @@ export default function AdminBookings() {
             </div>
           ) : (
             <div className="overflow-x-auto">
-            <table className="w-full min-w-[700px]">
+            <table className="admin-table">
               <thead>
-                <tr className="border-b border-white/10">
-                  <th className="text-left py-4 px-6 text-surface-400 font-medium">Client</th>
-                  <th className="text-left py-4 px-6 text-surface-400 font-medium">Email</th>
-                  <th className="text-left py-4 px-6 text-surface-400 font-medium">Date & Time</th>
-                  <th className="text-left py-4 px-6 text-surface-400 font-medium">Status</th>
-                  <th className="text-right py-4 px-6 text-surface-400 font-medium">Actions</th>
+                <tr>
+                  <th>Client</th>
+                  <th>Email</th>
+                  <th>Date & Time</th>
+                  <th>Status</th>
+                  <th className="text-right">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {bookings.map((booking) => (
-                  <tr key={booking.id} className="border-b border-white/5 last:border-0">
-                    <td className="py-4 px-6 font-medium">{booking.client_name}</td>
-                    <td className="py-4 px-6 text-surface-400">{booking.client_email}</td>
-                    <td className="py-4 px-6">
+                  <tr key={booking.id}>
+                    <td className="font-medium">{booking.client_name}</td>
+                    <td className="text-surface-400">{booking.client_email}</td>
+                    <td>
                       <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4 text-primary-400" />
                         {booking.booking_date} at {booking.booking_time}
                       </div>
                     </td>
-                    <td className="py-4 px-6">
+                    <td>
                       <div className="flex items-center gap-2">
                         <span className={`px-3 py-1 text-xs rounded-full ${
                           booking.status === 'confirmed'
@@ -237,7 +237,7 @@ export default function AdminBookings() {
                         )}
                       </div>
                     </td>
-                    <td className="py-4 px-6">
+                    <td>
                       <div className="flex items-center justify-end gap-2">
                         {syncingBookingId === booking.id ? (
                           <div className="flex items-center gap-2 text-surface-400">

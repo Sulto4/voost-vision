@@ -27,10 +27,10 @@ export default function Breadcrumbs({ items, className = '' }: BreadcrumbsProps)
   const homeLabel = currentLang === 'en' ? 'Home' : 'Acasă'
 
   return (
-    <nav aria-label="Breadcrumb" className={`flex items-center gap-2 text-sm ${className}`}>
+    <nav aria-label="Breadcrumb" className={`flex flex-wrap items-center gap-2 text-sm ${className}`}>
       <Link
         to={getHomePath()}
-        className="flex items-center gap-1 text-surface-400 hover:text-white transition-colors"
+        className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-surface-400 transition-colors hover:bg-white/5 hover:text-white"
       >
         <Home className="w-4 h-4" />
         <span className="hidden sm:inline">{homeLabel}</span>
@@ -42,12 +42,12 @@ export default function Breadcrumbs({ items, className = '' }: BreadcrumbsProps)
           {item.href ? (
             <Link
               to={item.href}
-              className="text-surface-400 hover:text-white transition-colors"
+              className="rounded-lg px-2 py-1 text-surface-400 transition-colors hover:bg-white/5 hover:text-white"
             >
               {item.label}
             </Link>
           ) : (
-            <span className="text-white font-medium">{item.label}</span>
+            <span className="rounded-lg bg-white/5 px-2 py-1 font-medium text-white">{item.label}</span>
           )}
         </div>
       ))}

@@ -23,20 +23,20 @@ export default function ErrorMessage({
     : error || t('common.tryAgainLater')
 
   return (
-    <div className={`flex flex-col items-center justify-center py-16 px-4 text-center ${className}`}>
-      <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center mb-6">
+    <div className={`glass-card flex flex-col items-center justify-center px-6 py-14 text-center ${className}`}>
+      <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-red-500/[0.14]">
         <Icon className="w-8 h-8 text-red-400" />
       </div>
-      <h3 className="text-xl font-semibold mb-2 text-white">
+      <h3 className="mb-2 text-xl font-semibold text-white">
         {title}
       </h3>
-      <p className="text-surface-400 mb-6 max-w-md">
+      <p className="mb-6 max-w-md text-surface-400">
         {description}
       </p>
       {onRetry && (
         <button
           onClick={onRetry}
-          className="inline-flex items-center gap-2 px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white rounded-lg transition-colors"
+          className="btn-primary"
         >
           <RefreshCw className="w-4 h-4" />
           {t('common.retry')}

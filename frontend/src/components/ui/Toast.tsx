@@ -69,7 +69,7 @@ function ToastContainer({ toasts, removeToast }: ToastContainerProps) {
 
   return (
     <div
-      className="fixed bottom-4 right-4 z-[9999] flex flex-col gap-3 max-w-sm w-full pointer-events-none"
+      className="pointer-events-none fixed bottom-4 right-4 z-[9999] flex w-full max-w-sm flex-col gap-3"
       aria-live="polite"
       aria-label="Notifications"
     >
@@ -100,17 +100,17 @@ function ToastItem({ toast, onClose, index }: ToastItemProps) {
   }
 
   const colors = {
-    success: 'bg-green-500/20 text-green-400 border-green-500/30',
-    error: 'bg-red-500/20 text-red-400 border-red-500/30',
-    warning: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
-    info: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
+    success: 'border-green-500/[0.35] bg-green-500/[0.12] text-green-300',
+    error: 'border-red-500/40 bg-red-500/[0.14] text-red-300',
+    warning: 'border-amber-500/40 bg-amber-500/[0.14] text-amber-300',
+    info: 'border-blue-500/40 bg-blue-500/[0.14] text-blue-300',
   }
 
   const Icon = icons[toast.type]
 
   return (
     <div
-      className={`pointer-events-auto flex items-start gap-3 p-4 rounded-lg border backdrop-blur-md shadow-lg animate-slide-in-right ${colors[toast.type]}`}
+      className={`animate-slide-in-right pointer-events-auto flex items-start gap-3 rounded-xl border p-4 shadow-card backdrop-blur-xl ${colors[toast.type]}`}
       role="alert"
       aria-live="assertive"
       style={{

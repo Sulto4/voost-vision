@@ -180,64 +180,76 @@ export default function Home() {
   ]
 
   return (
-    <div className="pt-16 md:pt-20">
-      {/* Hero Section */}
-      <section className="section min-h-[90vh] flex items-center relative overflow-hidden dark-section bg-surface-900">
-        {/* Background gradient effects */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary-500/20 rounded-full blur-3xl -z-10" />
-        <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-primary-700/10 rounded-full blur-3xl -z-10" />
-
+    <div className="page-shell">
+      <section className="section relative overflow-hidden pb-24 pt-28 md:pt-36">
+        <div className="hero-backdrop" />
+        <div className="hero-grid-overlay" />
         <div className="container-custom">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="heading-1 mb-6 animate-fade-in-up">
+          <div className="mx-auto max-w-4xl text-center">
+            <span className="section-kicker animate-fade-in">Premium Digital Agency</span>
+            <h1 className="heading-1 animate-fade-in-up">
               <span className="gradient-text">{t('hero.title')}</span>
             </h1>
-            <p className="text-xl md:text-2xl text-surface-300 mb-10 animate-fade-in-up animate-delay-100">
+            <p className="mx-auto mt-6 max-w-3xl text-xl text-surface-300 md:text-2xl">
               {t('hero.subtitle')}
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up animate-delay-200">
+            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
                 to={getLocalizedPath('/booking', '/programare')}
-                className="btn-primary text-lg"
+                className="btn-primary text-base md:text-lg"
               >
                 {t('hero.cta')}
-                <ArrowRight className="w-5 h-5 ml-2" />
+                <ArrowRight className="h-5 w-5" />
               </Link>
               <Link
                 to={getLocalizedPath('/portfolio', '/portofoliu')}
-                className="btn-secondary text-lg"
+                className="btn-secondary text-base md:text-lg"
               >
                 {t('hero.secondaryCta')}
               </Link>
+            </div>
+            <div className="mt-12 grid gap-4 sm:grid-cols-3">
+              <div className="glass-card px-5 py-4 text-left">
+                <p className="text-sm text-surface-400">Delivery Speed</p>
+                <p className="mt-1 font-display text-xl font-semibold text-white">2-6 weeks</p>
+              </div>
+              <div className="glass-card px-5 py-4 text-left">
+                <p className="text-sm text-surface-400">Product Focus</p>
+                <p className="mt-1 font-display text-xl font-semibold text-white">Web + Mobile</p>
+              </div>
+              <div className="glass-card px-5 py-4 text-left">
+                <p className="text-sm text-surface-400">Client Support</p>
+                <p className="mt-1 font-display text-xl font-semibold text-white">Ongoing</p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Services Section */}
-      <section className="section bg-surface-950/50" id="services">
+      <section className="section border-y border-white/[0.08] bg-surface-950/[0.45]" id="services">
         <div className="container-custom">
-          <div className="text-center mb-16">
-            <h2 className="heading-2 mb-4">{t('services.title')}</h2>
-            <p className="text-xl text-surface-400">{t('services.subtitle')}</p>
+          <div className="mb-14 text-center">
+            <span className="section-kicker">Services</span>
+            <h2 className="heading-2 mt-3">{t('services.title')}</h2>
+            <p className="section-subtitle mt-4">{t('services.subtitle')}</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
             {services.map((service, index) => (
               <Link
                 key={service.href}
                 to={service.href}
-                className="glass-card p-6 hover:border-primary-500/50 transition-all duration-300 group"
-                style={{ animationDelay: `${index * 100}ms` }}
+                className="glass-card group flex h-full flex-col p-6"
+                style={{ animationDelay: `${index * 90}ms` }}
               >
-                <div className="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center mb-4 group-hover:bg-primary-500/30 transition-colors">
-                  <service.icon className="w-6 h-6 text-primary-400" />
+                <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-primary-500/[0.35] bg-primary-500/[0.12]">
+                  <service.icon className="h-6 w-6 text-primary-300" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">{service.title}</h3>
-                <p className="text-surface-400 mb-4">{service.description}</p>
-                <span className="text-primary-400 inline-flex items-center text-sm font-medium group-hover:text-primary-300">
+                <h3 className="text-xl font-semibold text-white">{service.title}</h3>
+                <p className="mt-3 flex-1 text-sm text-surface-400">{service.description}</p>
+                <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-primary-300 transition-colors group-hover:text-primary-200">
                   {t('services.learnMore')}
-                  <ArrowRight className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </span>
               </Link>
             ))}
@@ -245,17 +257,17 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Portfolio Section */}
       <section className="section" id="portfolio">
         <div className="container-custom">
-          <div className="text-center mb-16">
-            <h2 className="heading-2 mb-4">{t('portfolio.title')}</h2>
-            <p className="text-xl text-surface-400">{t('portfolio.subtitle')}</p>
+          <div className="mb-14 text-center">
+            <span className="section-kicker">Case Studies</span>
+            <h2 className="heading-2 mt-3">{t('portfolio.title')}</h2>
+            <p className="section-subtitle mt-4">{t('portfolio.subtitle')}</p>
           </div>
 
           {loadingProjects ? (
             <div className="flex justify-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
+              <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-primary-500" />
             </div>
           ) : projectsError ? (
             <ErrorMessage
@@ -264,38 +276,35 @@ export default function Home() {
               onRetry={fetchFeaturedProjects}
             />
           ) : featuredProjects.length === 0 ? (
-            <div className="text-center text-surface-400">
-              <p>{t('portfolio.noProjects', 'No projects available yet.')}</p>
+            <div className="panel-shell px-8 py-16 text-center">
+              <p className="text-surface-400">{t('portfolio.noProjects', 'No projects available yet.')}</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               {featuredProjects.map((project) => (
                 <Link
                   key={project.id}
                   to={`${getLocalizedPath('/portfolio', '/portofoliu')}/${project.id}`}
-                  className="glass-card overflow-hidden group"
+                  className="glass-card group overflow-hidden"
                 >
-                  <div className="aspect-video overflow-hidden">
+                  <div className="aspect-video overflow-hidden border-b border-white/10">
                     <ResponsiveImage
                       src={project.thumbnail_url || 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&auto=format&fit=crop&q=60'}
                       alt={currentLang === 'en' ? project.title_en : project.title_ro}
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
                   <div className="p-6">
-                    <h3 className="text-xl font-semibold mb-2">
+                    <h3 className="text-xl font-semibold text-white">
                       {currentLang === 'en' ? project.title_en : project.title_ro}
                     </h3>
-                    <p className="text-surface-400 mb-4">
+                    <p className="mt-3 text-sm text-surface-400">
                       {currentLang === 'en' ? project.description_en : project.description_ro}
                     </p>
-                    <div className="flex flex-wrap gap-2">
-                      {project.tech_stack?.map((tech) => (
-                        <span
-                          key={tech}
-                          className="px-3 py-1 text-xs bg-primary-500/20 text-primary-300 rounded-full"
-                        >
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {project.tech_stack?.slice(0, 4).map((tech) => (
+                        <span key={tech} className="pill-chip">
                           {tech}
                         </span>
                       ))}
@@ -306,108 +315,102 @@ export default function Home() {
             </div>
           )}
 
-          <div className="text-center mt-12">
+          <div className="mt-10 text-center">
             <Link
               to={getLocalizedPath('/portfolio', '/portofoliu')}
               className="btn-outline"
             >
               {t('portfolio.viewAll')}
-              <ArrowRight className="w-5 h-5 ml-2" />
+              <ArrowRight className="h-5 w-5" />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="section bg-surface-950/50" id="testimonials">
+      <section className="section border-y border-white/[0.08] bg-surface-950/[0.45]" id="testimonials">
         <div className="container-custom">
-          <div className="text-center mb-16">
-            <h2 className="heading-2 mb-4">{t('testimonials.title')}</h2>
-            <p className="text-xl text-surface-400">{t('testimonials.subtitle')}</p>
+          <div className="mb-14 text-center">
+            <span className="section-kicker">Client Feedback</span>
+            <h2 className="heading-2 mt-3">{t('testimonials.title')}</h2>
+            <p className="section-subtitle mt-4">{t('testimonials.subtitle')}</p>
           </div>
 
           {loadingTestimonials ? (
             <div className="flex justify-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
+              <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-primary-500" />
             </div>
           ) : testimonials.length === 0 ? (
-            <div className="text-center text-surface-400">
-              <p>{t('testimonials.noTestimonials', 'No testimonials available yet.')}</p>
+            <div className="panel-shell px-8 py-16 text-center">
+              <p className="text-surface-400">{t('testimonials.noTestimonials', 'No testimonials available yet.')}</p>
             </div>
           ) : (
-          <div className="max-w-4xl mx-auto">
-            <div className="glass-card p-8 md:p-12 relative">
-              <Quote className="w-12 h-12 text-primary-500/30 absolute top-6 left-6" />
-
-              <div className="text-center">
-                <p className="text-xl md:text-2xl text-surface-200 mb-8 relative z-10">
-                  "{currentLang === 'en'
-                    ? testimonials[currentTestimonial]?.text_en
-                    : testimonials[currentTestimonial]?.text_ro}"
-                </p>
-
-                <div className="flex items-center justify-center gap-4">
-                  <img
-                    src={testimonials[currentTestimonial]?.avatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=60'}
-                    alt={testimonials[currentTestimonial]?.name}
-                    loading="lazy"
-                    className="w-14 h-14 rounded-full object-cover"
-                  />
-                  <div className="text-left">
-                    <p className="font-semibold">{testimonials[currentTestimonial]?.name}</p>
-                    <p className="text-surface-400 text-sm">{testimonials[currentTestimonial]?.company}</p>
+            <div className="mx-auto max-w-4xl">
+              <div className="glass-card relative p-8 md:p-12">
+                <Quote className="absolute left-6 top-6 h-10 w-10 text-primary-500/30" />
+                <div className="text-center">
+                  <p className="relative z-10 text-xl text-surface-200 md:text-2xl">
+                    "{currentLang === 'en'
+                      ? testimonials[currentTestimonial]?.text_en
+                      : testimonials[currentTestimonial]?.text_ro}"
+                  </p>
+                  <div className="mt-8 flex items-center justify-center gap-4">
+                    <img
+                      src={testimonials[currentTestimonial]?.avatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=60'}
+                      alt={testimonials[currentTestimonial]?.name}
+                      loading="lazy"
+                      className="h-14 w-14 rounded-full border border-white/15 object-cover"
+                    />
+                    <div className="text-left">
+                      <p className="font-semibold">{testimonials[currentTestimonial]?.name}</p>
+                      <p className="text-sm text-surface-400">{testimonials[currentTestimonial]?.company}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Navigation dots */}
-              <div className="flex justify-center gap-2 mt-8">
-                {testimonials.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentTestimonial(index)}
-                    className={`w-2 h-2 rounded-full transition-colors ${
-                      index === currentTestimonial
-                        ? 'bg-primary-500'
-                        : 'bg-surface-600 hover:bg-surface-500'
-                    }`}
-                    aria-label={`Go to testimonial ${index + 1}`}
-                  />
-                ))}
-              </div>
+                <div className="mt-8 flex justify-center gap-2">
+                  {testimonials.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentTestimonial(index)}
+                      className={`h-2 rounded-full transition-all ${
+                        index === currentTestimonial ? 'w-8 bg-primary-500' : 'w-2 bg-surface-600 hover:bg-surface-500'
+                      }`}
+                      aria-label={`Go to testimonial ${index + 1}`}
+                    />
+                  ))}
+                </div>
 
-              {/* Arrow navigation */}
-              <button
-                onClick={() => setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length)}
-                className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors hidden md:block"
-                aria-label="Previous testimonial"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-              <button
-                onClick={() => setCurrentTestimonial((prev) => (prev + 1) % testimonials.length)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors hidden md:block"
-                aria-label="Next testimonial"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
+                <button
+                  onClick={() => setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length)}
+                  className="absolute left-4 top-1/2 hidden -translate-y-1/2 rounded-full border border-white/10 bg-white/5 p-2 transition-colors hover:bg-white/10 md:block"
+                  aria-label="Previous testimonial"
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </button>
+                <button
+                  onClick={() => setCurrentTestimonial((prev) => (prev + 1) % testimonials.length)}
+                  className="absolute right-4 top-1/2 hidden -translate-y-1/2 rounded-full border border-white/10 bg-white/5 p-2 transition-colors hover:bg-white/10 md:block"
+                  aria-label="Next testimonial"
+                >
+                  <ChevronRight className="h-5 w-5" />
+                </button>
+              </div>
             </div>
-          </div>
           )}
         </div>
       </section>
 
-      {/* Blog Preview Section */}
       <section className="section" id="blog">
         <div className="container-custom">
-          <div className="text-center mb-16">
-            <h2 className="heading-2 mb-4">{t('blogPreview.title')}</h2>
-            <p className="text-xl text-surface-400">{t('blogPreview.subtitle')}</p>
+          <div className="mb-14 text-center">
+            <span className="section-kicker">Insights</span>
+            <h2 className="heading-2 mt-3">{t('blogPreview.title')}</h2>
+            <p className="section-subtitle mt-4">{t('blogPreview.subtitle')}</p>
           </div>
 
           {loadingArticles ? (
             <div className="flex justify-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
+              <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-primary-500" />
             </div>
           ) : articlesError ? (
             <ErrorMessage
@@ -416,39 +419,39 @@ export default function Home() {
               onRetry={fetchLatestArticles}
             />
           ) : blogArticles.length === 0 ? (
-            <div className="text-center text-surface-400">
-              <p>{t('blogPreview.noArticles', 'No articles available yet.')}</p>
+            <div className="panel-shell px-8 py-16 text-center">
+              <p className="text-surface-400">{t('blogPreview.noArticles', 'No articles available yet.')}</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               {blogArticles.map((article) => (
                 <Link
                   key={article.id}
                   to={`/blog/${article.slug}`}
-                  className="glass-card overflow-hidden group"
+                  className="glass-card group overflow-hidden"
                 >
-                  <div className="aspect-video overflow-hidden">
+                  <div className="aspect-video overflow-hidden border-b border-white/10">
                     <ResponsiveImage
                       src={article.cover_image || 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&auto=format&fit=crop&q=60'}
                       alt={currentLang === 'en' ? article.title_en : article.title_ro}
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
                   <div className="p-6">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs text-primary-400 font-medium uppercase tracking-wide">
+                    <div className="mb-3 flex items-center justify-between">
+                      <span className="text-xs font-semibold uppercase tracking-[0.12em] text-primary-300">
                         {article.category}
                       </span>
-                      <span className="text-xs text-surface-500 flex items-center gap-1">
-                        <Calendar className="w-3 h-3" />
+                      <span className="inline-flex items-center gap-1 text-xs text-surface-500">
+                        <Calendar className="h-3 w-3" />
                         {formatDate(article.published_at, currentLang)}
                       </span>
                     </div>
-                    <h3 className="text-xl font-semibold mb-3">
+                    <h3 className="text-xl font-semibold text-white">
                       {currentLang === 'en' ? article.title_en : article.title_ro}
                     </h3>
-                    <p className="text-surface-400">
+                    <p className="mt-3 text-sm text-surface-400">
                       {currentLang === 'en' ? article.excerpt_en : article.excerpt_ro}
                     </p>
                   </div>
@@ -457,33 +460,31 @@ export default function Home() {
             </div>
           )}
 
-          <div className="text-center mt-12">
+          <div className="mt-10 text-center">
             <Link to="/blog" className="btn-outline">
               {t('blogPreview.viewAll')}
-              <ArrowRight className="w-5 h-5 ml-2" />
+              <ArrowRight className="h-5 w-5" />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="section bg-gradient-to-b from-surface-950 to-surface-900 relative overflow-hidden dark-section" id="cta">
-        {/* Background effect */}
-        <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-primary-700/10" />
-
-        <div className="container-custom relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="heading-2 mb-6">{t('cta.title')}</h2>
-            <p className="text-xl text-surface-300 mb-10">
-              {t('cta.subtitle')}
-            </p>
-            <Link
-              to={getLocalizedPath('/booking', '/programare')}
-              className="btn-primary text-lg"
-            >
-              {t('cta.button')}
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Link>
+      <section className="section relative overflow-hidden pb-24 pt-10" id="cta">
+        <div className="container-custom">
+          <div className="panel-shell relative overflow-hidden px-8 py-14 text-center md:px-12">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(196,30,58,0.24),transparent_58%)]" />
+            <div className="relative z-10 mx-auto max-w-3xl">
+              <span className="section-kicker">Let's Build</span>
+              <h2 className="heading-2 mt-3">{t('cta.title')}</h2>
+              <p className="mt-5 text-xl text-surface-300">{t('cta.subtitle')}</p>
+              <Link
+                to={getLocalizedPath('/booking', '/programare')}
+                className="btn-primary mt-10 text-base md:text-lg"
+              >
+                {t('cta.button')}
+                <ArrowRight className="h-5 w-5" />
+              </Link>
+            </div>
           </div>
         </div>
       </section>

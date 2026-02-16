@@ -174,12 +174,12 @@ export default function Booking() {
 
   if (status === 'success') {
     return (
-      <div className="pt-16 md:pt-20">
-        <section className="section min-h-[60vh] flex items-center">
+      <div className="page-shell">
+        <section className="section flex min-h-[60vh] items-center">
           <div className="container-custom">
-            <div className="max-w-xl mx-auto text-center glass-card p-12">
-              <div className="w-20 h-20 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-6">
-                <Check className="w-10 h-10 text-green-400" />
+            <div className="glass-card mx-auto max-w-xl p-12 text-center">
+              <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-green-500/20">
+                <Check className="h-10 w-10 text-green-400" />
               </div>
               <h2 className="heading-3 mb-4">{t('booking.success')}</h2>
               <p className="text-surface-400 mb-6">
@@ -199,11 +199,13 @@ export default function Booking() {
   }
 
   return (
-    <div className="pt-16 md:pt-20">
-      <section className="section">
+    <div className="page-shell">
+      <section className="section relative overflow-hidden pb-16 pt-28 md:pt-32">
+        <div className="hero-backdrop" />
         <div className="container-custom">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <h1 className="heading-1 mb-6">
+          <div className="mx-auto mb-14 max-w-3xl text-center">
+            <span className="section-kicker">Book A Call</span>
+            <h1 className="heading-1 mt-3 mb-6">
               <span className="gradient-text">{t('booking.pageTitle')}</span>
             </h1>
             <p className="text-xl text-surface-300">
@@ -211,12 +213,12 @@ export default function Booking() {
             </p>
           </div>
 
-          <div className="max-w-2xl mx-auto">
+          <div className="mx-auto max-w-2xl">
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* Date Selection */}
               <div className="glass-card p-6">
                 <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                  <Calendar className="w-5 h-5 text-primary-400" />
+                  <Calendar className="h-5 w-5 text-primary-300" />
                   {t('booking.selectDate')}
                 </h3>
                 <input
@@ -232,7 +234,7 @@ export default function Booking() {
               {/* Time Selection */}
               <div className="glass-card p-6">
                 <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                  <Clock className="w-5 h-5 text-primary-400" />
+                  <Clock className="h-5 w-5 text-primary-300" />
                   {t('booking.selectTime')}
                 </h3>
                 <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
@@ -268,7 +270,7 @@ export default function Booking() {
               {/* Contact Details */}
               <div className="glass-card p-6">
                 <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                  <User className="w-5 h-5 text-primary-400" />
+                  <User className="h-5 w-5 text-primary-300" />
                   {t('booking.yourDetails')}
                 </h3>
                 <div className="space-y-4">

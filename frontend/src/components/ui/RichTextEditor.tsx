@@ -46,14 +46,14 @@ export default function RichTextEditor({
       }),
       Image.configure({
         HTMLAttributes: {
-          class: 'max-w-full h-auto rounded-lg my-4'
+          class: 'my-4 h-auto max-w-full rounded-xl border border-white/10'
         }
       })
     ],
     content: content,
     editorProps: {
       attributes: {
-        class: 'prose prose-invert max-w-none min-h-[200px] focus:outline-none p-4'
+        class: 'prose prose-invert min-h-[220px] max-w-none p-4 focus:outline-none'
       }
     },
     onUpdate: ({ editor }) => {
@@ -98,14 +98,14 @@ export default function RichTextEditor({
   }
 
   return (
-    <div className={`border border-white/10 rounded-xl bg-white/5 overflow-hidden ${className}`}>
+    <div className={`overflow-hidden rounded-xl border border-white/10 bg-surface-900/[0.65] ${className}`}>
       {/* Toolbar */}
-      <div className="flex flex-wrap gap-1 p-2 border-b border-white/10 bg-white/5">
+      <div className="flex flex-wrap gap-1 border-b border-white/10 bg-white/5 p-2">
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleBold().run()}
           className={`p-2 rounded hover:bg-white/10 transition-colors ${
-            editor.isActive('bold') ? 'bg-white/20 text-primary-400' : ''
+            editor.isActive('bold') ? 'bg-primary-500/[0.18] text-primary-200' : ''
           }`}
           title="Bold (Ctrl+B)"
         >
@@ -115,7 +115,7 @@ export default function RichTextEditor({
           type="button"
           onClick={() => editor.chain().focus().toggleItalic().run()}
           className={`p-2 rounded hover:bg-white/10 transition-colors ${
-            editor.isActive('italic') ? 'bg-white/20 text-primary-400' : ''
+            editor.isActive('italic') ? 'bg-primary-500/[0.18] text-primary-200' : ''
           }`}
           title="Italic (Ctrl+I)"
         >
@@ -128,7 +128,7 @@ export default function RichTextEditor({
           type="button"
           onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
           className={`p-2 rounded hover:bg-white/10 transition-colors ${
-            editor.isActive('heading', { level: 1 }) ? 'bg-white/20 text-primary-400' : ''
+            editor.isActive('heading', { level: 1 }) ? 'bg-primary-500/[0.18] text-primary-200' : ''
           }`}
           title="Heading 1"
         >
@@ -138,7 +138,7 @@ export default function RichTextEditor({
           type="button"
           onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
           className={`p-2 rounded hover:bg-white/10 transition-colors ${
-            editor.isActive('heading', { level: 2 }) ? 'bg-white/20 text-primary-400' : ''
+            editor.isActive('heading', { level: 2 }) ? 'bg-primary-500/[0.18] text-primary-200' : ''
           }`}
           title="Heading 2"
         >
@@ -151,7 +151,7 @@ export default function RichTextEditor({
           type="button"
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           className={`p-2 rounded hover:bg-white/10 transition-colors ${
-            editor.isActive('bulletList') ? 'bg-white/20 text-primary-400' : ''
+            editor.isActive('bulletList') ? 'bg-primary-500/[0.18] text-primary-200' : ''
           }`}
           title="Bullet List"
         >
@@ -161,7 +161,7 @@ export default function RichTextEditor({
           type="button"
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
           className={`p-2 rounded hover:bg-white/10 transition-colors ${
-            editor.isActive('orderedList') ? 'bg-white/20 text-primary-400' : ''
+            editor.isActive('orderedList') ? 'bg-primary-500/[0.18] text-primary-200' : ''
           }`}
           title="Numbered List"
         >
@@ -171,7 +171,7 @@ export default function RichTextEditor({
           type="button"
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
           className={`p-2 rounded hover:bg-white/10 transition-colors ${
-            editor.isActive('blockquote') ? 'bg-white/20 text-primary-400' : ''
+            editor.isActive('blockquote') ? 'bg-primary-500/[0.18] text-primary-200' : ''
           }`}
           title="Quote"
         >
@@ -181,7 +181,7 @@ export default function RichTextEditor({
           type="button"
           onClick={() => editor.chain().focus().toggleCodeBlock().run()}
           className={`p-2 rounded hover:bg-white/10 transition-colors ${
-            editor.isActive('codeBlock') ? 'bg-white/20 text-primary-400' : ''
+            editor.isActive('codeBlock') ? 'bg-primary-500/[0.18] text-primary-200' : ''
           }`}
           title="Code Block"
         >
@@ -194,7 +194,7 @@ export default function RichTextEditor({
           type="button"
           onClick={setLink}
           className={`p-2 rounded hover:bg-white/10 transition-colors ${
-            editor.isActive('link') ? 'bg-white/20 text-primary-400' : ''
+            editor.isActive('link') ? 'bg-primary-500/[0.18] text-primary-200' : ''
           }`}
           title="Add Link"
         >

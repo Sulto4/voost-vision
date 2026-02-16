@@ -124,7 +124,7 @@ export default function ImageUpload({
           <button
             type="button"
             onClick={clearImage}
-            className="p-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors"
+            className="rounded-lg bg-red-500/20 p-2 text-red-300 transition-colors hover:bg-red-500/30"
             title="Clear image"
           >
             <X className="w-5 h-5" />
@@ -134,7 +134,7 @@ export default function ImageUpload({
 
       {/* Upload Area */}
       <div
-        className={`relative border-2 border-dashed rounded-xl p-6 text-center transition-colors ${
+        className={`relative rounded-xl border-2 border-dashed p-6 text-center transition-colors ${
           dragOver
             ? 'border-primary-500 bg-primary-500/10'
             : 'border-white/20 hover:border-white/30'

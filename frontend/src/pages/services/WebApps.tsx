@@ -18,12 +18,13 @@ export default function WebApps() {
   const technologies = ['React', 'Vue.js', 'Node.js', 'PostgreSQL', 'MongoDB', 'Redis', 'GraphQL', 'REST APIs']
 
   return (
-    <div className="pt-16 md:pt-20">
-      <section className="section">
+    <div className="page-shell">
+      <section className="section relative overflow-hidden pb-16 pt-28 md:pt-32">
+        <div className="hero-backdrop" />
         <div className="container-custom">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <div className="w-20 h-20 rounded-2xl bg-primary-500/20 flex items-center justify-center mx-auto mb-8">
-              <Code className="w-10 h-10 text-primary-400" />
+          <div className="mx-auto mb-14 max-w-3xl text-center">
+            <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-2xl border border-primary-500/[0.35] bg-primary-500/[0.12]">
+              <Code className="h-10 w-10 text-primary-300" />
             </div>
             <h1 className="heading-1 mb-6">
               <span className="gradient-text">{t('services.webApps')}</span>
@@ -33,13 +34,13 @@ export default function WebApps() {
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-12 items-start">
+          <div className="grid items-start gap-6 lg:grid-cols-2">
             <div className="glass-card p-8">
               <h2 className="heading-3 mb-6">What we build</h2>
               <ul className="space-y-4">
                 {features.map((feature) => (
                   <li key={feature} className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-primary-400 mt-1 flex-shrink-0" />
+                    <Check className="mt-1 h-5 w-5 flex-shrink-0 text-primary-300" />
                     <span className="text-surface-300">{feature}</span>
                   </li>
                 ))}
@@ -52,30 +53,30 @@ export default function WebApps() {
                 {technologies.map((tech) => (
                   <span
                     key={tech}
-                    className="px-4 py-2 bg-primary-500/20 text-primary-300 rounded-full text-sm"
+                    className="pill-chip border-primary-500/[0.25] bg-primary-500/[0.12] text-primary-200"
                   >
                     {tech}
                   </span>
                 ))}
               </div>
 
-              <div className="mt-8 pt-8 border-t border-white/10">
+              <div className="mt-8 border-t border-white/10 pt-8">
                 <h3 className="font-semibold mb-4">Key benefits</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex items-center gap-2 text-surface-400">
-                    <Database className="w-4 h-4 text-primary-400" />
+                    <Database className="h-4 w-4 text-primary-300" />
                     Scalable
                   </div>
                   <div className="flex items-center gap-2 text-surface-400">
-                    <Lock className="w-4 h-4 text-primary-400" />
+                    <Lock className="h-4 w-4 text-primary-300" />
                     Secure
                   </div>
                   <div className="flex items-center gap-2 text-surface-400">
-                    <Cloud className="w-4 h-4 text-primary-400" />
+                    <Cloud className="h-4 w-4 text-primary-300" />
                     Cloud-ready
                   </div>
                   <div className="flex items-center gap-2 text-surface-400">
-                    <Code className="w-4 h-4 text-primary-400" />
+                    <Code className="h-4 w-4 text-primary-300" />
                     Modern stack
                   </div>
                 </div>
@@ -83,13 +84,13 @@ export default function WebApps() {
             </div>
           </div>
 
-          <div className="text-center mt-12">
+          <div className="mt-12 text-center">
             <Link
               to={currentLang === 'en' ? '/booking' : '/programare'}
               className="btn-primary text-lg"
             >
               {t('hero.cta')}
-              <ArrowRight className="w-5 h-5 ml-2" />
+              <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
           </div>
         </div>

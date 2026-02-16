@@ -75,9 +75,9 @@ export default function BlogDetail() {
 
   if (loading) {
     return (
-      <div className="pt-16 md:pt-20">
-        <section className="section min-h-[60vh] flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
+      <div className="page-shell">
+        <section className="section flex min-h-[60vh] items-center justify-center">
+          <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-primary-500" />
         </section>
       </div>
     )
@@ -85,12 +85,12 @@ export default function BlogDetail() {
 
   if (error || !article) {
     return (
-      <div className="pt-16 md:pt-20">
-        <section className="section min-h-[60vh] flex items-center">
+      <div className="page-shell">
+        <section className="section flex min-h-[60vh] items-center">
           <div className="container-custom text-center">
             <h1 className="heading-2 mb-4">Article not found</h1>
             <Link to="/blog" className="btn-primary">
-              <ArrowLeft className="w-5 h-5 mr-2" />
+              <ArrowLeft className="mr-2 h-5 w-5" />
               Back to Blog
             </Link>
           </div>
@@ -136,7 +136,7 @@ export default function BlogDetail() {
   }
 
   return (
-    <div className="pt-16 md:pt-20">
+    <div className="page-shell">
       <Helmet>
         <title>{title} | Voost Vision</title>
         <meta name="description" content={description || ''} />
@@ -166,31 +166,32 @@ export default function BlogDetail() {
         </script>
       </Helmet>
 
-      <article className="section">
+      <article className="section relative overflow-hidden pb-20 pt-28 md:pt-32">
+        <div className="hero-backdrop" />
         <div className="container-custom">
-          <div className="max-w-3xl mx-auto">
+          <div className="mx-auto max-w-3xl">
             <Link
               to="/blog"
-              className="inline-flex items-center text-surface-400 hover:text-white transition-colors mb-8"
+              className="mb-8 inline-flex items-center text-surface-400 transition-colors hover:text-white"
             >
-              <ArrowLeft className="w-5 h-5 mr-2" />
+              <ArrowLeft className="mr-2 h-5 w-5" />
               Back to Blog
             </Link>
 
-            <div className="flex items-center gap-4 mb-6">
-              <span className="text-xs text-primary-400 font-medium uppercase tracking-wide px-3 py-1 bg-primary-500/20 rounded-full">
+            <div className="mb-6 flex flex-wrap items-center gap-4">
+              <span className="rounded-full border border-primary-500/30 bg-primary-500/[0.12] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary-200">
                 {article.category}
               </span>
-              <div className="flex items-center text-surface-400 text-sm">
-                <Calendar className="w-4 h-4 mr-1" />
+              <div className="flex items-center text-sm text-surface-400">
+                <Calendar className="mr-1 h-4 w-4" />
                 {new Date(article.published_at || article.created_at).toLocaleDateString(currentLang === 'en' ? 'en-US' : 'ro-RO', {
                   year: 'numeric',
                   month: 'long',
                   day: 'numeric',
                 })}
               </div>
-              <div className="flex items-center text-surface-400 text-sm">
-                <User className="w-4 h-4 mr-1" />
+              <div className="flex items-center text-sm text-surface-400">
+                <User className="mr-1 h-4 w-4" />
                 {article.author}
               </div>
             </div>
@@ -204,7 +205,7 @@ export default function BlogDetail() {
                 src={article.cover_image}
                 alt={currentLang === 'en' ? article.title_en : article.title_ro}
                 loading="lazy"
-                className="w-full rounded-2xl mb-12"
+                className="mb-12 w-full rounded-2xl border border-white/10"
               />
             )}
 
@@ -215,14 +216,13 @@ export default function BlogDetail() {
               }}
             />
 
-            {/* Tags */}
             {article.tags && article.tags.length > 0 && (
               <div className="mt-8 flex flex-wrap gap-2">
                 {article.tags.map((tag) => (
                   <Link
                     key={tag}
                     to={`/blog?tag=${encodeURIComponent(tag)}`}
-                    className="text-sm px-3 py-1 bg-accent-500/20 text-accent-300 rounded-full hover:bg-accent-500/30 transition-colors"
+                    className="rounded-full border border-accent-500/[0.35] bg-accent-500/[0.15] px-3 py-1 text-sm text-accent-100 transition-colors hover:border-accent-500/[0.45]"
                   >
                     #{tag}
                   </Link>
@@ -230,33 +230,32 @@ export default function BlogDetail() {
               </div>
             )}
 
-            {/* Share buttons */}
-            <div className="mt-12 pt-8 border-t border-white/10">
-              <p className="text-surface-400 mb-4">Share this article:</p>
+            <div className="mt-12 border-t border-white/10 pt-8">
+              <p className="mb-4 text-surface-400">Share this article:</p>
               <div className="flex gap-4">
                 <a
                   href={`https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
+                  className="rounded-xl border border-white/10 bg-white/5 p-3 transition-colors hover:bg-white/10"
                 >
-                  <Facebook className="w-5 h-5" />
+                  <Facebook className="h-5 w-5" />
                 </a>
                 <a
                   href={`https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareTitle}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
+                  className="rounded-xl border border-white/10 bg-white/5 p-3 transition-colors hover:bg-white/10"
                 >
-                  <Twitter className="w-5 h-5" />
+                  <Twitter className="h-5 w-5" />
                 </a>
                 <a
                   href={`https://www.linkedin.com/shareArticle?mini=true&url=${shareUrl}&title=${shareTitle}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
+                  className="rounded-xl border border-white/10 bg-white/5 p-3 transition-colors hover:bg-white/10"
                 >
-                  <Linkedin className="w-5 h-5" />
+                  <Linkedin className="h-5 w-5" />
                 </a>
               </div>
             </div>
@@ -264,38 +263,37 @@ export default function BlogDetail() {
         </div>
       </article>
 
-      {/* Related Articles */}
       {relatedArticles.length > 0 && (
-        <section className="section pt-0">
+        <section className="section border-t border-white/[0.08] pt-0">
           <div className="container-custom">
             <h2 className="heading-2 mb-8 text-center">
               {currentLang === 'en' ? 'Related Articles' : 'Articole similare'}
             </h2>
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid gap-6 md:grid-cols-3">
               {relatedArticles.map((relatedArticle) => (
                 <Link
                   key={relatedArticle.id}
                   to={`/blog/${relatedArticle.slug}`}
-                  className="glass-card overflow-hidden group"
+                  className="glass-card group overflow-hidden"
                 >
-                  <div className="aspect-video overflow-hidden">
+                  <div className="aspect-video overflow-hidden border-b border-white/10">
                     <img
                       src={relatedArticle.cover_image || ''}
                       alt={currentLang === 'en' ? relatedArticle.title_en : relatedArticle.title_ro}
                       loading="lazy"
-                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
                   <div className="p-5">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs text-primary-400 font-medium uppercase tracking-wide">
+                    <div className="mb-2 flex items-center justify-between">
+                      <span className="text-xs font-semibold uppercase tracking-[0.12em] text-primary-300">
                         {relatedArticle.category || ''}
                       </span>
                       <span className="text-xs text-surface-500">
                         {relatedArticle.published_at ? new Date(relatedArticle.published_at).toLocaleDateString(currentLang === 'en' ? 'en-US' : 'ro-RO') : ''}
                       </span>
                     </div>
-                    <h3 className="text-lg font-semibold line-clamp-2">
+                    <h3 className="line-clamp-2 text-lg font-semibold">
                       {currentLang === 'en' ? relatedArticle.title_en : relatedArticle.title_ro}
                     </h3>
                   </div>

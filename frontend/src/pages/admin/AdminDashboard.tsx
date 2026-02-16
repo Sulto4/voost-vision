@@ -97,12 +97,12 @@ export default function AdminDashboard() {
     <AdminLayout>
       <h1 className="heading-2 mb-8">Dashboard</h1>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="mb-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {statCards.map((stat) => (
             <Link
               key={stat.label}
               to={stat.href}
-              className="glass-card p-6 hover:border-primary-500/50 transition-all group"
+              className="glass-card group p-6"
             >
               <div className="flex items-start justify-between">
                 <div>
@@ -111,19 +111,19 @@ export default function AdminDashboard() {
                     {loading ? '...' : stat.value}
                   </p>
                 </div>
-                <div className="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center">
-                  <stat.icon className="w-6 h-6 text-primary-400" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-primary-500/30 bg-primary-500/[0.12]">
+                  <stat.icon className="h-6 w-6 text-primary-300" />
                 </div>
               </div>
-              <div className="mt-4 flex items-center text-primary-400 text-sm group-hover:text-primary-300">
+              <div className="mt-4 flex items-center text-sm text-primary-300 group-hover:text-primary-200">
                 View all
-                <ArrowRight className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="ml-1 h-4 w-4 transform transition-transform group-hover:translate-x-1" />
               </div>
             </Link>
           ))}
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid gap-8 lg:grid-cols-2">
           <div className="glass-card p-6">
             <h2 className="text-xl font-semibold mb-4">Recent Bookings</h2>
             <div className="space-y-4">
@@ -133,12 +133,12 @@ export default function AdminDashboard() {
                 <p className="text-surface-400">No bookings yet</p>
               ) : (
                 recentBookings.map((booking) => (
-                  <div key={booking.id} className="flex items-center justify-between py-3 border-b border-white/5">
+                  <div key={booking.id} className="flex items-center justify-between border-b border-white/5 py-3">
                     <div>
                       <p className="font-medium">{booking.client_name}</p>
                       <p className="text-surface-400 text-sm">{booking.description || 'Consultation'}</p>
                     </div>
-                    <span className={`px-3 py-1 text-xs rounded-full capitalize ${getStatusColor(booking.status)}`}>
+                    <span className={`rounded-full px-3 py-1 text-xs capitalize ${getStatusColor(booking.status)}`}>
                       {booking.status}
                     </span>
                   </div>
@@ -156,7 +156,7 @@ export default function AdminDashboard() {
                 <p className="text-surface-400">No messages yet</p>
               ) : (
                 recentMessages.map((message) => (
-                  <div key={message.id} className="py-3 border-b border-white/5">
+                  <div key={message.id} className="border-b border-white/5 py-3">
                     <div className="flex items-center justify-between mb-1">
                       <p className="font-medium">{message.name}</p>
                       {!message.read ? (

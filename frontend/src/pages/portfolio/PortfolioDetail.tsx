@@ -69,9 +69,9 @@ export default function PortfolioDetail() {
 
   if (loading) {
     return (
-      <div className="pt-16 md:pt-20">
-        <section className="section min-h-[60vh] flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
+      <div className="page-shell">
+        <section className="section flex min-h-[60vh] items-center justify-center">
+          <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-primary-500" />
         </section>
       </div>
     )
@@ -79,15 +79,15 @@ export default function PortfolioDetail() {
 
   if (error || !project) {
     return (
-      <div className="pt-16 md:pt-20">
-        <section className="section min-h-[60vh] flex items-center">
+      <div className="page-shell">
+        <section className="section flex min-h-[60vh] items-center">
           <div className="container-custom text-center">
             <h1 className="heading-2 mb-4">Project not found</h1>
             <Link
               to={currentLang === 'en' ? '/portfolio' : '/portofoliu'}
               className="btn-primary"
             >
-              <ArrowLeft className="w-5 h-5 mr-2" />
+              <ArrowLeft className="mr-2 h-5 w-5" />
               Back to Portfolio
             </Link>
           </div>
@@ -104,18 +104,19 @@ export default function PortfolioDetail() {
   ]
 
   return (
-    <div className="pt-16 md:pt-20">
-      <section className="section">
+    <div className="page-shell">
+      <section className="section relative overflow-hidden pb-16 pt-28 md:pt-32">
+        <div className="hero-backdrop" />
         <div className="container-custom">
           <Breadcrumbs items={breadcrumbItems} className="mb-8" />
 
-          <div className="grid lg:grid-cols-3 gap-12">
+          <div className="grid gap-8 lg:grid-cols-3">
             <div className="lg:col-span-2">
               <img
                 src={project.thumbnail_url || defaultImage}
                 alt={currentLang === 'en' ? project.title_en : project.title_ro}
                 loading="lazy"
-                className="w-full rounded-2xl mb-8 cursor-pointer hover:opacity-90 transition-opacity"
+                className="mb-8 w-full cursor-pointer rounded-2xl border border-white/10 transition-opacity hover:opacity-90"
                 onClick={() => openLightbox(0)}
               />
 
@@ -127,7 +128,7 @@ export default function PortfolioDetail() {
                       src={img}
                       alt=""
                       loading="lazy"
-                      className="w-full rounded-xl cursor-pointer hover:opacity-90 transition-opacity"
+                      className="w-full cursor-pointer rounded-xl border border-white/10 transition-opacity hover:opacity-90"
                       onClick={() => openLightbox(idx + 1)}
                     />
                   ))}
@@ -136,7 +137,7 @@ export default function PortfolioDetail() {
             </div>
 
             <div>
-              <div className="glass-card p-8 sticky top-28">
+              <div className="glass-card sticky top-28 p-8">
                 <h1 className="heading-3 mb-4">
                   {currentLang === 'en' ? project.title_en : project.title_ro}
                 </h1>
@@ -146,15 +147,12 @@ export default function PortfolioDetail() {
 
                 {project.tech_stack && project.tech_stack.length > 0 && (
                   <div className="mb-6">
-                    <h3 className="text-sm font-semibold text-surface-400 uppercase tracking-wide mb-3">
+                    <h3 className="mb-3 text-sm font-semibold uppercase tracking-[0.12em] text-surface-400">
                       Tech Stack
                     </h3>
                     <div className="flex flex-wrap gap-2">
                       {project.tech_stack.map((tech) => (
-                        <span
-                          key={tech}
-                          className="px-3 py-1 text-sm bg-primary-500/20 text-primary-300 rounded-full"
-                        >
+                        <span key={tech} className="pill-chip">
                           {tech}
                         </span>
                       ))}
@@ -170,7 +168,7 @@ export default function PortfolioDetail() {
                     className="btn-primary w-full"
                   >
                     View Live Site
-                    <ExternalLink className="w-4 h-4 ml-2" />
+                    <ExternalLink className="ml-2 h-4 w-4" />
                   </a>
                 )}
               </div>
@@ -179,33 +177,29 @@ export default function PortfolioDetail() {
         </div>
       </section>
 
-      {/* Lightbox Modal */}
       {lightboxOpen && allImages.length > 0 && (
         <div
-          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/95"
           onClick={closeLightbox}
         >
-          {/* Close button */}
           <button
             onClick={closeLightbox}
-            className="absolute top-4 right-4 p-2 text-white/70 hover:text-white transition-colors z-10"
+            className="absolute right-4 top-4 z-10 rounded-full border border-white/15 bg-black/50 p-2 text-white/70 transition-colors hover:text-white"
             aria-label="Close lightbox"
           >
-            <X className="w-8 h-8" />
+            <X className="h-8 w-8" />
           </button>
 
-          {/* Previous button */}
           {allImages.length > 1 && (
             <button
-              onClick={(e) => { e.stopPropagation(); prevImage(); }}
-              className="absolute left-4 p-2 text-white/70 hover:text-white transition-colors z-10"
+              onClick={(e) => { e.stopPropagation(); prevImage() }}
+              className="absolute left-4 z-10 rounded-full border border-white/15 bg-black/50 p-2 text-white/70 transition-colors hover:text-white"
               aria-label="Previous image"
             >
-              <ChevronLeft className="w-10 h-10" />
+              <ChevronLeft className="h-10 w-10" />
             </button>
           )}
 
-          {/* Image */}
           <img
             src={allImages[lightboxIndex]}
             alt=""
@@ -213,20 +207,18 @@ export default function PortfolioDetail() {
             onClick={(e) => e.stopPropagation()}
           />
 
-          {/* Next button */}
           {allImages.length > 1 && (
             <button
-              onClick={(e) => { e.stopPropagation(); nextImage(); }}
-              className="absolute right-4 p-2 text-white/70 hover:text-white transition-colors z-10"
+              onClick={(e) => { e.stopPropagation(); nextImage() }}
+              className="absolute right-4 z-10 rounded-full border border-white/15 bg-black/50 p-2 text-white/70 transition-colors hover:text-white"
               aria-label="Next image"
             >
-              <ChevronRight className="w-10 h-10" />
+              <ChevronRight className="h-10 w-10" />
             </button>
           )}
 
-          {/* Image counter */}
           {allImages.length > 1 && (
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/70 text-sm">
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full border border-white/15 bg-black/60 px-3 py-1 text-sm text-white/80">
               {lightboxIndex + 1} / {allImages.length}
             </div>
           )}

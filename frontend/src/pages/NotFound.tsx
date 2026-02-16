@@ -6,25 +6,25 @@ export default function NotFound() {
   const { t } = useTranslation()
 
   return (
-    <div className="pt-16 md:pt-20">
-      <section className="section min-h-[70vh] flex items-center">
+    <div className="page-shell">
+      <section className="section flex min-h-[70vh] items-center">
         <div className="container-custom">
-          <div className="max-w-xl mx-auto text-center">
+          <div className="glass-card mx-auto max-w-xl p-10 text-center md:p-14">
             <h1 className="text-9xl font-bold gradient-text mb-6">404</h1>
             <h2 className="heading-3 mb-4">Page Not Found</h2>
             <p className="text-surface-400 text-lg mb-8">
               The page you're looking for doesn't exist or has been moved.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col justify-center gap-4 sm:flex-row">
               <Link to="/" className="btn-primary">
-                <Home className="w-5 h-5 mr-2" />
+                <Home className="mr-2 h-5 w-5" />
                 {t('nav.home')}
               </Link>
               <button
                 onClick={() => window.history.back()}
                 className="btn-secondary"
               >
-                <ArrowLeft className="w-5 h-5 mr-2" />
+                <ArrowLeft className="mr-2 h-5 w-5" />
                 Go Back
               </button>
             </div>

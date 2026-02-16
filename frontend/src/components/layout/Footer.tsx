@@ -1,12 +1,25 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useMemo, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Mail, Phone, MapPin, Facebook, Instagram, Linkedin, Twitter, Globe } from 'lucide-react'
+import { Mail, Phone, MapPin, Instagram, Linkedin, Facebook, Twitter, Globe, ArrowRight } from 'lucide-react'
 
 export default function Footer() {
   const { t, i18n } = useTranslation()
-  const currentLang = i18n.language
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false)
+  const location = useLocation()
+  const currentLang = i18n.language
+
+  const urlPrefix = useMemo(() => {
+    if (location.pathname.startsWith('/en/') || location.pathname === '/en') return '/en'
+    if (location.pathname.startsWith('/ro/') || location.pathname === '/ro') return '/ro'
+    return ''
+  }, [location.pathname])
+
+  const withPrefix = (path: string) => {
+    if (!urlPrefix) return path
+    if (path === '/') return urlPrefix
+    return `${urlPrefix}${path}`
+  }
 
   const changeLanguage = (lang: string) => {
     i18n.changeLanguage(lang)
@@ -25,144 +38,139 @@ export default function Footer() {
   ]
 
   const services = [
-    { href: getLocalizedPath('/services/web-development', '/servicii/dezvoltare-web'), label: t('services.webDev') },
-    { href: getLocalizedPath('/services/web-apps', '/servicii/aplicatii-web'), label: t('services.webApps') },
-    { href: getLocalizedPath('/services/mobile', '/servicii/mobile'), label: t('services.mobile') },
-    { href: getLocalizedPath('/services/design', '/servicii/design'), label: t('services.design') },
+    { href: withPrefix(getLocalizedPath('/services/web-development', '/servicii/dezvoltare-web')), label: t('services.webDev') },
+    { href: withPrefix(getLocalizedPath('/services/web-apps', '/servicii/aplicatii-web')), label: t('services.webApps') },
+    { href: withPrefix(getLocalizedPath('/services/mobile', '/servicii/mobile')), label: t('services.mobile') },
+    { href: withPrefix(getLocalizedPath('/services/design', '/servicii/design')), label: t('services.design') },
   ]
 
   const quickLinks = [
-    { href: getLocalizedPath('/about', '/despre'), label: t('nav.about') },
-    { href: getLocalizedPath('/portfolio', '/portofoliu'), label: t('nav.portfolio') },
-    { href: '/blog', label: t('nav.blog') },
-    { href: '/contact', label: t('nav.contact') },
-    { href: getLocalizedPath('/booking', '/programare'), label: t('nav.bookCall') },
+    { href: withPrefix(getLocalizedPath('/about', '/despre')), label: t('nav.about') },
+    { href: withPrefix(getLocalizedPath('/portfolio', '/portofoliu')), label: t('nav.portfolio') },
+    { href: withPrefix('/blog'), label: t('nav.blog') },
+    { href: withPrefix('/contact'), label: t('nav.contact') },
   ]
 
   return (
-    <footer className="bg-surface-950 border-t border-white/5">
-      <div className="container-custom py-12 md:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-          {/* Company Info */}
-          <div className="lg:col-span-1">
-            <Link to="/" className="inline-block mb-4">
-              <span className="text-2xl font-bold gradient-text">Voost Vision</span>
-            </Link>
-            <p className="text-surface-400 mb-6">
-              {t('footer.tagline')}
-            </p>
-            <div className="flex space-x-4">
+    <footer className="relative mt-16 border-t border-white/10 bg-surface-950">
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary-500/70 to-transparent" />
+      <div className="container-custom py-16 md:py-20">
+        <div className="grid gap-10 lg:grid-cols-12">
+          <div className="panel-shell p-6 lg:col-span-5">
+            <div className="inline-flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-primary-500 shadow-glow" />
+              <span className="font-display text-2xl font-semibold text-white">
+                Voost <span className="text-primary-300">Vision</span>
+              </span>
+            </div>
+            <p className="mt-4 max-w-md text-surface-300">{t('footer.tagline')}</p>
+            <div className="mt-6 flex flex-wrap gap-3">
               {socialLinks.map((social) => (
                 <a
                   key={social.label}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-surface-400 hover:text-white transition-colors"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.12] bg-white/5 text-surface-300 transition-colors hover:border-primary-400/[0.50] hover:text-primary-200"
                   aria-label={social.label}
                 >
-                  <social.icon className="w-5 h-5" />
+                  <social.icon className="h-4 w-4" />
                 </a>
               ))}
             </div>
+            <Link
+              to={withPrefix(getLocalizedPath('/booking', '/programare'))}
+              className="btn-outline mt-8"
+            >
+              {t('nav.bookCall')}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
 
-          {/* Services */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">{t('footer.services')}</h3>
-            <ul className="space-y-3">
-              {services.map((service) => (
-                <li key={service.href}>
-                  <Link
-                    to={service.href}
-                    className="text-surface-400 hover:text-white transition-colors"
-                  >
-                    {service.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <div className="lg:col-span-7">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="glass-card p-6">
+                <h3 className="font-display text-sm font-semibold uppercase tracking-[0.12em] text-surface-200">
+                  {t('footer.services')}
+                </h3>
+                <ul className="mt-4 space-y-3">
+                  {services.map((service) => (
+                    <li key={service.href}>
+                      <Link to={service.href} className="text-sm text-surface-300 transition-colors hover:text-white">
+                        {service.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-          {/* Quick Links */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">{t('footer.quickLinks')}</h3>
-            <ul className="space-y-3">
-              {quickLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    to={link.href}
-                    className="text-surface-400 hover:text-white transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+              <div className="glass-card p-6">
+                <h3 className="font-display text-sm font-semibold uppercase tracking-[0.12em] text-surface-200">
+                  {t('footer.quickLinks')}
+                </h3>
+                <ul className="mt-4 space-y-3">
+                  {quickLinks.map((link) => (
+                    <li key={link.href}>
+                      <Link to={link.href} className="text-sm text-surface-300 transition-colors hover:text-white">
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-          {/* Contact Info */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">{t('footer.contact')}</h3>
-            <ul className="space-y-3">
-              <li>
-                <a
-                  href="mailto:contact@voostvision.ro"
-                  className="flex items-center space-x-3 text-surface-400 hover:text-white transition-colors"
-                >
-                  <Mail className="w-5 h-5 flex-shrink-0" />
-                  <span>contact@voostvision.ro</span>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="tel:+40700000000"
-                  className="flex items-center space-x-3 text-surface-400 hover:text-white transition-colors"
-                >
-                  <Phone className="w-5 h-5 flex-shrink-0" />
-                  <span>+40 700 000 000</span>
-                </a>
-              </li>
-              <li>
-                <div className="flex items-start space-x-3 text-surface-400">
-                  <MapPin className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                  <span>București, România</span>
-                </div>
-              </li>
-            </ul>
+              <div className="glass-card p-6">
+                <h3 className="font-display text-sm font-semibold uppercase tracking-[0.12em] text-surface-200">
+                  {t('footer.contact')}
+                </h3>
+                <ul className="mt-4 space-y-3 text-sm text-surface-300">
+                  <li>
+                    <a href="mailto:contact@voostvision.ro" className="inline-flex items-center gap-2 transition-colors hover:text-white">
+                      <Mail className="h-4 w-4 text-primary-300" />
+                      contact@voostvision.ro
+                    </a>
+                  </li>
+                  <li>
+                    <a href="tel:+40700000000" className="inline-flex items-center gap-2 transition-colors hover:text-white">
+                      <Phone className="h-4 w-4 text-primary-300" />
+                      +40 700 000 000
+                    </a>
+                  </li>
+                  <li className="inline-flex items-center gap-2">
+                    <MapPin className="h-4 w-4 text-primary-300" />
+                    București, România
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-          <p className="text-surface-500 text-sm">
-            © {new Date().getFullYear()} Voost Vision. {t('footer.rights')}
-          </p>
-          <div className="flex items-center space-x-6 text-sm text-surface-500">
-            {/* Language Switcher */}
+        <div className="mt-10 flex flex-col items-start justify-between gap-4 border-t border-white/10 pt-6 text-sm text-surface-500 md:flex-row md:items-center">
+          <p>© {new Date().getFullYear()} Voost Vision. {t('footer.rights')}</p>
+          <div className="flex flex-wrap items-center gap-5">
             <div className="relative">
               <button
-                onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-                className="flex items-center space-x-2 hover:text-white transition-colors"
-                aria-label="Change language"
+                onClick={() => setIsLangMenuOpen((prev) => !prev)}
+                className="inline-flex items-center gap-2 text-surface-400 transition-colors hover:text-white"
               >
-                <Globe className="w-4 h-4" />
+                <Globe className="h-4 w-4" />
                 <span className="uppercase">{currentLang}</span>
               </button>
               {isLangMenuOpen && (
-                <div className="absolute bottom-full right-0 mb-2 w-32 py-2 bg-surface-800 rounded-lg shadow-xl border border-white/10">
+                <div className="absolute bottom-[calc(100%+0.5rem)] right-0 w-32 rounded-xl border border-white/[0.12] bg-surface-900/[0.97] p-1 backdrop-blur-xl">
                   <button
                     onClick={() => changeLanguage('ro')}
-                    className={`w-full px-4 py-2 text-left text-sm hover:bg-white/10 ${
-                      currentLang === 'ro' ? 'text-primary-400' : 'text-white'
+                    className={`w-full rounded-lg px-3 py-2 text-left text-sm ${
+                      currentLang === 'ro' ? 'bg-primary-500/20 text-primary-200' : 'text-surface-300 hover:bg-white/[0.08]'
                     }`}
                   >
                     Română
                   </button>
                   <button
                     onClick={() => changeLanguage('en')}
-                    className={`w-full px-4 py-2 text-left text-sm hover:bg-white/10 ${
-                      currentLang === 'en' ? 'text-primary-400' : 'text-white'
+                    className={`w-full rounded-lg px-3 py-2 text-left text-sm ${
+                      currentLang === 'en' ? 'bg-primary-500/20 text-primary-200' : 'text-surface-300 hover:bg-white/[0.08]'
                     }`}
                   >
                     English
@@ -170,10 +178,10 @@ export default function Footer() {
                 </div>
               )}
             </div>
-            <Link to="/privacy" className="hover:text-white transition-colors">
+            <Link to={withPrefix('/privacy')} className="transition-colors hover:text-white">
               {t('footer.privacy')}
             </Link>
-            <Link to="/terms" className="hover:text-white transition-colors">
+            <Link to={withPrefix('/terms')} className="transition-colors hover:text-white">
               {t('footer.terms')}
             </Link>
           </div>

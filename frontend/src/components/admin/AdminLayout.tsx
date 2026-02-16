@@ -50,8 +50,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   // Show loading state while checking auth
   if (loading) {
     return (
-      <div className="min-h-screen bg-surface-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
+      <div className="flex min-h-screen items-center justify-center bg-surface-950">
+        <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-primary-500" />
       </div>
     )
   }
@@ -62,12 +62,12 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   }
 
   return (
-    <div className="min-h-screen bg-surface-900">
-      <header className="bg-surface-950 border-b border-white/5 sticky top-0 z-40">
+    <div className="min-h-screen bg-surface-950">
+      <header className="sticky top-0 z-40 border-b border-white/10 bg-surface-950/[0.92] backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <Link to="/admin/dashboard" className="text-xl font-bold gradient-text">
-              Voost Vision Admin
+            <Link to="/admin/dashboard" className="font-display text-xl font-semibold text-white">
+              Voost <span className="text-primary-300">Vision Admin</span>
             </Link>
             <nav className="hidden md:flex items-center space-x-1">
               {navItems.map((item) => (
@@ -76,8 +76,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                   to={item.href}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
                     isActive(item.href)
-                      ? 'bg-primary-500/20 text-primary-400'
-                      : 'text-surface-300 hover:text-white hover:bg-white/5'
+                      ? 'bg-primary-500/[0.18] text-primary-200'
+                      : 'text-surface-300 hover:text-white hover:bg-white/[0.06]'
                   }`}
                 >
                   <item.icon className="w-4 h-4" />
@@ -86,7 +86,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               ))}
             </nav>
             <div className="flex items-center gap-4">
-              <Link to="/" className="text-surface-400 hover:text-white text-sm">
+              <Link to="/" className="text-sm text-surface-400 hover:text-white">
                 View Site
               </Link>
               <div className="flex items-center gap-3 pl-4 border-l border-white/10">
@@ -95,7 +95,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 </span>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-2 px-3 py-2 text-surface-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-surface-400 transition-colors hover:bg-red-500/10 hover:text-red-300"
                   title="Sign out"
                 >
                   <LogOut className="w-4 h-4" />
@@ -107,7 +107,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         {children}
       </main>
     </div>

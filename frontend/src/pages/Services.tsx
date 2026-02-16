@@ -38,11 +38,13 @@ export default function Services() {
   ]
 
   return (
-    <div className="pt-16 md:pt-20">
-      <section className="section">
+    <div className="page-shell">
+      <section className="section relative overflow-hidden pb-14 pt-28 md:pt-32">
+        <div className="hero-backdrop" />
         <div className="container-custom">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <h1 className="heading-1 mb-6">
+          <div className="mx-auto mb-14 max-w-3xl text-center">
+            <span className="section-kicker">Capabilities</span>
+            <h1 className="heading-1 mt-3 mb-6">
               <span className="gradient-text">{t('services.title')}</span>
             </h1>
             <p className="text-xl text-surface-300">
@@ -50,21 +52,21 @@ export default function Services() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid gap-6 md:grid-cols-2">
             {services.map((service) => (
               <Link
                 key={service.href}
                 to={service.href}
-                className="glass-card p-8 hover:border-primary-500/50 transition-all duration-300 group"
+                className="glass-card group p-8"
               >
-                <div className="w-16 h-16 rounded-2xl bg-primary-500/20 flex items-center justify-center mb-6 group-hover:bg-primary-500/30 transition-colors">
-                  <service.icon className="w-8 h-8 text-primary-400" />
+                <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl border border-primary-500/[0.35] bg-primary-500/[0.12]">
+                  <service.icon className="h-7 w-7 text-primary-300" />
                 </div>
-                <h3 className="text-2xl font-semibold mb-4">{service.title}</h3>
-                <p className="text-surface-400 mb-6">{service.description}</p>
-                <span className="text-primary-400 inline-flex items-center font-medium group-hover:text-primary-300">
+                <h3 className="mb-4 text-2xl font-semibold">{service.title}</h3>
+                <p className="mb-6 text-surface-400">{service.description}</p>
+                <span className="inline-flex items-center font-semibold text-primary-300 transition-colors group-hover:text-primary-200">
                   {t('services.learnMore')}
-                  <ArrowRight className="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="ml-2 h-5 w-5 transform transition-transform group-hover:translate-x-1" />
                 </span>
               </Link>
             ))}

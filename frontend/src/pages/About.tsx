@@ -23,12 +23,13 @@ export default function About() {
   ]
 
   return (
-    <div className="pt-16 md:pt-20">
-      {/* Hero Section */}
-      <section className="section">
+    <div className="page-shell">
+      <section className="section relative overflow-hidden pb-14 pt-28 md:pt-32">
+        <div className="hero-backdrop" />
         <div className="container-custom">
-          <div className="max-w-3xl mx-auto text-center">
-            <h1 className="heading-1 mb-6">
+          <div className="mx-auto max-w-3xl text-center">
+            <span className="section-kicker">About Voost Vision</span>
+            <h1 className="heading-1 mt-3 mb-6">
               <span className="gradient-text">{t('about.pageTitle')}</span>
             </h1>
             <p className="text-xl text-surface-300">
@@ -38,38 +39,40 @@ export default function About() {
         </div>
       </section>
 
-      {/* Story Section */}
-      <section className="section bg-surface-950/50">
+      <section className="section border-y border-white/[0.08] bg-surface-950/[0.45]">
         <div className="container-custom">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid items-center gap-8 lg:grid-cols-2">
             <div>
+              <span className="section-kicker">Our Story</span>
               <h2 className="heading-3 mb-4">{t('about.story')}</h2>
-              <p className="text-surface-300 text-lg mb-6">
+              <p className="mb-6 text-lg text-surface-300">
                 {t('about.storyText')}
               </p>
               <h2 className="heading-3 mb-4">{t('about.mission')}</h2>
-              <p className="text-surface-300 text-lg">
+              <p className="text-lg text-surface-300">
                 {t('about.missionText')}
               </p>
             </div>
-            <div className="glass-card p-8 flex items-center justify-center">
-              <Users className="w-48 h-48 text-primary-500/30" />
+            <div className="glass-card flex items-center justify-center p-8">
+              <Users className="h-44 w-44 text-primary-500/30 md:h-52 md:w-52" />
             </div>
           </div>
         </div>
       </section>
 
-      {/* Why Us Section */}
       <section className="section">
         <div className="container-custom">
-          <h2 className="heading-2 text-center mb-16">{t('about.whyUs')}</h2>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="mb-14 text-center">
+            <span className="section-kicker">Why Choose Us</span>
+            <h2 className="heading-2 mt-3">{t('about.whyUs')}</h2>
+          </div>
+          <div className="grid gap-6 md:grid-cols-3">
             {values.map((value) => (
               <div key={value.title} className="glass-card p-8 text-center">
-                <div className="w-16 h-16 rounded-2xl bg-primary-500/20 flex items-center justify-center mx-auto mb-6">
-                  <value.icon className="w-8 h-8 text-primary-400" />
+                <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-2xl border border-primary-500/30 bg-primary-500/[0.12]">
+                  <value.icon className="h-7 w-7 text-primary-300" />
                 </div>
-                <h3 className="text-xl font-semibold mb-4">{value.title}</h3>
+                <h3 className="mb-4 text-xl font-semibold">{value.title}</h3>
                 <p className="text-surface-400">{value.description}</p>
               </div>
             ))}

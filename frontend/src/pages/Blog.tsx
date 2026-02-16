@@ -202,70 +202,69 @@ export default function Blog() {
   }
 
   return (
-    <div className="pt-16 md:pt-20">
-      <section className="section">
+    <div className="page-shell">
+      <section className="section relative overflow-hidden pb-16 pt-28 md:pt-32">
+        <div className="hero-backdrop" />
         <div className="container-custom">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <h1 className="heading-1 mb-6">
+          <div className="mx-auto mb-12 max-w-3xl text-center">
+            <span className="section-kicker">Insights</span>
+            <h1 className="heading-1 mt-3 mb-6">
               <span className="gradient-text">{t('blogPreview.title')}</span>
             </h1>
-            <p className="text-xl text-surface-300">
-              {t('blogPreview.subtitle')}
-            </p>
+            <p className="text-xl text-surface-300">{t('blogPreview.subtitle')}</p>
           </div>
 
-          {/* Search Bar */}
-          <form onSubmit={handleSearch} className="max-w-md mx-auto mb-8">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-surface-400" />
-              <input
-                type="text"
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                placeholder={currentLang === 'en' ? 'Search articles...' : 'Caută articole...'}
-                className="w-full pl-12 pr-12 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-surface-400 focus:outline-none focus:border-primary-500 transition-colors"
-              />
-              {searchInput && (
-                <button
-                  type="button"
-                  onClick={clearSearch}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-surface-400 hover:text-white transition-colors"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              )}
-            </div>
-          </form>
+          <div className="glass-card mx-auto mb-8 max-w-2xl p-4">
+            <form onSubmit={handleSearch}>
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-surface-400" />
+                <input
+                  type="text"
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  placeholder={currentLang === 'en' ? 'Search articles...' : 'Caută articole...'}
+                  className="input pl-12 pr-12"
+                />
+                {searchInput && (
+                  <button
+                    type="button"
+                    onClick={clearSearch}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-surface-400 transition-colors hover:text-white"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                )}
+              </div>
+            </form>
+          </div>
 
-          {/* Active Search Indicator */}
           {searchQuery && (
-            <div className="flex justify-center items-center gap-2 mb-4">
-              <span className="text-surface-400 text-sm">
+            <div className="mb-4 flex items-center justify-center gap-2">
+              <span className="text-sm text-surface-400">
                 {currentLang === 'en' ? 'Search results for:' : 'Rezultate pentru:'}
               </span>
-              <span className="inline-flex items-center gap-1 px-3 py-1 bg-primary-500/20 text-primary-300 rounded-full text-sm">
+              <span className="inline-flex items-center gap-1 rounded-full border border-primary-500/[0.35] bg-primary-500/[0.12] px-3 py-1 text-sm text-primary-200">
                 "{searchQuery}"
                 <button
                   onClick={clearSearch}
-                  className="ml-1 hover:text-white transition-colors"
+                  className="ml-1 transition-colors hover:text-white"
                   aria-label="Clear search"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="h-4 w-4" />
                 </button>
               </span>
             </div>
           )}
 
-          {/* Category Filter */}
-          <div className="flex flex-wrap justify-center gap-3 mb-8">
+          <div className="mb-8 flex flex-wrap justify-center gap-3">
             {categories.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setCategory(cat.id)}
-                className={`px-5 py-2 rounded-full text-sm transition-colors ${
+                className={`rounded-full px-5 py-2 text-sm font-semibold transition-colors ${
                   currentCategory === cat.id
                     ? 'bg-primary-500 text-white'
-                    : 'bg-white/5 text-surface-300 hover:bg-white/10'
+                    : 'border border-white/10 bg-white/5 text-surface-300 hover:bg-white/10'
                 }`}
               >
                 {currentLang === 'en' ? cat.label_en : cat.label_ro}
@@ -273,28 +272,27 @@ export default function Blog() {
             ))}
           </div>
 
-          {/* Active Tag Filter Indicator */}
           {currentTag && (
-            <div className="flex justify-center items-center gap-2 mb-8">
-              <span className="text-surface-400 text-sm">
+            <div className="mb-8 flex items-center justify-center gap-2">
+              <span className="text-sm text-surface-400">
                 {currentLang === 'en' ? 'Filtered by tag:' : 'Filtrat dupa tag:'}
               </span>
-              <span className="inline-flex items-center gap-1 px-3 py-1 bg-accent-500/20 text-accent-300 rounded-full text-sm">
+              <span className="inline-flex items-center gap-1 rounded-full border border-accent-500/[0.35] bg-accent-500/[0.15] px-3 py-1 text-sm text-accent-100">
                 #{currentTag}
                 <button
                   onClick={clearTag}
-                  className="ml-1 hover:text-white transition-colors"
+                  className="ml-1 transition-colors hover:text-white"
                   aria-label="Clear tag filter"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="h-4 w-4" />
                 </button>
               </span>
             </div>
           )}
 
           {loading ? (
-            <div className="flex justify-center items-center py-20">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
+            <div className="flex items-center justify-center py-20">
+              <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-primary-500" />
             </div>
           ) : error ? (
             <ErrorMessage
@@ -303,12 +301,12 @@ export default function Blog() {
               onRetry={fetchArticles}
             />
           ) : articles.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-20 text-center">
-              <div className="text-6xl mb-4">📝</div>
-              <h3 className="text-xl font-semibold mb-2">
+            <div className="panel-shell flex flex-col items-center justify-center py-20 text-center">
+              <div className="mb-4 text-6xl">📝</div>
+              <h3 className="mb-2 text-xl font-semibold">
                 {currentLang === 'en' ? 'No articles found' : 'Nu am găsit articole'}
               </h3>
-              <p className="text-surface-400 mb-6">
+              <p className="mb-6 text-surface-400">
                 {currentTag
                   ? (currentLang === 'en'
                     ? `No articles with the tag "${currentTag}"`
@@ -320,42 +318,42 @@ export default function Blog() {
               {currentTag && (
                 <button
                   onClick={clearTag}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white rounded-lg transition-colors"
+                  className="btn-primary"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="h-4 w-4" />
                   {currentLang === 'en' ? 'Clear filter' : 'Șterge filtrul'}
                 </button>
               )}
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {articles.map((article) => (
                 <Link
                   key={article.id}
                   to={`/blog/${article.slug}`}
-                  className="glass-card overflow-hidden group"
+                  className="glass-card group overflow-hidden"
                 >
-                  <div className="aspect-video overflow-hidden">
+                  <div className="aspect-video overflow-hidden border-b border-white/10">
                     <img
                       src={article.cover_image || ''}
                       alt={currentLang === 'en' ? article.title_en : article.title_ro}
                       loading="lazy"
-                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
                   <div className="p-6">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-xs text-primary-400 font-medium uppercase tracking-wide">
+                    <div className="mb-3 flex items-center justify-between">
+                      <span className="text-xs font-semibold uppercase tracking-[0.12em] text-primary-300">
                         {article.category || ''}
                       </span>
                       <span className="text-xs text-surface-500">
                         {article.published_at ? new Date(article.published_at).toLocaleDateString(currentLang === 'en' ? 'en-US' : 'ro-RO') : ''}
                       </span>
                     </div>
-                    <h3 className="text-xl font-semibold mb-3">
+                    <h3 className="mb-3 text-xl font-semibold">
                       {currentLang === 'en' ? article.title_en : article.title_ro}
                     </h3>
-                    <p className="text-surface-400 mb-4">
+                    <p className="mb-4 text-surface-400">
                       {currentLang === 'en' ? article.excerpt_en : article.excerpt_ro}
                     </p>
                     {article.tags && article.tags.length > 0 && (
@@ -368,7 +366,7 @@ export default function Blog() {
                               e.stopPropagation()
                               setTag(tag)
                             }}
-                            className="text-xs px-2 py-1 bg-white/5 hover:bg-accent-500/20 text-surface-400 hover:text-accent-300 rounded transition-colors"
+                            className="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-xs text-surface-400 transition-colors hover:border-accent-500/40 hover:bg-accent-500/[0.15] hover:text-accent-100"
                           >
                             #{tag}
                           </button>
@@ -381,26 +379,25 @@ export default function Blog() {
             </div>
           )}
 
-          {/* Pagination */}
           {!loading && totalPages > 1 && (
-            <div className="flex justify-center items-center gap-2 mt-12">
+            <div className="mt-12 flex items-center justify-center gap-2">
               <button
                 onClick={() => goToPage(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="p-2 rounded-lg bg-white/5 hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="rounded-xl border border-white/10 bg-white/5 p-2 transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
                 aria-label="Previous page"
               >
-                <ChevronLeft className="w-5 h-5" />
+                <ChevronLeft className="h-5 w-5" />
               </button>
 
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                 <button
                   key={page}
                   onClick={() => goToPage(page)}
-                  className={`px-4 py-2 rounded-lg transition-colors ${
+                  className={`rounded-xl px-4 py-2 text-sm font-semibold transition-colors ${
                     currentPage === page
                       ? 'bg-primary-500 text-white'
-                      : 'bg-white/5 hover:bg-white/10'
+                      : 'border border-white/10 bg-white/5 hover:bg-white/10'
                   }`}
                 >
                   {page}
@@ -410,10 +407,10 @@ export default function Blog() {
               <button
                 onClick={() => goToPage(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="p-2 rounded-lg bg-white/5 hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="rounded-xl border border-white/10 bg-white/5 p-2 transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
                 aria-label="Next page"
               >
-                <ChevronRight className="w-5 h-5" />
+                <ChevronRight className="h-5 w-5" />
               </button>
             </div>
           )}

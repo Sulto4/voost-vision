@@ -259,9 +259,9 @@ export default function AdminBlog() {
         <div>
           <Link
             to="/admin/dashboard"
-            className="inline-flex items-center text-surface-400 hover:text-white transition-colors mb-2"
+            className="mb-2 inline-flex items-center text-surface-400 transition-colors hover:text-white"
           >
-            <ArrowLeft className="w-4 h-4 mr-1" />
+            <ArrowLeft className="mr-1 h-4 w-4" />
             Back to Dashboard
           </Link>
           <h1 className="heading-2">Blog Management</h1>
@@ -279,26 +279,26 @@ export default function AdminBlog() {
             <div className="p-8 text-center text-surface-400">No articles yet. Click "New Article" to create one.</div>
           ) : (
             <div className="overflow-x-auto">
-            <table className="w-full min-w-[700px]">
+            <table className="admin-table">
               <thead>
-                <tr className="border-b border-white/10">
-                  <th className="text-left py-4 px-6 text-surface-400 font-medium">Title</th>
-                  <th className="text-left py-4 px-6 text-surface-400 font-medium">Category</th>
-                  <th className="text-left py-4 px-6 text-surface-400 font-medium">Status</th>
-                  <th className="text-left py-4 px-6 text-surface-400 font-medium">Date</th>
-                  <th className="text-right py-4 px-6 text-surface-400 font-medium">Actions</th>
+                <tr>
+                  <th>Title</th>
+                  <th>Category</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th className="text-right">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {articles.map((article) => (
-                  <tr key={article.id} className="border-b border-white/5 last:border-0">
-                    <td className="py-4 px-6 font-medium">{article.title_en}</td>
-                    <td className="py-4 px-6">
+                  <tr key={article.id}>
+                    <td className="font-medium">{article.title_en}</td>
+                    <td>
                       <span className="px-3 py-1 text-xs bg-primary-500/20 text-primary-300 rounded-full">
                         {article.category || 'Uncategorized'}
                       </span>
                     </td>
-                    <td className="py-4 px-6">
+                    <td>
                       <span className={`px-3 py-1 text-xs rounded-full ${
                         article.published
                           ? 'bg-green-500/20 text-green-400'
@@ -307,10 +307,10 @@ export default function AdminBlog() {
                         {article.published ? 'Published' : 'Draft'}
                       </span>
                     </td>
-                    <td className="py-4 px-6 text-surface-400 text-sm">
+                    <td className="text-sm text-surface-400">
                       {formatDate(article.published_at)}
                     </td>
-                    <td className="py-4 px-6">
+                    <td>
                       <div className="flex items-center justify-end gap-2">
                         <button
                           onClick={() => openEditModal(article)}
@@ -339,9 +339,9 @@ export default function AdminBlog() {
 
       {/* Create/Edit Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-surface-800 rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-surface-800 px-6 py-4 border-b border-white/10 flex items-center justify-between">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/[0.65] p-4 backdrop-blur-sm">
+          <div className="w-full max-h-[90vh] max-w-3xl overflow-y-auto rounded-2xl border border-white/10 bg-surface-900">
+            <div className="sticky top-0 flex items-center justify-between border-b border-white/10 bg-surface-900 px-6 py-4">
               <h2 className="text-xl font-semibold">
                 {editingArticle ? 'Edit Article' : 'New Article'}
               </h2>
@@ -352,7 +352,7 @@ export default function AdminBlog() {
 
             <form onSubmit={handleSubmit} className="p-6 space-y-6">
               {message && (
-                <div className={`p-4 rounded-lg ${
+                <div className={`rounded-lg p-4 ${
                   message.type === 'success'
                     ? 'bg-green-500/20 text-green-400 border border-green-500/30'
                     : 'bg-red-500/20 text-red-400 border border-red-500/30'

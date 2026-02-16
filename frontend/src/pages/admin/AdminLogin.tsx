@@ -78,14 +78,15 @@ export default function AdminLogin() {
   }
 
   return (
-    <div className="min-h-screen bg-surface-900 flex items-center justify-center p-4">
+    <div className="flex min-h-screen items-center justify-center bg-surface-950 p-4">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(196,30,58,0.2),transparent_45%),radial-gradient(circle_at_bottom,rgba(196,30,58,0.12),transparent_55%)]" />
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold gradient-text mb-2">Voost Vision</h1>
+        <div className="mb-8 text-center">
+          <h1 className="font-display mb-2 text-3xl font-semibold text-white">Voost <span className="text-primary-300">Vision</span></h1>
           <p className="text-surface-400">Admin Panel</p>
         </div>
 
-        <div className="glass-card p-8 space-y-6">
+        <div className="glass-card space-y-6 p-8">
           {/* Google Sign In Button */}
           <button
             type="button"
@@ -117,7 +118,7 @@ export default function AdminLogin() {
           {/* Divider */}
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-white/10"></div>
+              <div className="w-full border-t border-white/10" />
             </div>
             <div className="relative flex justify-center text-sm">
               <span className="px-4 bg-surface-900/80 text-surface-400">or continue with email</span>
@@ -126,7 +127,7 @@ export default function AdminLogin() {
 
           {/* Error message */}
           {error && (
-            <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
+            <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-300">
               {error}
             </div>
           )}
