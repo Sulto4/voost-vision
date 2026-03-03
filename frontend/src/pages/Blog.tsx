@@ -1,19 +1,18 @@
 import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useState, useEffect, useCallback } from 'react'
-import { supabase, Article } from '@/lib/supabase'
+import { fetchArticles as fetchArticlesFromDataLayer } from '@/lib/data-layer'
+import type { Article } from '@/lib/supabase'
 import { ChevronLeft, ChevronRight, X, Search } from 'lucide-react'
-import ErrorMessage from '@/components/ui/ErrorMessage'
 
 const ARTICLES_PER_PAGE = 6
 
 const categories = [
   { id: 'all', label_ro: 'Toate', label_en: 'All' },
+  { id: 'ecommerce', label_ro: 'eCommerce', label_en: 'eCommerce' },
   { id: 'Development', label_ro: 'Development', label_en: 'Development' },
-  { id: 'Design', label_ro: 'Design', label_en: 'Design' },
-  { id: 'Strategy', label_ro: 'Strategy', label_en: 'Strategy' },
   { id: 'SEO', label_ro: 'SEO', label_en: 'SEO' },
-  { id: 'Security', label_ro: 'Security', label_en: 'Security' },
+  { id: 'Strategy', label_ro: 'Strategy', label_en: 'Strategy' },
   { id: 'AI', label_ro: 'AI', label_en: 'AI' },
   { id: 'Performance', label_ro: 'Performance', label_en: 'Performance' },
 ]
@@ -25,8 +24,6 @@ export default function Blog() {
   const [articles, setArticles] = useState<Article[]>([])
   const [totalCount, setTotalCount] = useState(0)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [isNetworkError, setIsNetworkError] = useState(false)
 
   const parsedPage = parseInt(searchParams.get('page') || '1', 10)
   const currentPage = isNaN(parsedPage) || parsedPage < 1 ? 1 : parsedPage
@@ -38,91 +35,22 @@ export default function Blog() {
 
   const fetchArticles = useCallback(async () => {
     setLoading(true)
-    setError(null)
-    setIsNetworkError(false)
 
     try {
-      const from = (currentPage - 1) * ARTICLES_PER_PAGE
-      const to = from + ARTICLES_PER_PAGE - 1
+      const { data, count } = await fetchArticlesFromDataLayer({
+        page: currentPage,
+        limit: ARTICLES_PER_PAGE,
+        category: currentCategory !== 'all' ? currentCategory : undefined,
+        tag: currentTag || undefined,
+        search: searchQuery || undefined,
+      })
 
-      // Build query for count
-      let countQuery = supabase
-        .from('articles')
-        .select('*', { count: 'exact', head: true })
-        .eq('published', true)
-
-      if (currentCategory !== 'all') {
-        countQuery = countQuery.eq('category', currentCategory)
-      }
-
-      if (currentTag) {
-        countQuery = countQuery.contains('tags', [currentTag])
-      }
-
-      if (searchQuery) {
-        countQuery = countQuery.or(`title_en.ilike.%${searchQuery}%,title_ro.ilike.%${searchQuery}%,excerpt_en.ilike.%${searchQuery}%,excerpt_ro.ilike.%${searchQuery}%`)
-      }
-
-      const { count, error: countError } = await countQuery
-
-      if (countError) {
-        const isNetwork = !navigator.onLine ||
-          countError.message?.includes('fetch') ||
-          countError.message?.includes('network') ||
-          countError.message?.includes('Failed to fetch')
-        setIsNetworkError(isNetwork)
-        setError(countError.message)
-        console.error('Error fetching articles count:', countError.message)
-        setLoading(false)
-        return
-      }
-
-      setTotalCount(count || 0)
-
-      // Build query for articles
-      let articlesQuery = supabase
-        .from('articles')
-        .select('*')
-        .eq('published', true)
-        .order('published_at', { ascending: false })
-
-      if (currentCategory !== 'all') {
-        articlesQuery = articlesQuery.eq('category', currentCategory)
-      }
-
-      if (currentTag) {
-        articlesQuery = articlesQuery.contains('tags', [currentTag])
-      }
-
-      if (searchQuery) {
-        articlesQuery = articlesQuery.or(`title_en.ilike.%${searchQuery}%,title_ro.ilike.%${searchQuery}%,excerpt_en.ilike.%${searchQuery}%,excerpt_ro.ilike.%${searchQuery}%`)
-      }
-
-      const { data, error: fetchError } = await articlesQuery.range(from, to)
-
-      if (fetchError) {
-        const isNetwork = !navigator.onLine ||
-          fetchError.message?.includes('fetch') ||
-          fetchError.message?.includes('network') ||
-          fetchError.message?.includes('Failed to fetch')
-
-        setIsNetworkError(isNetwork)
-        setError(fetchError.message)
-        console.error('Error fetching articles:', fetchError.message)
-      } else {
-        setArticles(data || [])
-      }
+      setArticles(data)
+      setTotalCount(count)
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error'
-      const isNetwork = !navigator.onLine ||
-        (err instanceof TypeError && errorMessage?.includes('fetch')) ||
-        errorMessage?.includes('Failed to fetch') ||
-        errorMessage?.includes('network') ||
-        errorMessage?.includes('NetworkError')
-
-      setIsNetworkError(isNetwork)
-      setError(errorMessage)
-      console.error('Error fetching articles:', errorMessage)
+      console.error('Error fetching articles:', err)
+      setArticles([])
+      setTotalCount(0)
     } finally {
       setLoading(false)
     }
@@ -137,6 +65,12 @@ export default function Blog() {
     if (currentCategory !== 'all') {
       params.category = currentCategory
     }
+    if (currentTag) {
+      params.tag = currentTag
+    }
+    if (searchQuery) {
+      params.q = searchQuery
+    }
     setSearchParams(params)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -149,6 +83,9 @@ export default function Blog() {
     if (currentTag) {
       params.tag = currentTag
     }
+    if (searchQuery) {
+      params.q = searchQuery
+    }
     setSearchParams(params)
   }
 
@@ -156,6 +93,9 @@ export default function Blog() {
     const params: Record<string, string> = { page: '1' }
     if (currentCategory !== 'all') {
       params.category = currentCategory
+    }
+    if (searchQuery) {
+      params.q = searchQuery
     }
     if (tag) {
       params.tag = tag
@@ -294,12 +234,6 @@ export default function Blog() {
             <div className="flex items-center justify-center py-20">
               <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-primary-500" />
             </div>
-          ) : error ? (
-            <ErrorMessage
-              error={error}
-              isNetworkError={isNetworkError}
-              onRetry={fetchArticles}
-            />
           ) : articles.length === 0 ? (
             <div className="panel-shell flex flex-col items-center justify-center py-20 text-center">
               <div className="mb-4 text-6xl">📝</div>

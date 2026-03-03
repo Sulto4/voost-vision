@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { useState, useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { ArrowLeft, Calendar, User, Facebook, Twitter, Linkedin } from 'lucide-react'
-import { supabase, Article } from '@/lib/supabase'
+import { fetchArticleBySlug, fetchArticles } from '@/lib/data-layer'
+import type { Article } from '@/lib/supabase'
 
 export default function BlogDetail() {
   const { slug } = useParams()
@@ -23,15 +24,8 @@ export default function BlogDetail() {
       }
 
       try {
-        const { data, error: fetchError } = await supabase
-          .from('articles')
-          .select('*')
-          .eq('slug', slug)
-          .eq('published', true)
-          .single()
-
-        if (fetchError) {
-          console.error('Error fetching article:', fetchError)
+        const data = await fetchArticleBySlug(slug)
+        if (!data) {
           setError('Article not found')
         } else {
           setArticle(data)
@@ -53,18 +47,12 @@ export default function BlogDetail() {
       if (!article) return
 
       try {
-        const { data, error: fetchError } = await supabase
-          .from('articles')
-          .select('*')
-          .eq('published', true)
-          .eq('category', article.category)
-          .neq('slug', article.slug)
-          .order('published_at', { ascending: false })
-          .limit(3)
-
-        if (!fetchError && data) {
-          setRelatedArticles(data)
-        }
+        const { data } = await fetchArticles({
+          page: 1,
+          limit: 12,
+          category: article.category || undefined,
+        })
+        setRelatedArticles(data.filter((item) => item.slug !== article.slug).slice(0, 3))
       } catch (err) {
         console.error('Error fetching related articles:', err)
       }
@@ -107,6 +95,7 @@ export default function BlogDetail() {
   const description = currentLang === 'en' ? article.excerpt_en : article.excerpt_ro
   const canonicalUrl = `https://voostvision.ro/blog/${article.slug}`
   const publishedDate = article.published_at ? new Date(article.published_at).toISOString() : new Date().toISOString()
+  const renderedContent = currentLang === 'en' && article.content_en ? article.content_en : article.content_ro
 
   // Article structured data (JSON-LD)
   const articleSchema = {
@@ -212,7 +201,7 @@ export default function BlogDetail() {
             <div
               className="prose prose-invert prose-lg max-w-none"
               dangerouslySetInnerHTML={{
-                __html: currentLang === 'en' ? article.content_en : article.content_ro,
+                __html: renderedContent,
               }}
             />
 

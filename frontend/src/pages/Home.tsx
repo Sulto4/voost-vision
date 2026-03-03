@@ -2,8 +2,8 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowRight, Code, Smartphone, Palette, Globe, ChevronLeft, ChevronRight, Quote, Calendar } from 'lucide-react'
 import { useState, useEffect, useCallback } from 'react'
-import { supabase, Project, Article, Testimonial } from '@/lib/supabase'
-import ErrorMessage from '@/components/ui/ErrorMessage'
+import { fetchArticles, fetchFeaturedProjects, fetchTestimonials } from '@/lib/data-layer'
+import type { Project, Article, Testimonial } from '@/lib/supabase'
 import ResponsiveImage from '@/components/ui/ResponsiveImage'
 
 // Helper function to format date
@@ -25,10 +25,6 @@ export default function Home() {
   const [blogArticles, setBlogArticles] = useState<Article[]>([])
   const [loadingProjects, setLoadingProjects] = useState(true)
   const [loadingArticles, setLoadingArticles] = useState(true)
-  const [projectsError, setProjectsError] = useState<string | null>(null)
-  const [projectsNetworkError, setProjectsNetworkError] = useState(false)
-  const [articlesError, setArticlesError] = useState<string | null>(null)
-  const [articlesNetworkError, setArticlesNetworkError] = useState(false)
   const [testimonials, setTestimonials] = useState<Testimonial[]>([])
   const [loadingTestimonials, setLoadingTestimonials] = useState(true)
 
@@ -36,78 +32,35 @@ export default function Home() {
     return currentLang === 'en' ? enPath : roPath
   }
 
-  // Fetch featured projects from database
-  const fetchFeaturedProjects = useCallback(async () => {
+  // Fetch featured projects from data layer
+  const loadFeaturedProjects = useCallback(async () => {
     setLoadingProjects(true)
-    setProjectsError(null)
-    setProjectsNetworkError(false)
 
     try {
-      const { data, error } = await supabase
-        .from('projects')
-        .select('*')
-        .eq('featured', true)
-        .eq('published', true)
-        .order('created_at', { ascending: false })
-        .limit(4)
-
-      if (error) {
-        const isNetwork = !navigator.onLine ||
-          error.message?.includes('fetch') ||
-          error.message?.includes('network') ||
-          error.message?.includes('Failed to fetch')
-        setProjectsNetworkError(isNetwork)
-        setProjectsError(error.message)
-        console.error('Error fetching projects:', error.message)
-      } else {
-        setFeaturedProjects(data || [])
-      }
+      const data = await fetchFeaturedProjects()
+      setFeaturedProjects(data.slice(0, 4))
     } catch (err) {
-      const isNetwork = !navigator.onLine ||
-        (err instanceof TypeError && err.message?.includes('fetch'))
-      setProjectsNetworkError(isNetwork)
-      setProjectsError(err instanceof Error ? err.message : 'Unknown error')
-      console.error('Error:', err instanceof Error ? err.message : 'Unknown error')
+      console.error('Error fetching featured projects:', err)
+      setFeaturedProjects([])
     } finally {
       setLoadingProjects(false)
     }
   }, [])
 
   useEffect(() => {
-    fetchFeaturedProjects()
-  }, [fetchFeaturedProjects])
+    loadFeaturedProjects()
+  }, [loadFeaturedProjects])
 
-  // Fetch latest blog articles from database
+  // Fetch latest blog articles from data layer
   const fetchLatestArticles = useCallback(async () => {
     setLoadingArticles(true)
-    setArticlesError(null)
-    setArticlesNetworkError(false)
 
     try {
-      const { data, error } = await supabase
-        .from('articles')
-        .select('*')
-        .eq('published', true)
-        .order('published_at', { ascending: false, nullsFirst: false })
-        .limit(3)
-
-      if (error) {
-        const isNetwork = !navigator.onLine ||
-          error.message?.includes('fetch') ||
-          error.message?.includes('network') ||
-          error.message?.includes('Failed to fetch')
-        setArticlesNetworkError(isNetwork)
-        setArticlesError(error.message)
-        console.error('Error fetching articles:', error.message)
-      } else {
-        setBlogArticles(data || [])
-      }
+      const { data } = await fetchArticles({ page: 1, limit: 3 })
+      setBlogArticles(data)
     } catch (err) {
-      const isNetwork = !navigator.onLine ||
-        (err instanceof TypeError && err.message?.includes('fetch'))
-      setArticlesNetworkError(isNetwork)
-      setArticlesError(err instanceof Error ? err.message : 'Unknown error')
-      console.error('Error:', err instanceof Error ? err.message : 'Unknown error')
+      console.error('Error fetching blog articles:', err)
+      setBlogArticles([])
     } finally {
       setLoadingArticles(false)
     }
@@ -117,31 +70,23 @@ export default function Home() {
     fetchLatestArticles()
   }, [fetchLatestArticles])
 
-  // Fetch testimonials from database
-  const fetchTestimonials = useCallback(async () => {
+  // Fetch testimonials from data layer
+  const loadTestimonials = useCallback(async () => {
     setLoadingTestimonials(true)
     try {
-      const { data, error } = await supabase
-        .from('testimonials')
-        .select('*')
-        .eq('published', true)
-        .order('display_order', { ascending: true })
-
-      if (error) {
-        console.error('Error fetching testimonials:', error.message)
-      } else {
-        setTestimonials(data || [])
-      }
+      const data = await fetchTestimonials()
+      setTestimonials(data)
     } catch (err) {
-      console.error('Error:', err instanceof Error ? err.message : 'Unknown error')
+      console.error('Error fetching testimonials:', err)
+      setTestimonials([])
     } finally {
       setLoadingTestimonials(false)
     }
   }, [])
 
   useEffect(() => {
-    fetchTestimonials()
-  }, [fetchTestimonials])
+    loadTestimonials()
+  }, [loadTestimonials])
 
   // Auto-rotate testimonials
   useEffect(() => {
@@ -269,12 +214,6 @@ export default function Home() {
             <div className="flex justify-center">
               <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-primary-500" />
             </div>
-          ) : projectsError ? (
-            <ErrorMessage
-              error={projectsError}
-              isNetworkError={projectsNetworkError}
-              onRetry={fetchFeaturedProjects}
-            />
           ) : featuredProjects.length === 0 ? (
             <div className="panel-shell px-8 py-16 text-center">
               <p className="text-surface-400">{t('portfolio.noProjects', 'No projects available yet.')}</p>
@@ -282,9 +221,11 @@ export default function Home() {
           ) : (
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               {featuredProjects.map((project) => (
-                <Link
+                <a
                   key={project.id}
-                  to={`${getLocalizedPath('/portfolio', '/portofoliu')}/${project.id}`}
+                  href={project.live_url || getLocalizedPath('/portfolio', '/portofoliu')}
+                  target={project.live_url ? '_blank' : undefined}
+                  rel={project.live_url ? 'noopener noreferrer' : undefined}
                   className="glass-card group overflow-hidden"
                 >
                   <div className="aspect-video overflow-hidden border-b border-white/10">
@@ -310,7 +251,7 @@ export default function Home() {
                       ))}
                     </div>
                   </div>
-                </Link>
+                </a>
               ))}
             </div>
           )}
@@ -412,12 +353,6 @@ export default function Home() {
             <div className="flex justify-center">
               <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-primary-500" />
             </div>
-          ) : articlesError ? (
-            <ErrorMessage
-              error={articlesError}
-              isNetworkError={articlesNetworkError}
-              onRetry={fetchLatestArticles}
-            />
           ) : blogArticles.length === 0 ? (
             <div className="panel-shell px-8 py-16 text-center">
               <p className="text-surface-400">{t('blogPreview.noArticles', 'No articles available yet.')}</p>
