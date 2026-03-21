@@ -1,0 +1,23 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  VITE_SUPABASE_URL = "https://voostvision.ro"
+  VITE_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoid2ViX2Fub24iLCJpYXQiOjE3MDAwMDAwMDAsImV4cCI6OTk5OTk5OTk5OX0.N8FPSzLy4x4PGcx176qqprr3D57_R33OsllTfVMXv5A"
+  NODE_VERSION = "20"
+
+[[redirects]]
+  from = "/rest/v1/*"
+  to = "https://api.voostvision.ro/rest/v1/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/auth/v1/*"
+  to = "https://api.voostvision.ro/auth/v1/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
