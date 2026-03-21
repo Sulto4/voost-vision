@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Voost Voice thumbnail</title>
+  <desc id="desc">Gradient thumbnail for the Voost Voice AI voice platform.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#111827" />
+      <stop offset="45%" stop-color="#0f766e" />
+      <stop offset="100%" stop-color="#164e63" />
+    </linearGradient>
+    <linearGradient id="wave" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2dd4bf" />
+      <stop offset="100%" stop-color="#38bdf8" />
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)" />
+  <circle cx="1280" cy="180" r="240" fill="#2dd4bf" fill-opacity="0.18" />
+  <circle cx="260" cy="760" r="220" fill="#38bdf8" fill-opacity="0.14" />
+  <rect x="120" y="120" width="1360" height="660" rx="40" fill="#020617" fill-opacity="0.22" stroke="#ffffff" stroke-opacity="0.12" />
+  <rect x="180" y="220" width="480" height="420" rx="40" fill="#0f172a" fill-opacity="0.44" />
+  <path d="M270 470c50-140 140 140 200 0s150 140 210 0" fill="none" stroke="url(#wave)" stroke-width="22" stroke-linecap="round" />
+  <circle cx="370" cy="470" r="76" fill="#0f172a" stroke="#2dd4bf" stroke-width="18" />
+  <circle cx="370" cy="470" r="20" fill="#2dd4bf" />
+  <rect x="740" y="250" width="560" height="74" rx="37" fill="#ffffff" fill-opacity="0.1" />
+  <rect x="740" y="360" width="470" height="26" rx="13" fill="#e2e8f0" fill-opacity="0.92" />
+  <rect x="740" y="410" width="390" height="24" rx="12" fill="#e2e8f0" fill-opacity="0.45" />
+  <rect x="740" y="470" width="180" height="56" rx="28" fill="#2dd4bf" />
+  <text x="740" y="303" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="78" font-weight="700">Voost Voice</text>
+  <text x="740" y="602" fill="#cbd5e1" font-family="Arial, Helvetica, sans-serif" font-size="32">AI voice workflows, qualification, and automated bookings</text>
+  <text x="140" y="840" fill="#cbd5e1" font-family="Arial, Helvetica, sans-serif" font-size="26" letter-spacing="6">VOOST VISION</text>
+</svg>

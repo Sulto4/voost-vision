@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">React plus Supabase pentru startup-uri</title>
+  <desc id="desc">Cover art for the React and Supabase startup article.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#111827" />
+      <stop offset="55%" stop-color="#065f46" />
+      <stop offset="100%" stop-color="#34d399" />
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)" />
+  <rect x="110" y="110" width="1380" height="680" rx="44" fill="#020617" fill-opacity="0.24" stroke="#fff" stroke-opacity="0.14" />
+  <circle cx="340" cy="450" r="130" fill="none" stroke="#a7f3d0" stroke-width="20" />
+  <circle cx="340" cy="450" r="26" fill="#a7f3d0" />
+  <ellipse cx="340" cy="450" rx="170" ry="64" fill="none" stroke="#a7f3d0" stroke-width="12" />
+  <ellipse cx="340" cy="450" rx="64" ry="170" fill="none" stroke="#a7f3d0" stroke-width="12" />
+  <rect x="620" y="290" width="400" height="84" rx="42" fill="#fff" fill-opacity="0.1" />
+  <rect x="620" y="420" width="520" height="24" rx="12" fill="#ecfdf5" fill-opacity="0.92" />
+  <rect x="620" y="468" width="450" height="22" rx="11" fill="#d1fae5" fill-opacity="0.42" />
+  <rect x="620" y="516" width="220" height="54" rx="27" fill="#34d399" />
+  <text x="620" y="346" fill="#ecfdf5" font-family="Arial, Helvetica, sans-serif" font-size="68" font-weight="700">React + Supabase</text>
+  <text x="620" y="632" fill="#d1fae5" font-family="Arial, Helvetica, sans-serif" font-size="32">Stack rapid pentru MVP-uri, admin, autentificare si baze de date</text>
+  <text x="140" y="840" fill="#d1fae5" font-family="Arial, Helvetica, sans-serif" font-size="26" letter-spacing="6">VOOST VISION • DEVELOPMENT</text>
+</svg>

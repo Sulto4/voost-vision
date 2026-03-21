@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Voost Level CRM thumbnail</title>
+  <desc id="desc">Gradient thumbnail for the Voost Level CRM product.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#172554" />
+      <stop offset="55%" stop-color="#312e81" />
+      <stop offset="100%" stop-color="#1d4ed8" />
+    </linearGradient>
+    <linearGradient id="card" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#60a5fa" />
+      <stop offset="100%" stop-color="#c084fc" />
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)" />
+  <circle cx="1360" cy="190" r="220" fill="#c084fc" fill-opacity="0.18" />
+  <circle cx="220" cy="720" r="240" fill="#60a5fa" fill-opacity="0.18" />
+  <rect x="120" y="120" width="1360" height="660" rx="40" fill="#0f172a" fill-opacity="0.18" stroke="#ffffff" stroke-opacity="0.12" />
+  <rect x="190" y="210" width="520" height="470" rx="34" fill="#020617" fill-opacity="0.35" />
+  <rect x="250" y="280" width="220" height="180" rx="28" fill="url(#card)" fill-opacity="0.94" />
+  <rect x="500" y="280" width="150" height="22" rx="11" fill="#ffffff" fill-opacity="0.82" />
+  <rect x="500" y="324" width="120" height="18" rx="9" fill="#ffffff" fill-opacity="0.38" />
+  <rect x="250" y="510" width="400" height="18" rx="9" fill="#ffffff" fill-opacity="0.22" />
+  <rect x="250" y="548" width="340" height="18" rx="9" fill="#ffffff" fill-opacity="0.22" />
+  <rect x="250" y="586" width="300" height="18" rx="9" fill="#ffffff" fill-opacity="0.22" />
+  <rect x="790" y="250" width="540" height="82" rx="41" fill="#ffffff" fill-opacity="0.1" />
+  <rect x="790" y="390" width="540" height="220" rx="34" fill="#ffffff" fill-opacity="0.08" />
+  <text x="790" y="307" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="74" font-weight="700">Voost Level CRM</text>
+  <text x="790" y="440" fill="#dbeafe" font-family="Arial, Helvetica, sans-serif" font-size="32">Pipeline visibility, follow-up automation, and sales operations</text>
+  <text x="140" y="840" fill="#dbeafe" font-family="Arial, Helvetica, sans-serif" font-size="26" letter-spacing="6">VOOST VISION</text>
+</svg>

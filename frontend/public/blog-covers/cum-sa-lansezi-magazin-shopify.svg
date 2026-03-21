@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Cum să lansezi primul magazin Shopify</title>
+  <desc id="desc">Cover art for the Shopify launch article.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#052e16" />
+      <stop offset="55%" stop-color="#166534" />
+      <stop offset="100%" stop-color="#84cc16" />
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)" />
+  <rect x="110" y="110" width="1380" height="680" rx="44" fill="#020617" fill-opacity="0.2" stroke="#fff" stroke-opacity="0.14" />
+  <path d="M290 620h280l-30-260-110-74-110 74z" fill="#dcfce7" fill-opacity="0.22" stroke="#dcfce7" stroke-opacity="0.72" stroke-width="10" />
+  <path d="M366 390c14-72 46-108 96-108 42 0 68 24 78 70" fill="none" stroke="#f0fdf4" stroke-width="12" stroke-linecap="round" />
+  <rect x="660" y="280" width="700" height="84" rx="42" fill="#fff" fill-opacity="0.1" />
+  <rect x="660" y="420" width="530" height="24" rx="12" fill="#f0fdf4" fill-opacity="0.92" />
+  <rect x="660" y="468" width="460" height="22" rx="11" fill="#dcfce7" fill-opacity="0.42" />
+  <rect x="660" y="516" width="220" height="54" rx="27" fill="#84cc16" />
+  <text x="660" y="338" fill="#f0fdf4" font-family="Arial, Helvetica, sans-serif" font-size="70" font-weight="700">Primul magazin Shopify</text>
+  <text x="660" y="632" fill="#dcfce7" font-family="Arial, Helvetica, sans-serif" font-size="32">Checklist scurt pentru lansare, design si primele vanzari</text>
+  <text x="140" y="840" fill="#dcfce7" font-family="Arial, Helvetica, sans-serif" font-size="26" letter-spacing="6">VOOST VISION • SHOPIFY</text>
+</svg>

@@ -9,6 +9,7 @@ const categories = [
   { id: 'all', label_ro: 'Toate', label_en: 'All' },
   { id: 'web', label_ro: 'Web', label_en: 'Web' },
   { id: 'app', label_ro: 'Aplicatii', label_en: 'Apps' },
+  { id: 'ecommerce', label_ro: 'eCommerce', label_en: 'eCommerce' },
   { id: 'mobile', label_ro: 'Mobile', label_en: 'Mobile' },
   { id: 'design', label_ro: 'Design', label_en: 'Design' },
 ]

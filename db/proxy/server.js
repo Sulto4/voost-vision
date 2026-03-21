@@ -10,6 +10,7 @@ const fs = require('fs');
 const path = require('path');
 
 const PROXY_PORT = 54320;
+const PROXY_HOST = '127.0.0.1';
 const POSTGREST_URL = 'http://localhost:54321';
 
 const proxy = httpProxy.createProxyServer({ selfHandleResponse: false });
@@ -80,8 +81,8 @@ const server = http.createServer((req, res) => {
   res.end(JSON.stringify({ error: 'Not found' }));
 });
 
-server.listen(PROXY_PORT, () => {
-  console.log(`✅ Voost Vision Local Proxy — port ${PROXY_PORT}`);
+server.listen(PROXY_PORT, PROXY_HOST, () => {
+  console.log(`✅ Voost Vision Local Proxy — http://${PROXY_HOST}:${PROXY_PORT}`);
   console.log(`   /rest/v1/* → PostgREST (${POSTGREST_URL})`);
   console.log(`   /auth/v1/* → mock`);
 });
