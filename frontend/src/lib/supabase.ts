@@ -88,3 +88,6 @@ export interface Testimonial {
   display_order: number
   created_at: string
 }
+// build-stamp: 1774106962
+// Force hash change for deployment - build timestamp
+export const BUILD_ID = '20260321-1730'
