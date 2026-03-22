@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Users, Target, Award, HeartHandshake } from 'lucide-react'
+import { Target, Award, HeartHandshake } from 'lucide-react'
 
 export default function About() {
   const { t } = useTranslation()
