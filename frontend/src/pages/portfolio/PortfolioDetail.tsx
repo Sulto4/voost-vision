@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { ArrowLeft, ExternalLink, X, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ArrowLeft, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { supabase, Project } from '@/lib/supabase'
 import Breadcrumbs from '@/components/ui/Breadcrumbs'
@@ -179,16 +179,13 @@ export default function PortfolioDetail() {
 
       {lightboxOpen && allImages.length > 0 && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 p-8"
           onClick={closeLightbox}
         >
-          <button
-            onClick={(e) => { e.stopPropagation(); closeLightbox() }}
-            className="absolute right-4 top-4 z-[110] rounded-full border border-white/15 bg-black/80 p-3 text-white transition-colors hover:bg-white/20"
           {allImages.length > 1 && (
             <button
               onClick={(e) => { e.stopPropagation(); prevImage() }}
-              className="absolute left-4 z-10 rounded-full border border-white/15 bg-black/50 p-2 text-white/70 transition-colors hover:text-white"
+              className="absolute left-4 z-[110] rounded-full border border-white/15 bg-black/50 p-2 text-white/70 transition-colors hover:text-white"
               aria-label="Previous image"
             >
               <ChevronLeft className="h-10 w-10" />
@@ -205,7 +202,7 @@ export default function PortfolioDetail() {
           {allImages.length > 1 && (
             <button
               onClick={(e) => { e.stopPropagation(); nextImage() }}
-              className="absolute right-4 z-10 rounded-full border border-white/15 bg-black/50 p-2 text-white/70 transition-colors hover:text-white"
+              className="absolute right-16 z-[110] rounded-full border border-white/15 bg-black/50 p-2 text-white/70 transition-colors hover:text-white"
               aria-label="Next image"
             >
               <ChevronRight className="h-10 w-10" />
@@ -213,10 +210,12 @@ export default function PortfolioDetail() {
           )}
 
           {allImages.length > 1 && (
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full border border-white/15 bg-black/60 px-3 py-1 text-sm text-white/80">
+            <div className="absolute bottom-4 left-1/2 z-[110] -translate-x-1/2 rounded-full border border-white/15 bg-black/60 px-3 py-1 text-sm text-white/80">
               {lightboxIndex + 1} / {allImages.length}
             </div>
           )}
+
+          <p className="absolute bottom-4 right-4 z-[110] text-sm text-white/40">click to close</p>
         </div>
       )}
     </div>

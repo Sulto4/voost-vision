@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useState, useEffect, useCallback } from 'react'
 import { supabase, Project } from '@/lib/supabase'
-import { X, ChevronLeft, ChevronRight, ArrowUpDown } from 'lucide-react'
+import { ArrowUpDown } from 'lucide-react'
 import ErrorMessage from '@/components/ui/ErrorMessage'
 
 const categories = [
@@ -31,9 +31,6 @@ export default function Portfolio() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [isNetworkError, setIsNetworkError] = useState(false)
-  const [lightboxOpen, setLightboxOpen] = useState(false)
-  const [lightboxProject, setLightboxProject] = useState<Project | null>(null)
-  const [lightboxIndex, setLightboxIndex] = useState(0)
 
   // Sync filter state with URL
   const setFilter = (newFilter: string) => {
@@ -110,34 +107,10 @@ export default function Portfolio() {
     : projects.filter((p) => p.category === filter)
 
   // Lightbox functions
-  const openLightbox = (project: Project, e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setLightboxProject(project)
-    setLightboxIndex(0)
-    setLightboxOpen(true)
-  }
 
-  const closeLightbox = () => {
-    setLightboxOpen(false)
-    setLightboxProject(null)
-  }
 
-  const getLightboxImages = (project: Project) => {
-    return [project.thumbnail_url, ...(project.images || [])].filter(Boolean) as string[]
-  }
 
-  const nextImage = () => {
-    if (!lightboxProject) return
-    const images = getLightboxImages(lightboxProject)
-    setLightboxIndex((prev) => (prev + 1) % images.length)
-  }
 
-  const prevImage = () => {
-    if (!lightboxProject) return
-    const images = getLightboxImages(lightboxProject)
-    setLightboxIndex((prev) => (prev - 1 + images.length) % images.length)
-  }
 
   return (
     <div className="page-shell">
@@ -248,48 +221,7 @@ export default function Portfolio() {
         </div>
       </section>
 
-      {lightboxOpen && lightboxProject && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95"
-          onClick={closeLightbox}
-        >
-          <button
-            onClick={(e) => { e.stopPropagation(); closeLightbox() }}
-            className="absolute right-4 top-4 z-[60] rounded-full border border-white/15 bg-black/80 p-3 text-white transition-colors hover:bg-white/20"
-          {getLightboxImages(lightboxProject).length > 1 && (
-            <button
-              onClick={(e) => { e.stopPropagation(); prevImage() }}
-              className="absolute left-4 z-10 rounded-full border border-white/15 bg-black/50 p-2 text-white/70 transition-colors hover:text-white"
-              aria-label="Previous image"
-            >
-              <ChevronLeft className="h-10 w-10" />
-            </button>
-          )}
-
-          <img
-            src={getLightboxImages(lightboxProject)[lightboxIndex]}
-            alt={currentLang === 'en' ? lightboxProject.title_en : lightboxProject.title_ro}
-            className="max-h-[85vh] max-w-[85vw] rounded-lg object-contain"
-            onClick={(e) => e.stopPropagation()}
-          />
-
-          {getLightboxImages(lightboxProject).length > 1 && (
-            <button
-              onClick={(e) => { e.stopPropagation(); nextImage() }}
-              className="absolute right-4 z-10 rounded-full border border-white/15 bg-black/50 p-2 text-white/70 transition-colors hover:text-white"
-              aria-label="Next image"
-            >
-              <ChevronRight className="h-10 w-10" />
-            </button>
-          )}
-
-          {getLightboxImages(lightboxProject).length > 1 && (
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full border border-white/15 bg-black/60 px-3 py-1 text-sm text-white/80">
-              {lightboxIndex + 1} / {getLightboxImages(lightboxProject).length}
-            </div>
-          )}
-        </div>
-      )}
+      {/* Lightbox removed from listing - images link to project detail page */}
     </div>
   )
 }
