@@ -52,7 +52,7 @@ export default function About() {
               </p>
             </div>
             <div className="glass-card flex items-center justify-center p-8">
-              <Users className="h-44 w-44 text-primary-500/30 md:h-52 md:w-52" />
+              <img src="/thumbnails/voost-vision-logo.svg" alt="Voost Vision" className="w-full max-w-md rounded-xl" loading="lazy" />
             </div>
           </div>
         </div>
