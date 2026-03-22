@@ -179,12 +179,12 @@ export default function PortfolioDetail() {
 
       {lightboxOpen && allImages.length > 0 && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/95"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95"
           onClick={closeLightbox}
         >
           <button
-            onClick={closeLightbox}
-            className="absolute right-4 top-4 z-10 rounded-full border border-white/15 bg-black/50 p-2 text-white/70 transition-colors hover:text-white"
+            onClick={(e) => { e.stopPropagation(); closeLightbox() }}
+            className="absolute right-4 top-4 z-[110] rounded-full border border-white/15 bg-black/80 p-3 text-white transition-colors hover:bg-white/20"
             aria-label="Close lightbox"
           >
             <X className="h-8 w-8" />
@@ -203,7 +203,7 @@ export default function PortfolioDetail() {
           <img
             src={allImages[lightboxIndex]}
             alt=""
-            className="max-h-[90vh] max-w-[90vw] object-contain"
+            className="max-h-[80vh] max-w-[85vw] rounded-lg object-contain"
             onClick={(e) => e.stopPropagation()}
           />
 
