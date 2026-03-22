@@ -291,8 +291,8 @@ export default function Contact() {
                   <Phone className="h-6 w-6 text-primary-300" />
                 </div>
                 <h3 className="mb-2 font-semibold">Telefon</h3>
-                <a href="tel:+40700000000" className="text-surface-400 transition-colors hover:text-primary-300">
-                  +40 700 000 000
+                <a href="tel:+40721819077" className="text-surface-400 transition-colors hover:text-primary-300">
+                  +40 721 819 077
                 </a>
               </div>
 
