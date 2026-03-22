@@ -48,6 +48,12 @@ export default function Footer() {
     { href: withPrefix('/contact'), label: t('nav.contact') },
   ]
 
+  const companyMeta = [
+    'CUI: 53289768',
+    'Nr. Reg. Com.: J20/2616/2026',
+    currentLang === 'en' ? 'Registered office: Bucharest, District 3' : 'Sediu: Bucuresti, Sector 3',
+  ]
+
   return (
     <footer className="relative mt-16 border-t border-white/10 bg-surface-950">
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary-500/70 to-transparent" />
@@ -144,7 +150,14 @@ export default function Footer() {
         </div>
 
         <div className="mt-10 flex flex-col items-start justify-between gap-4 border-t border-white/10 pt-6 text-sm text-surface-500 md:flex-row md:items-center">
-          <p>© {new Date().getFullYear()} Voost Vision. {t('footer.rights')}</p>
+          <div className="space-y-2">
+            <p>© {new Date().getFullYear()} Voost Vision. {t('footer.rights')}</p>
+            <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-surface-500">
+              {companyMeta.map((item) => (
+                <span key={item}>{item}</span>
+              ))}
+            </div>
+          </div>
           <div className="flex flex-wrap items-center gap-5">
             <div className="relative">
               <button

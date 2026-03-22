@@ -21,6 +21,8 @@ const Blog = lazy(() => import('@/pages/Blog'))
 const BlogDetail = lazy(() => import('@/pages/blog/BlogDetail'))
 const Booking = lazy(() => import('@/pages/Booking'))
 const Contact = lazy(() => import('@/pages/Contact'))
+const Privacy = lazy(() => import('@/pages/Privacy'))
+const Terms = lazy(() => import('@/pages/Terms'))
 const NotFound = lazy(() => import('@/pages/NotFound'))
 
 // Admin pages
@@ -75,6 +77,8 @@ function App() {
               <Route path="/programare" element={<Booking />} />
               <Route path="/booking" element={<Booking />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/terms" element={<Terms />} />
             </Route>
 
             {/* Admin routes */}
@@ -100,6 +104,8 @@ function App() {
               <Route path="blog/:slug" element={<BlogDetail />} />
               <Route path="booking" element={<Booking />} />
               <Route path="contact" element={<Contact />} />
+              <Route path="privacy" element={<Privacy />} />
+              <Route path="terms" element={<Terms />} />
             </Route>
 
             <Route path="/ro/*" element={<Layout />}>
@@ -116,6 +122,8 @@ function App() {
               <Route path="blog/:slug" element={<BlogDetail />} />
               <Route path="programare" element={<Booking />} />
               <Route path="contact" element={<Contact />} />
+              <Route path="privacy" element={<Privacy />} />
+              <Route path="terms" element={<Terms />} />
             </Route>
 
             {/* 404 */}
