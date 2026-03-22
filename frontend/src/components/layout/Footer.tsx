@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Mail, Phone, MapPin, Instagram, Linkedin, Facebook, Twitter, Globe, ArrowRight } from 'lucide-react'
+import { Mail, Phone, MapPin, Instagram, Globe, ArrowRight } from 'lucide-react'
 
 export default function Footer() {
   const { t, i18n } = useTranslation()
@@ -31,10 +31,7 @@ export default function Footer() {
   }
 
   const socialLinks = [
-    { icon: Facebook, href: 'https://facebook.com/voostvision', label: 'Facebook' },
     { icon: Instagram, href: 'https://instagram.com/voostvision', label: 'Instagram' },
-    { icon: Linkedin, href: 'https://linkedin.com/company/voostvision', label: 'LinkedIn' },
-    { icon: Twitter, href: 'https://twitter.com/voostvision', label: 'Twitter' },
   ]
 
   const services = [
@@ -138,7 +135,7 @@ export default function Footer() {
                   </li>
                   <li className="inline-flex items-center gap-2">
                     <MapPin className="h-4 w-4 text-primary-300" />
-                    București, România
+                    Bucuresti, Romania
                   </li>
                 </ul>
               </div>
