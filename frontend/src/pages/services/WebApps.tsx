@@ -48,7 +48,7 @@ export default function WebApps() {
             </div>
 
             <div className="glass-card p-8">
-              <h2 className="heading-3 mb-6">Technologies</h2>
+              <h2 className="heading-3 mb-6"{currentLang === "en" ? "Technologies" : "Tehnologii"}</h2>
               <div className="flex flex-wrap gap-3">
                 {technologies.map((tech) => (
                   <span

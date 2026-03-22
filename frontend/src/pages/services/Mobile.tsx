@@ -36,7 +36,7 @@ export default function Mobile() {
 
           <div className="grid items-start gap-6 lg:grid-cols-2">
             <div className="glass-card p-8">
-              <h2 className="heading-3 mb-6">What we offer</h2>
+              <h2 className="heading-3 mb-6"{currentLang === "en" ? "What We Offer" : "Ce oferim"}</h2>
               <ul className="space-y-4">
                 {features.map((feature) => (
                   <li key={feature} className="flex items-start gap-3">
@@ -48,7 +48,7 @@ export default function Mobile() {
             </div>
 
             <div className="glass-card p-8">
-              <h2 className="heading-3 mb-6">Technologies</h2>
+              <h2 className="heading-3 mb-6"{currentLang === "en" ? "Technologies" : "Tehnologii"}</h2>
               <div className="flex flex-wrap gap-3">
                 {technologies.map((tech) => (
                   <span

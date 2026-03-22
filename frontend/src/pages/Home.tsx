@@ -101,7 +101,6 @@ export default function Home() {
         <div className="hero-grid-overlay" />
         <div className="container-custom">
           <div className="mx-auto max-w-4xl text-center">
-            <span className="section-kicker animate-fade-in">Premium Digital Agency</span>
             <h1 className="heading-1 animate-fade-in-up">
               <span className="gradient-text">{t('hero.title')}</span>
             </h1>
@@ -144,7 +143,6 @@ export default function Home() {
       <section className="section border-y border-white/[0.08] bg-surface-950/[0.45]" id="services">
         <div className="container-custom">
           <div className="mb-14 text-center">
-            <span className="section-kicker">Services</span>
             <h2 className="heading-2 mt-3">{t('services.title')}</h2>
             <p className="section-subtitle mt-4">{t('services.subtitle')}</p>
           </div>
@@ -175,7 +173,6 @@ export default function Home() {
       <section className="section" id="portfolio">
         <div className="container-custom">
           <div className="mb-14 text-center">
-            <span className="section-kicker">Case Studies</span>
             <h2 className="heading-2 mt-3">{t('portfolio.title')}</h2>
             <p className="section-subtitle mt-4">{t('portfolio.subtitle')}</p>
           </div>
@@ -243,7 +240,6 @@ export default function Home() {
       <section className="section" id="blog">
         <div className="container-custom">
           <div className="mb-14 text-center">
-            <span className="section-kicker">Insights</span>
             <h2 className="heading-2 mt-3">{t('blogPreview.title')}</h2>
             <p className="section-subtitle mt-4">{t('blogPreview.subtitle')}</p>
           </div>
@@ -308,7 +304,6 @@ export default function Home() {
           <div className="panel-shell relative overflow-hidden px-8 py-14 text-center md:px-12">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(196,30,58,0.24),transparent_58%)]" />
             <div className="relative z-10 mx-auto max-w-3xl">
-              <span className="section-kicker">Let's Build</span>
               <h2 className="heading-2 mt-3">{t('cta.title')}</h2>
               <p className="mt-5 text-xl text-surface-300">{t('cta.subtitle')}</p>
               <Link

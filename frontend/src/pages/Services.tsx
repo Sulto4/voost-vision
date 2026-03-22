@@ -43,7 +43,6 @@ export default function Services() {
         <div className="hero-backdrop" />
         <div className="container-custom">
           <div className="mx-auto mb-14 max-w-3xl text-center">
-            <span className="section-kicker">Capabilities</span>
             <h1 className="heading-1 mt-3 mb-6">
               <span className="gradient-text">{t('services.title')}</span>
             </h1>

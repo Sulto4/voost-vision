@@ -28,7 +28,6 @@ export default function About() {
         <div className="hero-backdrop" />
         <div className="container-custom">
           <div className="mx-auto max-w-3xl text-center">
-            <span className="section-kicker">About Voost Vision</span>
             <h1 className="heading-1 mt-3 mb-6">
               <span className="gradient-text">{t('about.pageTitle')}</span>
             </h1>
@@ -43,7 +42,6 @@ export default function About() {
         <div className="container-custom">
           <div className="grid items-center gap-8 lg:grid-cols-2">
             <div>
-              <span className="section-kicker">Our Story</span>
               <h2 className="heading-3 mb-4">{t('about.story')}</h2>
               <p className="mb-6 text-lg text-surface-300">
                 {t('about.storyText')}
@@ -63,7 +61,6 @@ export default function About() {
       <section className="section">
         <div className="container-custom">
           <div className="mb-14 text-center">
-            <span className="section-kicker">Why Choose Us</span>
             <h2 className="heading-2 mt-3">{t('about.whyUs')}</h2>
           </div>
           <div className="grid gap-6 md:grid-cols-3">
