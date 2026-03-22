@@ -259,8 +259,8 @@ export default function Portfolio() {
           onClick={closeLightbox}
         >
           <button
-            onClick={closeLightbox}
-            className="absolute right-4 top-4 z-10 rounded-full border border-white/15 bg-black/50 p-2 text-white/70 transition-colors hover:text-white"
+            onClick={(e) => { e.stopPropagation(); closeLightbox() }}
+            className="absolute right-4 top-4 z-[60] rounded-full border border-white/15 bg-black/80 p-3 text-white transition-colors hover:bg-white/20"
             aria-label="Close lightbox"
           >
             <X className="h-8 w-8" />
@@ -279,7 +279,7 @@ export default function Portfolio() {
           <img
             src={getLightboxImages(lightboxProject)[lightboxIndex]}
             alt={currentLang === 'en' ? lightboxProject.title_en : lightboxProject.title_ro}
-            className="max-h-[90vh] max-w-[90vw] object-contain"
+            className="max-h-[85vh] max-w-[85vw] rounded-lg object-contain"
             onClick={(e) => e.stopPropagation()}
           />
 
