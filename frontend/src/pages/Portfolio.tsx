@@ -212,9 +212,9 @@ export default function Portfolio() {
                   key={project.id}
                   className="glass-card group overflow-hidden"
                 >
-                  <div
-                    className="relative aspect-video cursor-pointer overflow-hidden border-b border-white/10"
-                    onClick={(e) => openLightbox(project, e)}
+                  <Link
+                    to={`${getLocalizedPath('/portfolio', '/portofoliu')}/${project.id}`}
+                    className="relative block aspect-video overflow-hidden border-b border-white/10"
                   >
                     <img
                       src={project.thumbnail_url || ''}
@@ -222,12 +222,7 @@ export default function Portfolio() {
                       loading="lazy"
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors group-hover:bg-black/[0.35]">
-                      <span className="rounded-full border border-white/20 bg-black/[0.55] px-3 py-1 text-sm text-white opacity-0 transition-opacity group-hover:opacity-100">
-                        {currentLang === 'en' ? 'View Image' : 'Vezi Imaginea'}
-                      </span>
-                    </div>
-                  </div>
+                  </Link>
                   <Link
                     to={`${getLocalizedPath('/portfolio', '/portofoliu')}/${project.id}`}
                     className="block p-6"
