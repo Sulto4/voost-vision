@@ -1,14 +1,12 @@
 import { useMemo, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Menu, X, Sun, Moon, Globe, ArrowRight } from 'lucide-react'
-import { useTheme } from '@/hooks/useTheme'
+import { Menu, X, Globe, ArrowRight } from 'lucide-react'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false)
   const { t, i18n } = useTranslation()
-  const { theme, toggleTheme } = useTheme()
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -115,14 +113,6 @@ export default function Header() {
                 )}
               </div>
 
-              <button
-                onClick={toggleTheme}
-                className="inline-flex items-center justify-center rounded-lg border border-white/10 bg-white/5 p-2 text-surface-300 transition-colors hover:text-white"
-                aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-              >
-                {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-              </button>
-
               <Link
                 to={withPrefix(currentLang === 'en' ? '/booking' : '/programare')}
                 className="btn-primary px-4 py-2 text-xs uppercase tracking-[0.1em]"
@@ -167,13 +157,6 @@ export default function Header() {
             >
               <Globe className="h-4 w-4" />
               {currentLang === 'en' ? 'Română' : 'English'}
-            </button>
-            <button
-              onClick={toggleTheme}
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/[0.12] bg-white/5 px-3 py-2 text-sm font-medium text-surface-300"
-            >
-              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-              {theme === 'dark' ? 'Light' : 'Dark'}
             </button>
           </div>
 

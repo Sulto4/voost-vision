@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Code, Smartphone, Palette, Globe, ChevronLeft, ChevronRight, Quote, Calendar } from 'lucide-react'
+import { ArrowRight, Code, Smartphone, Palette, Globe, Calendar } from 'lucide-react'
 import { useState, useEffect, useCallback } from 'react'
-import { fetchArticles, fetchFeaturedProjects, fetchTestimonials } from '@/lib/data-layer'
-import type { Project, Article, Testimonial } from '@/lib/supabase'
+import { fetchArticles, fetchFeaturedProjects } from '@/lib/data-layer'
+import type { Project, Article } from '@/lib/supabase'
 import ResponsiveImage from '@/components/ui/ResponsiveImage'
 
 // Helper function to format date
@@ -20,13 +20,10 @@ const formatDate = (dateString: string | null, lang: string): string => {
 export default function Home() {
   const { t, i18n } = useTranslation()
   const currentLang = i18n.language
-  const [currentTestimonial, setCurrentTestimonial] = useState(0)
   const [featuredProjects, setFeaturedProjects] = useState<Project[]>([])
   const [blogArticles, setBlogArticles] = useState<Article[]>([])
   const [loadingProjects, setLoadingProjects] = useState(true)
   const [loadingArticles, setLoadingArticles] = useState(true)
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([])
-  const [loadingTestimonials, setLoadingTestimonials] = useState(true)
 
   const getLocalizedPath = (enPath: string, roPath: string) => {
     return currentLang === 'en' ? enPath : roPath
@@ -69,33 +66,6 @@ export default function Home() {
   useEffect(() => {
     fetchLatestArticles()
   }, [fetchLatestArticles])
-
-  // Fetch testimonials from data layer
-  const loadTestimonials = useCallback(async () => {
-    setLoadingTestimonials(true)
-    try {
-      const data = await fetchTestimonials()
-      setTestimonials(data)
-    } catch (err) {
-      console.error('Error fetching testimonials:', err)
-      setTestimonials([])
-    } finally {
-      setLoadingTestimonials(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    loadTestimonials()
-  }, [loadTestimonials])
-
-  // Auto-rotate testimonials
-  useEffect(() => {
-    if (testimonials.length === 0) return
-    const interval = setInterval(() => {
-      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length)
-    }, 5000)
-    return () => clearInterval(interval)
-  }, [testimonials.length])
 
   const services = [
     {
@@ -268,78 +238,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section border-y border-white/[0.08] bg-surface-950/[0.45]" id="testimonials">
-        <div className="container-custom">
-          <div className="mb-14 text-center">
-            <span className="section-kicker">Client Feedback</span>
-            <h2 className="heading-2 mt-3">{t('testimonials.title')}</h2>
-            <p className="section-subtitle mt-4">{t('testimonials.subtitle')}</p>
-          </div>
-
-          {loadingTestimonials ? (
-            <div className="flex justify-center">
-              <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-primary-500" />
-            </div>
-          ) : testimonials.length === 0 ? (
-            <div className="panel-shell px-8 py-16 text-center">
-              <p className="text-surface-400">{t('testimonials.noTestimonials', 'No testimonials available yet.')}</p>
-            </div>
-          ) : (
-            <div className="mx-auto max-w-4xl">
-              <div className="glass-card relative p-8 md:p-12">
-                <Quote className="absolute left-6 top-6 h-10 w-10 text-primary-500/30" />
-                <div className="text-center">
-                  <p className="relative z-10 text-xl text-surface-200 md:text-2xl">
-                    "{currentLang === 'en'
-                      ? testimonials[currentTestimonial]?.text_en
-                      : testimonials[currentTestimonial]?.text_ro}"
-                  </p>
-                  <div className="mt-8 flex items-center justify-center gap-4">
-                    <img
-                      src={testimonials[currentTestimonial]?.avatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=60'}
-                      alt={testimonials[currentTestimonial]?.name}
-                      loading="lazy"
-                      className="h-14 w-14 rounded-full border border-white/15 object-cover"
-                    />
-                    <div className="text-left">
-                      <p className="font-semibold">{testimonials[currentTestimonial]?.name}</p>
-                      <p className="text-sm text-surface-400">{testimonials[currentTestimonial]?.company}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-8 flex justify-center gap-2">
-                  {testimonials.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setCurrentTestimonial(index)}
-                      className={`h-2 rounded-full transition-all ${
-                        index === currentTestimonial ? 'w-8 bg-primary-500' : 'w-2 bg-surface-600 hover:bg-surface-500'
-                      }`}
-                      aria-label={`Go to testimonial ${index + 1}`}
-                    />
-                  ))}
-                </div>
-
-                <button
-                  onClick={() => setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length)}
-                  className="absolute left-4 top-1/2 hidden -translate-y-1/2 rounded-full border border-white/10 bg-white/5 p-2 transition-colors hover:bg-white/10 md:block"
-                  aria-label="Previous testimonial"
-                >
-                  <ChevronLeft className="h-5 w-5" />
-                </button>
-                <button
-                  onClick={() => setCurrentTestimonial((prev) => (prev + 1) % testimonials.length)}
-                  className="absolute right-4 top-1/2 hidden -translate-y-1/2 rounded-full border border-white/10 bg-white/5 p-2 transition-colors hover:bg-white/10 md:block"
-                  aria-label="Next testimonial"
-                >
-                  <ChevronRight className="h-5 w-5" />
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
+      {/* Testimonials section - hidden until we have more real testimonials */}
 
       <section className="section" id="blog">
         <div className="container-custom">
