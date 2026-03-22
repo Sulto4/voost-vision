@@ -261,11 +261,6 @@ export default function Portfolio() {
           <button
             onClick={(e) => { e.stopPropagation(); closeLightbox() }}
             className="absolute right-4 top-4 z-[60] rounded-full border border-white/15 bg-black/80 p-3 text-white transition-colors hover:bg-white/20"
-            aria-label="Close lightbox"
-          >
-            <X className="h-8 w-8" />
-          </button>
-
           {getLightboxImages(lightboxProject).length > 1 && (
             <button
               onClick={(e) => { e.stopPropagation(); prevImage() }}
