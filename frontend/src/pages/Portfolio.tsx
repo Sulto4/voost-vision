@@ -5,14 +5,13 @@ import { supabase, Project } from '@/lib/supabase'
 import { ArrowUpDown } from 'lucide-react'
 import ErrorMessage from '@/components/ui/ErrorMessage'
 
-const categories = [
-  { id: 'all', label_ro: 'Toate', label_en: 'All' },
-  { id: 'web', label_ro: 'Web', label_en: 'Web' },
-  { id: 'app', label_ro: 'Aplicatii', label_en: 'Apps' },
-  { id: 'ecommerce', label_ro: 'eCommerce', label_en: 'eCommerce' },
-  { id: 'mobile', label_ro: 'Mobile', label_en: 'Mobile' },
-  { id: 'design', label_ro: 'Design', label_en: 'Design' },
-]
+const categoryLabels: Record<string, { label_ro: string; label_en: string }> = {
+  app: { label_ro: 'Aplicatii', label_en: 'Apps' },
+  ecommerce: { label_ro: 'eCommerce', label_en: 'eCommerce' },
+  web: { label_ro: 'Web', label_en: 'Web' },
+  mobile: { label_ro: 'Mobile', label_en: 'Mobile' },
+  design: { label_ro: 'Design', label_en: 'Design' },
+}
 
 const sortOptions = [
   { id: 'newest', label_ro: 'Cele mai noi', label_en: 'Newest' },
@@ -102,6 +101,22 @@ export default function Portfolio() {
     return currentLang === 'en' ? enPath : roPath
   }
 
+  const availableCategories = [
+    { id: 'all', label_ro: 'Toate', label_en: 'All' },
+    ...Array.from(new Set(projects.map((project) => project.category).filter(Boolean)))
+      .map((category) => ({
+        id: category,
+        label_ro: categoryLabels[category]?.label_ro || category,
+        label_en: categoryLabels[category]?.label_en || category,
+      })),
+  ]
+
+  useEffect(() => {
+    if (!loading && filter !== 'all' && !projects.some((project) => project.category === filter)) {
+      setFilter('all')
+    }
+  }, [loading, filter, projects])
+
   const filteredProjects = filter === 'all'
     ? projects
     : projects.filter((p) => p.category === filter)
@@ -126,7 +141,7 @@ export default function Portfolio() {
 
           <div className="glass-card mb-8 flex flex-col gap-5 p-5 md:flex-row md:items-center md:justify-between">
             <div className="flex flex-wrap gap-3">
-              {categories.map((cat) => (
+              {availableCategories.map((cat) => (
                 <button
                   key={cat.id}
                   onClick={() => setFilter(cat.id)}

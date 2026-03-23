@@ -9,12 +9,8 @@ const ARTICLES_PER_PAGE = 6
 
 const categories = [
   { id: 'all', label_ro: 'Toate', label_en: 'All' },
-  { id: 'ecommerce', label_ro: 'eCommerce', label_en: 'eCommerce' },
-  { id: 'Development', label_ro: 'Development', label_en: 'Development' },
-  { id: 'SEO', label_ro: 'SEO', label_en: 'SEO' },
-  { id: 'Strategy', label_ro: 'Strategy', label_en: 'Strategy' },
-  { id: 'AI', label_ro: 'AI', label_en: 'AI' },
-  { id: 'Performance', label_ro: 'Performance', label_en: 'Performance' },
+  { id: 'development', label_ro: 'Development', label_en: 'Development' },
+  { id: 'ai', label_ro: 'AI', label_en: 'AI' },
 ]
 
 export default function Blog() {
@@ -59,6 +55,12 @@ export default function Blog() {
   useEffect(() => {
     fetchArticles()
   }, [fetchArticles])
+
+  useEffect(() => {
+    if (currentCategory !== 'all' && !categories.some((category) => category.id === currentCategory)) {
+      setSearchParams({ page: '1' })
+    }
+  }, [currentCategory, setSearchParams])
 
   const goToPage = (page: number) => {
     const params: Record<string, string> = { page: page.toString() }
